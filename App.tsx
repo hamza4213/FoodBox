@@ -29,6 +29,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import CodePush from 'react-native-code-push';
 import analytics from '@react-native-firebase/analytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 import {isEnabled} from 'appcenter';
 
 const Section: React.FC<
@@ -98,6 +99,16 @@ const App = () => {
                 size: 'L',
               });
               console.log('event logged');
+            }}
+          />
+
+          <Button
+            title="Cash test"
+            onPress={() => {
+              // crashlytics().crash();
+              
+              throw 'OMG';
+              console.log('crashed');
             }}
           />
           <Section title="Step One">
