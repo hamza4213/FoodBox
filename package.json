@@ -12,6 +12,7 @@
     "CodePush:android": "appcenter CodePush release-react -a Fortune-Ikechi/MeatBallApp-Android -d Production"
   },
   "dependencies": {
+    "@react-native-firebase/analytics": "^15.3.0",
     "@react-native-firebase/app": "^15.3.0",
     "appcenter": "4.4.5",
     "appcenter-analytics": "4.4.5",
