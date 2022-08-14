@@ -2,26 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-  
-  <key>CFBundleURLTypes</key>
-  <array>
-    <dict>
-    <key>CFBundleURLSchemes</key>
-    <array>
-      <string>1532703837120978</string>
-    </array>
-    </dict>
-  </array>
-  <key>FacebookAppID</key>
-  <string>1532703837120978</string>
-  <key>FacebookClientToken</key>
-  <string>f4947c472a70962b8a42ba58ddab95e3</string>
-  <key>FacebookDisplayName</key>
-  <string>Foodobox</string>
-
-  <key>NSUserTrackingUsageDescription</key>
-  <string>YOUR TEXT</string>
-
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -40,10 +20,33 @@
 	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>1532703837120978</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.378104807990-n6n7c6m3eal3c3sd5ja1thum91kljinv</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>CodePushDeploymentKey</key>
 	<string>PzpgWTLEJE_1dv8aM28fAsoAMeG7jZOyNFKi1</string>
+	<key>FacebookAppID</key>
+	<string>1532703837120978</string>
+	<key>FacebookClientToken</key>
+	<string>f4947c472a70962b8a42ba58ddab95e3</string>
+	<key>FacebookDisplayName</key>
+	<string>Foodobox</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -59,6 +62,8 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>YOUR TEXT</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

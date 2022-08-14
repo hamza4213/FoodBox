@@ -34,6 +34,7 @@ import {AppEventsLogger, Settings as FBSettings} from 'react-native-fbsdk-next';
 import {isEnabled} from 'appcenter';
 import {useAppState} from '@react-native-community/hooks';
 import {check, PERMISSIONS, request} from 'react-native-permissions';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 const Section: React.FC<PropsWithChildren<{
   title: string;
@@ -114,6 +115,21 @@ const App = () => {
     };
   }, [state]);
 
+  GoogleSignin.configure();
+
+  const googleLogin = async () => {
+    try {
+      const result = await GoogleSignin.signIn();
+      console.log('googleLogin result', result);
+      let tt = await GoogleSignin.getTokens();
+      console.log('googleLogin tt', tt);
+      const isAuthorized = !!tt.accessToken;
+      console.log('googleLogin isAuthorized', isAuthorized);
+    } catch (error) {
+      console.log('googleLogin error', error);
+    }
+  };
+
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}/>
@@ -152,8 +168,15 @@ const App = () => {
           <Button
             title="FB Event "
             onPress={() => {
-              AppEventsLogger.logEvent('test_ios', {blqt: 1});
+              AppEventsLogger.logEvent('test_google', {blqt: 1});
               console.log('FB event send');
+            }}
+          />
+
+          <Button
+            title="Google login "
+            onPress={async () => {
+              await googleLogin();
             }}
           />
 
