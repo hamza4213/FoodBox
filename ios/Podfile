@@ -23,6 +23,10 @@ target 'FoodOBox' do
   )
   
   pod 'GoogleUtilities', :modular_headers => true
+  
+  permissions_path = '../node_modules/react-native-permissions/ios'
+  pod 'Permission-AppTrackingTransparency', :path => "#{permissions_path}/AppTrackingTransparency"
+  pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications"
 
   target 'FoodOBoxTests' do
     inherit! :complete

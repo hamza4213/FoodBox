@@ -10,6 +10,7 @@
 #import <Firebase.h>
 
 #import <React/RCTAppSetupUtils.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
@@ -68,6 +69,8 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   [AppCenterReactNativeCrashes registerWithAutomaticProcessing];
   
   [FIRApp configure];
+  
+  [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
 
   return YES;
 }

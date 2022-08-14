@@ -12,6 +12,7 @@
     "CodePush:android": "appcenter CodePush release-react -a Fortune-Ikechi/MeatBallApp-Android -d Production"
   },
   "dependencies": {
+    "@react-native-community/hooks": "^2.8.1",
     "@react-native-firebase/analytics": "^15.3.0",
     "@react-native-firebase/app": "^15.3.0",
     "@react-native-firebase/crashlytics": "^15.3.0",
@@ -20,7 +21,9 @@
     "appcenter-crashes": "4.4.5",
     "react": "18.0.0",
     "react-native": "0.69.4",
-    "react-native-code-push": "^7.0.5"
+    "react-native-code-push": "^7.0.5",
+    "react-native-fbsdk-next": "^10.1.0",
+    "react-native-permissions": "^3.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

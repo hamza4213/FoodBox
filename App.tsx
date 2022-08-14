@@ -10,7 +10,7 @@
 
 import React, {type PropsWithChildren, useEffect} from 'react';
 import {
-  Button,
+  Button, Platform,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -30,13 +30,14 @@ import {
 import CodePush from 'react-native-code-push';
 import analytics from '@react-native-firebase/analytics';
 import crashlytics from '@react-native-firebase/crashlytics';
+import {AppEventsLogger, Settings as FBSettings} from 'react-native-fbsdk-next';
 import {isEnabled} from 'appcenter';
+import {useAppState} from '@react-native-community/hooks';
+import {check, PERMISSIONS, request} from 'react-native-permissions';
 
-const Section: React.FC<
-  PropsWithChildren<{
-    title: string;
-  }>
-> = ({children, title}) => {
+const Section: React.FC<PropsWithChildren<{
+  title: string;
+}>> = ({children, title}) => {
   const isDarkMode = useColorScheme() === 'dark';
   return (
     <View style={styles.sectionContainer}>
@@ -78,13 +79,48 @@ const App = () => {
     checkAppCenter();
   }, []);
 
+  const setupFB = async (attEnabled: boolean) => {
+    console.log('setupFB ', attEnabled);
+    if (attEnabled) {
+      FBSettings.setAppID('1532703837120978');
+      FBSettings.initializeSDK();
+      await FBSettings.setAdvertiserTrackingEnabled(attEnabled);
+    }
+  };
+
+  const checkAttPermissions = async () => {
+    console.log('checkAttPermissions');
+    const att_check = await check(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
+    console.log('att_check ', att_check);
+    if (att_check === 'granted' || att_check === 'unavailable') {
+      await setupFB(true);
+    } else {
+      const att_request = await request(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
+      console.log('att_request ', att_request);
+
+      if (att_request === 'granted') {
+        await setupFB(true);
+      }
+    }
+
+  };
+
+  const state = useAppState();
+  useEffect(() => {
+    if (state === 'active' && Platform.OS === 'ios') {
+      checkAttPermissions();
+    }
+    return () => {
+    };
+  }, [state]);
+
   return (
     <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}/>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
-        <Header />
+        <Header/>
         <View
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
@@ -105,26 +141,37 @@ const App = () => {
           <Button
             title="Cash test"
             onPress={() => {
-              // crashlytics().crash();
-              
+              crashlytics().crash();
+
               throw 'OMG';
               console.log('crashed');
             }}
           />
+
+
+          <Button
+            title="FB Event "
+            onPress={() => {
+              AppEventsLogger.logEvent('test_ios', {blqt: 1});
+              console.log('FB event send');
+            }}
+          />
+
+
           <Section title="Step One">
             Edit <Text style={styles.highlight}>App.tsx</Text> to change this
             screen and then come back to see your edits.
           </Section>
           <Section title="See Your Changes">
-            <ReloadInstructions />
+            <ReloadInstructions/>
           </Section>
           <Section title="Debug">
-            <DebugInstructions />
+            <DebugInstructions/>
           </Section>
           <Section title="Learn More">
             Read the docs to discover what to do next:
           </Section>
-          <LearnMoreLinks />
+          <LearnMoreLinks/>
         </View>
       </ScrollView>
     </SafeAreaView>
