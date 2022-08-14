@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply plugin: 'com.google.gms.google-services'
 
 import com.android.build.OutputFile
 
@@ -307,3 +308,4 @@ def isNewArchitectureEnabled() {
 }
 
 apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
+

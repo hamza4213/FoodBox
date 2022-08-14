@@ -7,6 +7,7 @@
 #import <AppCenterReactNative.h>
 #import <AppCenterReactNativeAnalytics.h>
 #import <AppCenterReactNativeCrashes.h>
+#import <Firebase.h>
 
 #import <React/RCTAppSetupUtils.h>
 
@@ -65,6 +66,8 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   [AppCenterReactNative register];
   [AppCenterReactNativeAnalytics registerWithInitiallyEnabled:true];
   [AppCenterReactNativeCrashes registerWithAutomaticProcessing];
+  
+  [FIRApp configure];
 
   return YES;
 }
