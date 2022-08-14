@@ -45,6 +45,9 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-FoodOBox.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FoodOBox.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F7C723828A8BC5000709E1B /* AppCenter-Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "AppCenter-Config.plist"; path = "FoodOBox/AppCenter-Config.plist"; sourceTree = "<group>"; };
 		6F7C723A28A8D77B00709E1B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "FoodOBox/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		6FC60F6D28A8F9870033A625 /* libFirebaseCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFirebaseCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		6FC60F6F28A8F9CF0033A625 /* libFirebaseCoreInternal.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFirebaseCoreInternal.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		6FC60F7128A8F9EC0033A625 /* libFirebaseCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFirebaseCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = FoodOBox/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-FoodOBox-FoodOBoxTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FoodOBox-FoodOBoxTests.release.xcconfig"; path = "Target Support Files/Pods-FoodOBox-FoodOBoxTests/Pods-FoodOBox-FoodOBoxTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -105,6 +108,9 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6FC60F7128A8F9EC0033A625 /* libFirebaseCore.a */,
+				6FC60F6F28A8F9CF0033A625 /* libFirebaseCoreInternal.a */,
+				6FC60F6D28A8F9870033A625 /* libFirebaseCore.a */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				5DCACB8F33CDC322A6C60F78 /* libPods-FoodOBox.a */,
 				19F6CBCC0A4E27FBF8BF4A61 /* libPods-FoodOBox-FoodOBoxTests.a */,
@@ -484,7 +490,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.foodobox.ios;
 				PRODUCT_NAME = FoodOBox;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -510,7 +516,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.foodobox.ios;
 				PRODUCT_NAME = FoodOBox;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

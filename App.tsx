@@ -10,6 +10,7 @@
 
 import React, {type PropsWithChildren, useEffect} from 'react';
 import {
+  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -27,6 +28,7 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import CodePush from 'react-native-code-push';
+import analytics from '@react-native-firebase/analytics';
 import {isEnabled} from 'appcenter';
 
 const Section: React.FC<
@@ -86,6 +88,18 @@ const App = () => {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
+
+          <Button
+            title="Test Android"
+            onPress={async () => {
+              await analytics().logEvent('android_test', {
+                id: 'aisdj',
+                item: 'mens grey t-shirt',
+                size: 'L',
+              });
+              console.log('event logged');
+            }}
+          />
           <Section title="Step One">
             Edit <Text style={styles.highlight}>App.tsx</Text> to change this
             screen and then come back to see your edits.
