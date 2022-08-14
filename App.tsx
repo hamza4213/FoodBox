@@ -8,7 +8,7 @@
  * @format
  */
 
-import React, {type PropsWithChildren} from 'react';
+import React, {type PropsWithChildren, useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -26,6 +26,8 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import CodePush from 'react-native-code-push';
+import {isEnabled} from 'appcenter';
 
 const Section: React.FC<
   PropsWithChildren<{
@@ -63,6 +65,15 @@ const App = () => {
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  const checkAppCenter = async () => {
+    const enabled = await isEnabled();
+    console.log('checkAppCenter', enabled);
+  };
+
+  useEffect(() => {
+    checkAppCenter();
+  }, []);
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -114,4 +125,15 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+let CodePushOptions = {
+  checkFrequency: __DEV__
+    ? CodePush.CheckFrequency.MANUAL
+    : CodePush.CheckFrequency.ON_APP_RESUME,
+  mandatoryInstallMode: CodePush.InstallMode.IMMEDIATE,
+  updateDialog: {
+    appendReleaseDescription: true,
+    title: 'a new update is available!',
+  },
+};
+
+export default CodePush(CodePushOptions)(App);
