@@ -2,6 +2,7 @@
   package="com.foodobox">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
       android:name=".MainApplication"
@@ -13,6 +14,7 @@
 
       <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
       <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
+      <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCX4sFRRo6lnaenjpWlnrIcgQBRT_UTEnc"/>
       
       
       <activity

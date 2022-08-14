@@ -24,6 +24,8 @@
     "react-native": "0.69.4",
     "react-native-code-push": "^7.0.5",
     "react-native-fbsdk-next": "^10.1.0",
+    "react-native-map-clustering": "^3.4.2",
+    "react-native-maps": "^1.2.0",
     "react-native-permissions": "^3.6.0"
   },
   "devDependencies": {

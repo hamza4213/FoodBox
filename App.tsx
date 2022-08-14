@@ -8,7 +8,7 @@
  * @format
  */
 
-import React, {type PropsWithChildren, useEffect} from 'react';
+import React, {type PropsWithChildren, useEffect, useRef} from 'react';
 import {
   Button, Platform,
   SafeAreaView,
@@ -35,6 +35,8 @@ import {isEnabled} from 'appcenter';
 import {useAppState} from '@react-native-community/hooks';
 import {check, PERMISSIONS, request} from 'react-native-permissions';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import Map, {PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView from 'react-native-map-clustering';
 
 const Section: React.FC<PropsWithChildren<{
   title: string;
@@ -130,6 +132,8 @@ const App = () => {
     }
   };
 
+  const mapRef = useRef<Map>();
+
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'}/>
@@ -185,14 +189,19 @@ const App = () => {
             Edit <Text style={styles.highlight}>App.tsx</Text> to change this
             screen and then come back to see your edits.
           </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions/>
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions/>
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
+          <Section title="Map">
+            <MapView
+              ref={mapRef}
+              provider={PROVIDER_GOOGLE}
+              style={styles.map}
+              region={{
+                latitude: 37.78825,
+                longitude: -122.4324,
+                latitudeDelta: 0.015,
+                longitudeDelta: 0.0121,
+              }}
+            >
+            </MapView>
           </Section>
           <LearnMoreLinks/>
         </View>
@@ -202,6 +211,10 @@ const App = () => {
 };
 
 const styles = StyleSheet.create({
+  map: {
+    height: 300,
+    width: 300
+  },
   sectionContainer: {
     marginTop: 32,
     paddingHorizontal: 24,
