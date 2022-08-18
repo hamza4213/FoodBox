@@ -1,0 +1,510 @@
+import React, {useEffect, useState} from 'react';
+import {Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {COLORS, icons, SIZES} from './../constants';
+import {Utils} from '../utils';
+import {API_ENDPOINT_PRODUCT_PHOTOS} from '../network/Server';
+import CountDown from 'react-native-countdown-component';
+import FBSpinner from '../components/common/spinner';
+import {FoodBox} from '../models/FoodBox';
+import {RestaurantHomeListItem} from '../models/Restaurant';
+import BackButton from '../components/common/BackButton';
+import FoodBoxCheckoutControl from '../components/RestaurantDetails/FoodBoxCheckoutControl';
+import {RestaurantService} from '../services/RestaurantService';
+import {analyticsPageOpen} from '../analytics';
+import {useSelector} from 'react-redux';
+import {FBRootState} from '../redux/store';
+import {FBUser} from '../models/User';
+import {useIntl} from 'react-intl';
+import {translateText} from '../lang/translate';
+import {showOnMap} from '../utils/showOnMap';
+import {useIsFocused} from '@react-navigation/native';
+
+// TODO: this has to be a model
+const allergensNames: string[] = [
+  'Ракообразни',
+  'Риба',
+  'Яйца',
+  'Соя',
+  'Ядки',
+  'Фъстъци',
+  'Целина',
+  'Горчица',
+  'Сусам',
+  'Лупина',
+  'Мекотели',
+  'Серен диоксид',
+  'Млечни продукти',
+  'Глутен',
+];
+
+// TODO: make proper ts type
+export interface OfferProps {
+  route: any,
+  navigation: any
+}
+
+const Offer = ({route, navigation}: OfferProps) => {
+  // TODO: make it react if the pick-up time starts or ends
+
+  const restaurant: RestaurantHomeListItem = route.params.restaurant;
+  const foodBox: FoodBox = route.params.box;
+
+  const allergensArray = JSON.parse(foodBox.allergenes);
+  const now = new Date().getTime();
+  const availableBoxes = foodBox.quantity;
+  const hasAvailableBoxes = RestaurantService.hasAvailability(foodBox);
+  const isFinished = RestaurantService.isFinished(foodBox);
+  const isStarted = RestaurantService.isStarted(foodBox);
+  const intl = useIntl();
+
+  const user = useSelector((state: FBRootState) => state.user.user) as FBUser;
+
+  useEffect(() => {
+    return navigation.addListener('focus', async () => {
+      await analyticsPageOpen({
+        userId: user.id,
+        email: user.email,
+        pageName: 'OfferDetails',
+        data: {boxId: foodBox.id, isStarted: isStarted, isFinished: isFinished},
+      });
+    });
+  }, [navigation]);
+
+  const [visibleLoading, setVisibleLoading] = useState(false);
+  const isOnFocus = useIsFocused();
+
+  return (
+    <SafeAreaView style={styles.mainWrapper}>
+      <View style={styles.navigationWrapper}>
+        <BackButton/>
+        <View style={styles.navigationRestaurantNameWrapper}>
+          <Text style={styles.navigationRestaurantNameText}>
+            {restaurant.name}
+          </Text>
+        </View>
+      </View>
+
+      <ScrollView
+        style={styles.mainContentWrapper}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+      >
+        <View style={styles.boxImageWrapper}>
+          <Image
+            style={styles.boxImage}
+            resizeMode={'cover'}
+            source={{uri: API_ENDPOINT_PRODUCT_PHOTOS + foodBox.photo}}
+          />
+        </View>
+
+        <View style={styles.wrapBoxMeta}>
+          <Text numberOfLines={2} adjustsFontSizeToFit style={{flex: 1, width: 1, color: '#29455f'}}>
+            <Text style={styles.boxTitleText}>{foodBox.name}</Text>
+            <Text>{` ${translateText(intl, 'order.from')} `}</Text>
+            <Text style={styles.boxTitleText}>{restaurant.name}</Text>
+          </Text>
+
+          {!isFinished &&
+            <View
+              style={{
+                ...styles.availableBoxesIndicatorWrapper,
+                backgroundColor: !hasAvailableBoxes ? COLORS.red : COLORS.primary,
+                borderColor: '#000', borderWidth: 2,
+              }}>
+              <Text style={styles.availableBoxesIndicatorText}>
+                {availableBoxes}{' '}{availableBoxes == 1 ? translateText(intl, 'box') : translateText(intl, 'boxes')}
+              </Text>
+            </View>
+          }
+        </View>
+
+        <View style={styles.pickUpTimeWrapper}>
+          <Image
+            source={require('../../assets/icons/offer_clock_icon.png')}
+            style={styles.pickUpTimeIcon}
+            resizeMode="contain"
+          />
+          <Text style={styles.pickUpTimeText}>
+            {`${translateText(intl, 'offer.pick_up_window')} ${translateText(intl, 'offer.from')} ${RestaurantService.formatPickUpWindowDate(foodBox.pickUpFrom)} ${translateText(intl, 'offer.to')} ${RestaurantService.formatPickUpWindowDate(foodBox.pickUpTo)}!`}
+          </Text>
+        </View>
+
+        {isFinished && (
+          <View style={{
+            ...styles.countdownWrapper,
+            backgroundColor: COLORS.red,
+          }}>
+            <Text style={styles.countdownText}>
+              {translateText(intl, 'offer.message_end')}
+            </Text>
+          </View>
+        )}
+
+        {!isFinished && (
+          <View style={{
+            ...styles.countdownWrapper,
+            backgroundColor: isStarted ? COLORS.red : COLORS.primary,
+          }}>
+            <Image
+              source={require('../../assets/icons/stopwatch_icon.png')}
+              style={styles.countdownIcon}
+              resizeMode="contain"
+            />
+
+            <Text style={styles.countdownText}>
+              {isStarted ? translateText(intl, 'offer.sale_end') : translateText(intl, 'offer.sale_start')}
+            </Text>
+
+            <CountDown
+              until={(isStarted ? foodBox.pickUpTo - now : foodBox.pickUpFrom - now) / 1000}
+              size={11}
+              digitStyle={{backgroundColor: isStarted ? COLORS.red : COLORS.primary}}
+              style={{marginTop: 3, marginLeft: 2}}
+              digitTxtStyle={{color: '#FFF'}}
+              separatorStyle={{color: '#FFF', margin: 0}}
+              timeToShow={['H', 'M', 'S']}
+              timeLabels={{m: '', s: ''}}
+              showSeparator
+            />
+          </View>
+        )}
+
+        <TouchableOpacity
+          style={styles.addressWrapper}
+          onPress={() => showOnMap({location: {latitude: restaurant.latitude, longitude: restaurant.longitude}})}
+        >
+          <Image
+            style={styles.addressIcon}
+            source={icons.location}
+            resizeMode="contain"
+          />
+
+          <Text style={styles.addressText}>
+            {restaurant.address}
+          </Text>
+        </TouchableOpacity>
+
+
+        <Text style={styles.description}>
+          {`${translateText(intl, 'offer.description_start')} ${foodBox.summary} ${translateText(intl, 'offer.description_end')}`}
+        </Text>
+
+        <Text style={styles.allergens}>
+          {`${translateText(intl, 'offer.allergens')}: `}
+          {allergensArray.map((item: number, key: number) => {
+            let dot = allergensArray.length - 1 == key ? '' : ', ';
+            return <Text key={key}>{allergensNames[item - 1] + dot}</Text>;
+          })}
+        </Text>
+
+        <View style={{flexDirection: 'row'}}>
+          <Text style={styles.h3}>
+            {translateText(intl, 'offer.price_in_store')}
+          </Text>
+          <Text>{` ${foodBox.price}${translateText(intl, 'price_unit')}`}</Text>
+        </View>
+
+        <View style={{flexDirection: 'row'}}>
+          <Text style={styles.h3}>
+            {translateText(intl, 'offer.price_in_foodobox')}
+          </Text>
+          <Text>{` ${foodBox.discountedPrice}${translateText(intl, 'price_unit')} (-${foodBox.discount}%)`}</Text>
+        </View>
+
+        <FoodBoxCheckoutControl
+          setIsLoading={setVisibleLoading}
+          restaurant={restaurant}
+          foodbox={foodBox}
+          isOnFocus={isOnFocus}
+        />
+
+        <View style={styles.howToPickUpDetailsWrapper}>
+          <Text style={styles.howToPickUpTitle}>
+            {translateText(intl, 'offer.pick_up_info_header')}
+          </Text>
+          <Text style={styles.howToPickUpDetails}>
+            {translateText(intl, 'offer.pick_up_info_description')}
+          </Text>
+          <Text style={styles.howToPickUpTitle}>
+            {translateText(intl, 'offer.pick_up_info_windows_header')}
+          </Text>
+          <Text style={styles.howToPickUpDetails}>
+            {`${translateText(intl, 'offer.from')} `}
+            {RestaurantService.formatPickUpWindowDate(foodBox.pickUpFrom)}
+            {` ${translateText(intl, 'offer.to')} `}
+            {RestaurantService.formatPickUpWindowDate(foodBox.pickUpTo)}
+          </Text>
+          <Text style={styles.howToPickUpTitle}>
+            {translateText(intl, 'offer.adress_dailog')}
+          </Text>
+          <Text style={styles.descriptionAddressDialog}>
+            <TouchableOpacity
+              style={styles.addressWrapper}
+              onPress={() => showOnMap({location: {latitude: restaurant.latitude, longitude: restaurant.longitude}})}
+            >
+              <Image
+                style={styles.addressIcon}
+                source={icons.location}
+                resizeMode="contain"
+              />
+
+              <Text style={styles.howToPickUpDetails}>
+                {restaurant.address}
+              </Text>
+
+              <Image
+                style={styles.addressIcon}
+                source={icons.location}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          </Text>
+        </View>
+      </ScrollView>
+
+      <FBSpinner isVisible={visibleLoading}/>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  mainContentWrapper: {
+    paddingLeft: Utils.android ? 0 : 20,
+    paddingRight: Utils.android ? 0 : 20,
+  },
+  mainWrapper: {
+    paddingHorizontal: 20,
+  },
+  navigationWrapper: {
+    flexDirection: 'row',
+    position: 'relative',
+  },
+  navigationRestaurantNameWrapper: {
+    flex: 1,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingRight: 50,
+  },
+  navigationRestaurantNameText: {fontSize: 18},
+  boxImageWrapper: {},
+  boxImage: {
+    height: 220,
+    marginBottom: 20,
+  },
+  wrapBoxMeta: {
+    flexDirection: 'row',
+    flexGrow: 1,
+    justifyContent: 'space-between',
+    height: 50,
+  },
+  boxTitleText: {
+    fontWeight: '700',
+    // fontSize: 18,
+    flexWrap: 'wrap',
+  },
+  availableBoxesIndicatorWrapper: {
+    borderRadius: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 7,
+    paddingVertical: 10,
+    width: 80,
+    marginLeft: 10,
+  },
+  availableBoxesIndicatorText: {
+    color: 'white',
+    fontSize: 12,
+  },
+  pickUpTimeWrapper: {flexDirection: 'row', marginTop: 5},
+  pickUpTimeIcon: {width: 16, height: 16},
+  pickUpTimeText: {marginHorizontal: 5, fontSize: 12, fontWeight: '500'},
+  addressWrapper: {
+    flexDirection: 'row',
+    paddingBottom: 20,
+    paddingTop: 20,
+  },
+  addressText: {
+    flexGrow: 1,
+    fontSize: 12,
+    marginHorizontal: 5,
+    fontWeight: 'bold',
+  },
+  addressIcon: {
+    width: 16, height: 16,
+  },
+  wrapCategoryName: {
+    flexDirection: 'row',
+    marginBottom: 20,
+    marginTop: 10,
+  },
+  categoryName: {
+    fontSize: 12,
+  },
+  description: {
+    fontSize: 12,
+    lineHeight: 16,
+  },
+
+  allergens: {
+    marginTop: 15,
+    fontSize: 12,
+    lineHeight: 16,
+    fontWeight: 'bold',
+  },
+
+  h3: {
+    fontSize: 12,
+    lineHeight: 16,
+    fontWeight: 'bold',
+  },
+
+  categoryTitle: {
+    fontSize: 12,
+  },
+  WrapCategoryTitle: {
+    flexDirection: 'row',
+    marginTop: 15,
+  },
+  wrapQuantity: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  promoCode: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 15,
+  },
+  wrapPrice: {
+    flexDirection: 'row',
+    paddingHorizontal: 40,
+    alignItems: 'center',
+  },
+  wrapBtnOrder: {
+    backgroundColor: COLORS.primary,
+    paddingVertical: 12,
+    marginTop: 20,
+    borderRadius: 50,
+    marginLeft: 10,
+    marginRight: 10,
+  },
+  textOrder: {
+    color: COLORS.white,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 14,
+    backgroundColor: 'rgba(52, 52, 52, 0.0)',
+  },
+  minus: {
+    height: 35,
+    width: 35,
+  },
+  plus: {
+    height: 35,
+    width: 35,
+  },
+  wrapIconFastTime: {
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  iconFastTime: {
+    height: 70,
+  },
+  howToPickUpDetailsWrapper: {
+    marginTop: 10,
+  },
+  howToPickUpHeader: {
+    fontSize: SIZES.h2,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  howToPickUpDescription: {
+    marginTop: 20,
+    fontSize: 16,
+    textAlign: 'center',
+    color: COLORS.primary,
+    fontWeight: 'bold',
+    marginLeft: 30,
+    marginRight: 30,
+  },
+  howToPickUpTitle: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#707070',
+    marginBottom: 10,
+  },
+  howToPickUpDetails: {
+    color: COLORS.primary,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginBottom: 30,
+  },
+  addressDialog: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 30,
+    fontSize: 16,
+    color: '#707070',
+  },
+  descriptionAddressDialog: {
+    color: COLORS.primary,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginBottom: 80,
+    fontSize: 16,
+    marginTop: 7,
+    marginLeft: 30,
+    marginRight: 30,
+  },
+  countdownWrapper: {
+    marginTop: 10,
+    height: 40,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 5,
+  },
+  countdownIcon: {
+    width: 15,
+    height: 15,
+    tintColor: '#fff',
+    marginRight: 10,
+  },
+  countdownText: {fontSize: 13, color: '#fff', fontWeight: '700'},
+  buttonNewpassword: {
+    backgroundColor: '#0bd53a',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 45,
+    marginTop: 30,
+    marginBottom: 30,
+    width: Utils.width - 150,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    alignSelf: 'center',
+    //paddingVertical: 12,
+  },
+  codeInput: {
+    borderRadius: 10,
+    borderColor: '#9B9B9B',
+    borderWidth: 1,
+    padding: 2,
+    width: Utils.width / 2 + 30,
+    height: 38,
+    fontSize: 12,
+  },
+  buttonPromoCode: {
+    backgroundColor: '#0bd53a',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 45,
+    marginLeft: 20,
+    alignSelf: 'center',
+    height: 38,
+    width: Utils.width / 5,
+  },
+});
+export default Offer;

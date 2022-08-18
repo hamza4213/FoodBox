@@ -13,6 +13,10 @@ import com.foodobox.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import com.microsoft.codepush.react.CodePush;
+import android.content.IntentFilter;
+import io.rumors.reactnativesettings.RNSettingsPackage;
+import io.rumors.reactnativesettings.receivers.GpsLocationReceiver;
+import io.rumors.reactnativesettings.receivers.AirplaneModeReceiver;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -61,5 +65,8 @@ public class MainApplication extends Application implements ReactApplication {
     // If you opted-in for the New Architecture, we enable the TurboModule system
     ReactFeatureFlags.useTurboModules = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
     SoLoader.init(this, /* native exopackage */ false);
+
+    registerReceiver(new GpsLocationReceiver(), new IntentFilter("android.location.PROVIDERS_CHANGED"));
+    registerReceiver(new AirplaneModeReceiver(), new IntentFilter("android.intent.action.AIRPLANE_MODE"));
   }
 }

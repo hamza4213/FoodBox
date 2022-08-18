@@ -1,0 +1,79 @@
+import React from 'react';
+import {useAuth} from './AuthProvider';
+import {ActivityIndicator, ImageBackground, View} from 'react-native';
+import {Utils} from '../utils';
+import {images} from '../constants';
+
+import {NavigationContainer} from '@react-navigation/native';
+import SignInScreen from '../screens/Authorization/Login';
+import SignUpScreen from '../screens/Authorization/SignUp';
+import HomeTabs from '../navigation/homeTabs';
+import OrderFinalized from '../screens/OrderFinalized';
+import OrderError from '../screens/OrderError';
+import SideMenuContent from '../screens/SideMenuContent';
+import Profile from '../screens/Profile';
+import Offer from '../screens/Offer';
+import PaymentMethod from '../screens/PaymentMethod';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import {createStackNavigator} from '@react-navigation/stack';
+
+const Drawer = createDrawerNavigator();
+const AuthStack = createStackNavigator();
+// const AppStack = createStackNavigator();
+
+
+const FBRouter = () => {
+  const {authData, loading} = useAuth();
+
+  if (loading) {
+    return (
+      <ImageBackground
+        source={images.app_background}
+        style={{
+          flex: 1,
+          height: Utils.height,
+          width: Utils.width,
+        }}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <View style={{flex: 1, alignSelf: 'center'}}>
+            <ActivityIndicator size="large" color="#10D53A"/>
+          </View>
+        </View>
+      </ImageBackground>
+    );
+  }
+
+  if (!authData?.userToken) {
+    return (
+      <NavigationContainer>
+        <AuthStack.Navigator screenOptions={{
+          headerShown: false,
+          animationEnabled: false
+        }} initialRouteName={'SignInScreen'}>
+          <AuthStack.Screen name="SignInScreen" component={SignInScreen}/>
+          <AuthStack.Screen name="SignUpScreen" component={SignUpScreen}/>
+        </AuthStack.Navigator>
+      </NavigationContainer>
+    );
+  }
+
+  return (
+    <NavigationContainer>
+      <Drawer.Navigator
+        screenOptions={{headerShown: false}}
+        initialRouteName={'HomeTabs'}
+        drawerContent={props => <SideMenuContent {...props} />}
+      >
+        <Drawer.Screen name="HomeTabs" component={HomeTabs}/>
+        <Drawer.Screen name="Offer" component={Offer}/>
+        <Drawer.Screen name="Profile" component={Profile}/>
+        <Drawer.Screen name="PaymentMethod" component={PaymentMethod}/>
+        <Drawer.Screen name="OrderFinalized" component={OrderFinalized}/>
+        <Drawer.Screen name="OrderError" component={OrderError}/>
+      </Drawer.Navigator>
+    </NavigationContainer>
+  );
+
+};
+
+export default FBRouter;
