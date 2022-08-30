@@ -23,7 +23,7 @@ const CODE_PUSH_OPTIONS = {
   checkFrequency: CodePush.CheckFrequency.ON_APP_RESUME,
 };
 
-const FBApp = () => {
+let FBApp = () => {
   // const {signOut} = useAuth();
   // const dispatch = useDispatch();
   const selectedLocale = useSelector((state: FBRootState) => state.user.locale);
@@ -65,7 +65,7 @@ const FBApp = () => {
 
   return (
     <>
-      <IntlProvider messages={MessagesInBulgarian} locale={selectedLocale} defaultLocale={FBLocale.BG}>
+      <IntlProvider messages={messages[selectedLocale]} locale={selectedLocale} defaultLocale={FBLocale.BG}>
         <SafeAreaProvider initialMetrics={initialWindowMetrics}>
           <StatusBar
             barStyle={'dark-content'}
@@ -84,9 +84,8 @@ const FBApp = () => {
   );
 };
 
-// let app = FBApp;
-// if (!__DEV__) {
-//   app = CodePush(CODE_PUSH_OPTIONS)(FBApp);
-// }
+if (!__DEV__) {
+  FBApp = CodePush(CODE_PUSH_OPTIONS)(FBApp);
+}
 
 export default FBApp;

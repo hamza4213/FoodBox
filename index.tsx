@@ -20,6 +20,7 @@ import {AUTH_DATA_KEY} from './src/providers/AuthProvider';
 import {UserRepository} from './src/repositories/UserRepository';
 import {createStore} from 'redux';
 import {name as appName} from './app.json';
+import {Settings as FBSettings} from 'react-native-fbsdk-next';
 
 
 const migrations = {
@@ -95,11 +96,10 @@ const persistConfig = {
 };
 
 const persistedReducer = persistReducer(persistConfig, allReducer);
-
 let store = createStore(persistedReducer);
-
-
 let persistor = persistStore(store);
+
+FBSettings.initializeSDK();
 
 const ReduxApp = () => (
   <Provider store={store}>

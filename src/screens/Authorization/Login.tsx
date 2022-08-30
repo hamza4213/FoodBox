@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {
-  Button,
   Image,
   ImageBackground,
   Platform,
@@ -16,7 +15,7 @@ import {COLORS, images} from '../../constants';
 import {Utils} from '../../utils';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
-import {AccessToken, AppEventsLogger, LoginManager} from 'react-native-fbsdk-next';
+import {AccessToken, LoginManager} from 'react-native-fbsdk-next';
 import {showToast, showToastError} from '../../common/FBToast';
 import {appleAuth, AppleButton} from '@invertase/react-native-apple-authentication';
 import FBButton from '../../components/common/button';
@@ -24,10 +23,7 @@ import FBSpinner from '../../components/common/spinner';
 import ForgotPasswordDialog from '../../components/login/ForgotPasswordDialog';
 import {NotAuthenticatedUserRepository} from '../../repositories/UserRepository';
 import {useAuth} from '../../providers/AuthProvider';
-import {
-  analyticsPageOpen,
-  analyticsSocialLogin
-} from '../../analytics';
+import {analyticsPageOpen, analyticsSocialLogin} from '../../analytics';
 import {FormattedMessage, useIntl} from 'react-intl';
 import RNPickerSelect from 'react-native-picker-select';
 import {useForm} from 'react-hook-form';
@@ -45,7 +41,6 @@ import BGFlag from '../../../assets/flags/bg.svg';
 import ENFLag from '../../../assets/flags/us.svg';
 // @ts-ignore
 import ROFLag from '../../../assets/flags/ro.svg';
-import analytics from '@react-native-firebase/analytics';
 
 
 interface LoginProps {
@@ -117,7 +112,11 @@ const Login = ({navigation}: LoginProps) => {
       let tt = await GoogleSignin.getTokens();
 
       const isAuthorized = !!tt.accessToken;
-      await analyticsSocialLogin({type: 'google', step: 'external_completed', data: {isAuthorized, isCancelled: false}});
+      await analyticsSocialLogin({
+        type: 'google',
+        step: 'external_completed',
+        data: {isAuthorized, isCancelled: false},
+      });
 
       if (tt.accessToken) {
         let email = result.user.email;
@@ -141,15 +140,21 @@ const Login = ({navigation}: LoginProps) => {
   };
 
   const onFacebookLogin = async () => {
+    console.log('onFacebookLogin 1');
     setVisibleLoading(true);
     await analyticsSocialLogin({type: 'fb', step: 'initiated'});
+    console.log('onFacebookLogin 2');
     try {
       if (Platform.OS === 'android') {
-        LoginManager.setLoginBehavior('web_only');
+        LoginManager.setLoginBehavior('native_with_fallback');
       }
-      LoginManager.logOut();
-      const loginResult = await LoginManager.logInWithPermissions(['email', 'public_profile']);
 
+      console.log('onFacebookLogin 3');
+
+      LoginManager.logOut();
+      console.log('onFacebookLogin 4');
+      const loginResult = await LoginManager.logInWithPermissions(['email', 'public_profile']);
+      console.log('onFacebookLogin 5', loginResult);
       if (loginResult.isCancelled) {
         await analyticsSocialLogin({type: 'fb', step: 'completed', data: {isAuthorized: false, isCancelled: true}});
         showToastError(translateText(intl, 'login.social_refused'));
@@ -187,7 +192,7 @@ const Login = ({navigation}: LoginProps) => {
 
   const onAppleLogin = async () => {
     setVisibleLoading(true);
-    
+
     await analyticsSocialLogin({type: 'apple', step: 'initiated'});
     try {
       // performs login request
@@ -198,7 +203,11 @@ const Login = ({navigation}: LoginProps) => {
 
       const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
       const isAuthorized = credentialState === appleAuth.State.AUTHORIZED;
-      await analyticsSocialLogin({type: 'apple', step: 'external_completed', data: {isAuthorized: isAuthorized, isCancelled: false}});
+      await analyticsSocialLogin({
+        type: 'apple',
+        step: 'external_completed',
+        data: {isAuthorized: isAuthorized, isCancelled: false},
+      });
 
       if (isAuthorized) {
         const appleUid = appleAuthRequestResponse.user;
@@ -340,24 +349,6 @@ const Login = ({navigation}: LoginProps) => {
             <FBButton
               onClick={handleSubmit(doLogin)}
               title={translateText(intl, 'login.login')}
-            />
-
-            <Button
-              title="Send Events"
-              onPress={async () => {
-                AppEventsLogger.logEvent('test_integration', {blqt: 1});
-                await analytics().logEvent('test_integration', {blqt:1});
-                console.log('events sent');
-              }}
-            />
-
-            <Button
-              title="Send Events"
-              onPress={async () => {
-                AppEventsLogger.logEvent('test_integration', {blqt: 1});
-                await analytics().logEvent('test_integration', {blqt:1});
-                console.log('events sent');
-              }}
             />
 
             <View style={{alignItems: 'center', marginTop: 30}}>
