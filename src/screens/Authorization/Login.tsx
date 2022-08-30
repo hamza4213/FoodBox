@@ -191,17 +191,24 @@ const Login = ({navigation}: LoginProps) => {
   };
 
   const onAppleLogin = async () => {
+    console.log('onAppleLogin start');
     setVisibleLoading(true);
 
     await analyticsSocialLogin({type: 'apple', step: 'initiated'});
     try {
       // performs login request
+
       const appleAuthRequestResponse = await appleAuth.performRequest({
         requestedOperation: appleAuth.Operation.LOGIN,
         requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
       });
 
+      console.log('onAppleLogin appleAuthRequestResponse', appleAuthRequestResponse);
+
       const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
+
+      console.log('onAppleLogin credentialState', credentialState);
+
       const isAuthorized = credentialState === appleAuth.State.AUTHORIZED;
       await analyticsSocialLogin({
         type: 'apple',
@@ -224,6 +231,7 @@ const Login = ({navigation}: LoginProps) => {
         await analyticsSocialLogin({type: 'apple', step: 'refused'});
       }
     } catch (error) {
+      console.log('onAppleLogin error', error);
       await analyticsSocialLogin({type: 'apple', step: 'failed'});
       showToastError(translateText(intl, 'backenderror.user_login_social_error'));
     }
