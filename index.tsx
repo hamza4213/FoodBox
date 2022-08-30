@@ -99,8 +99,6 @@ const persistedReducer = persistReducer(persistConfig, allReducer);
 let store = createStore(persistedReducer);
 let persistor = persistStore(store);
 
-FBSettings.initializeSDK();
-
 const ReduxApp = () => (
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>

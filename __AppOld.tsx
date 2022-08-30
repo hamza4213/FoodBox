@@ -82,34 +82,37 @@ const App = () => {
     checkAppCenter();
   }, []);
 
-  const setupFB = async (attEnabled: boolean) => {
-    console.log('setupFB ', attEnabled);
-    if (attEnabled) {
-      FBSettings.setAppID('1532703837120978');
-      FBSettings.initializeSDK();
-      await FBSettings.setAdvertiserTrackingEnabled(attEnabled);
-    }
-  };
-
-  const checkAttPermissions = async () => {
-    console.log('checkAttPermissions');
-    const att_check = await check(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
-    console.log('att_check ', att_check);
-    if (att_check === 'granted' || att_check === 'unavailable') {
-      await setupFB(true);
-    } else {
-      const att_request = await request(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
-      console.log('att_request ', att_request);
-
-      if (att_request === 'granted') {
-        await setupFB(true);
-      }
-    }
-
-  };
-
+  
+  
   const state = useAppState();
   useEffect(() => {
+    const checkAttPermissions = async () => {
+      console.log('checkAttPermissions');
+      const att_check = await check(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
+      console.log('att_check ', att_check);
+      if (att_check === 'granted' || att_check === 'unavailable') {
+        await setupFB(true);
+      } else {
+        const att_request = await request(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
+        console.log('att_request ', att_request);
+
+        if (att_request === 'granted') {
+          await setupFB(true);
+        }
+      }
+
+    };
+
+    const setupFB = async (attEnabled: boolean) => {
+      console.log('setupFB ', attEnabled);
+      if (attEnabled) {
+        FBSettings.setAppID('1532703837120978');
+        FBSettings.initializeSDK();
+        await FBSettings.setAdvertiserTrackingEnabled(attEnabled);
+      }
+    };
+    
+    
     if (state === 'active' && Platform.OS === 'ios') {
       checkAttPermissions();
     }

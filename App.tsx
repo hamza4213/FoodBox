@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
-import {StatusBar} from 'react-native';
+import {Platform, StatusBar} from 'react-native';
 import 'react-native-gesture-handler';
 import {initialWindowMetrics, SafeAreaProvider} from 'react-native-safe-area-context';
 import CodePush from 'react-native-code-push';
@@ -13,6 +13,9 @@ import MessagesInBulgarian from './src/lang/bg';
 import {FBLocale} from './src/redux/user/reducer';
 import {FBRootState} from './src/redux/store';
 import Toast from 'react-native-toast-message';
+import {useAppState} from '@react-native-community/hooks';
+import {check, PERMISSIONS, request} from 'react-native-permissions';
+import {Settings as FBSettings} from 'react-native-fbsdk-next';
 
 const messages = {
   [FBLocale.BG]: MessagesInBulgarian,
@@ -30,37 +33,75 @@ let FBApp = () => {
 
   /** Intercept any unauthorized request.
    * dispatch logout action accordingly **/
-  // const UNAUTHORIZED = 401;
-  // axiosClient.interceptors.response.use(
-  //   response => {
-  //     if (response && response.data) {
-  //       return response.data;
-  //     }
-  //     return response;
-  //   },
-  //   error => {
-  //     if (error && error.response) {
-  //       const status = error.response?.status;
-  //       if (status === UNAUTHORIZED) {
-  //         // signOut();
-  //         return
-  //       }
-  //
-  //       throw error.response.data;
-  //     }
-  //
-  //     throw error;
-  //   }
-  // );
+    // const UNAUTHORIZED = 401;
+    // axiosClient.interceptors.response.use(
+    //   response => {
+    //     if (response && response.data) {
+    //       return response.data;
+    //     }
+    //     return response;
+    //   },
+    //   error => {
+    //     if (error && error.response) {
+    //       const status = error.response?.status;
+    //       if (status === UNAUTHORIZED) {
+    //         // signOut();
+    //         return
+    //       }
+    //
+    //       throw error.response.data;
+    //     }
+    //
+    //     throw error;
+    //   }
+    // );
 
-  // useEffect(() => {
-  //   CodePush.sync(
-  //     {installMode: CodePush.InstallMode.IMMEDIATE},
-  //     (status) => {
-  //       console.log('codepush status', status);
-  //     },
-  //   );
-  // }, []);
+    // useEffect(() => {
+    //   CodePush.sync(
+    //     {installMode: CodePush.InstallMode.IMMEDIATE},
+    //     (status) => {
+    //       console.log('codepush status', status);
+    //     },
+    //   );
+    // }, []);
+
+  const state = useAppState();
+  useEffect(() => {
+    const checkAttPermissions = async () => {
+      console.log('checkAttPermissions');
+      const att_check = await check(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
+      console.log('att_check ', att_check);
+      if (att_check === 'granted' || att_check === 'unavailable') {
+        await setupFB(true);
+      } else {
+        const att_request = await request(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
+        console.log('att_request ', att_request);
+
+        if (att_request === 'granted') {
+          await setupFB(true);
+        } else {
+          await setupFB(false);
+        }
+      }
+
+    };
+
+    const setupFB = async (attEnabled: boolean) => {
+      console.log('setupFB ', attEnabled);
+
+      FBSettings.setAppID('1532703837120978');
+      FBSettings.initializeSDK();
+
+      await FBSettings.setAdvertiserTrackingEnabled(attEnabled);
+    };
+
+    if (state === 'active' && Platform.OS === 'ios') {
+      console.log('state ', state);
+      checkAttPermissions();
+    }
+    return () => {
+    };
+  }, [state]);
 
 
   return (
