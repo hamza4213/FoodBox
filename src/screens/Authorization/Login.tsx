@@ -15,7 +15,7 @@ import {COLORS, images} from '../../constants';
 import {Utils} from '../../utils';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
-import {AccessToken, LoginManager} from 'react-native-fbsdk-next';
+import {AccessToken, LoginButton, LoginManager} from 'react-native-fbsdk-next';
 import {showToast, showToastError} from '../../common/FBToast';
 import {appleAuth, AppleButton} from '@invertase/react-native-apple-authentication';
 import FBButton from '../../components/common/button';
@@ -359,7 +359,6 @@ const Login = ({navigation}: LoginProps) => {
               </Text>
             </View>
 
-            {/* TODO: extend FBButton to allow customization*/}
             <TouchableOpacity
               style={styles.facebookLoginWrapper}
               onPress={() => onFacebookLogin()}
