@@ -95,7 +95,7 @@ export default {
   'offer_confirm.text': 'Твоята Foodobox e изненада. Ти си на път да дадеш втори живот на храната. Тъй като не можем да гарантираме с точност какви продукти ще съдържа твоята кутия, при алергии или нужда от информация, моля свържи се с обекта на посочения номер.',
 
   'sort.lowest_price_first': 'Цена',
-  'sort.closest_first': 'Най-близо',
+  'sort.closest_distance_first': 'Най-близо',
   'sort.starting_soonest_first': 'Започващи',
   'sort.closing_soonest_first': 'Изтичащи',
 

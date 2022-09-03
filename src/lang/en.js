@@ -95,7 +95,7 @@ export default {
   'offer_confirm.text': 'You Foodobox is a surprise box full of surplus food. You will give this food a second chance. This means we are not able to guarantee exactly what you will get. In case you have allergies or need other information, please ask the waiter in the location when you pick up your Foodobox.',
 
   'sort.lowest_price_first': 'Cheapest',
-  'sort.closest_first': 'Closest',
+  'sort.closest_distance_first': 'Closest',
   'sort.starting_soonest_first': 'Starting',
   'sort.closing_soonest_first': 'Ending',
 
