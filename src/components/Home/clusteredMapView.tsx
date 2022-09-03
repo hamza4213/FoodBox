@@ -1,5 +1,5 @@
 import MapView from 'react-native-map-clustering';
-import {Image, Platform, StyleSheet, Text, View} from 'react-native';
+import {AppState, Image, PermissionsAndroid, Platform, StyleSheet, Text, View} from 'react-native';
 import {Callout, Marker} from 'react-native-maps';
 import {API_ENDPOINT_PRODUCT_PHOTOS} from '../../network/Server';
 import React, {useEffect, useState} from 'react';
@@ -18,6 +18,8 @@ import {useIntl} from 'react-intl';
 import {useAppState} from '@react-native-community/hooks';
 // @ts-ignore
 import RNSettings from 'react-native-settings';
+import {check as checkPermission, PERMISSIONS, request as requestPermission} from 'react-native-permissions';
+import {FBGeoLocation} from '../../models/FBGeoLocation';
 
 enum ZoomLevel {
   CLOSE,
@@ -50,11 +52,13 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
     );
   });
 
-  const appState = useAppState();
   useEffect(() => {
     const isLocationServiceEnabled = async () => {
-      const response = await RNSettings.getSetting(RNSettings.LOCATION_SETTING);
-      return response === 'ENABLED';
+      const locationSettingStatus = await RNSettings.getSetting(RNSettings.LOCATION_SETTING);
+      const locationPermissionRequestStatus = await checkPermission(
+        Platform.OS === 'ios' ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION
+      );
+      return locationSettingStatus === 'ENABLED' && locationPermissionRequestStatus !== 'unavailable';
     };
 
     const getUserLocation = async () => {
@@ -62,12 +66,50 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
 
       if (isLocationEnabled) {
         if (Platform.OS === 'ios') {
-          getIOSLocation();
+          await getIOSLocation();
         } else if (Platform.OS === 'android') {
-
+          await getAndroidLocation();
         }
       } else {
         // TODO: show dialog explaining the issue and prompt for enabling
+      }
+    };
+    
+    const isAndroidLocationPermissionGranted = async () => {
+      const locationPermissionStatus = await checkPermission(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+
+      if (locationPermissionStatus === 'granted' ) {
+        // user has granted it
+        return true;
+      } else if (locationPermissionStatus === 'denied') {
+        // must ask user
+        const locationPermissionRequest = await requestPermission(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+
+        if (locationPermissionRequest === 'granted') {
+          // user has granted it
+          return true;
+        }
+      }
+      
+      return false;
+    };
+    
+    const getAndroidLocation = async () => {
+      if (await isAndroidLocationPermissionGranted()) {
+        Geolocation.watchPosition(
+          (position) => {
+            handleUserLocationUpdate({currentUserLocation: position.coords});
+          },
+          () => {
+            handleUserLocationError();
+          },
+          {
+            enableHighAccuracy: false,
+            timeout: 15000,
+            maximumAge: 10000,
+            distanceFilter: 100,
+          },
+        );
       }
     };
 
@@ -76,19 +118,10 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
       Geolocation.requestAuthorization();
       Geolocation.watchPosition(
         (position) => {
-          const currentUserLocation = position.coords;
-
-          // ensure restaurants are shown closest to last known location on first load until we have real location
-          dispatch(userUpdateLocationAction({userLocation: currentUserLocation}));
-
-          // update restaurants distance to user
-          dispatch(restaurantDistanceUpdateAction({userLocation: currentUserLocation}));
-
-          // since we have access to the location show it on the map
-          setShowUserLocation(true);
+          handleUserLocationUpdate({currentUserLocation: position.coords});
         },
         () => {
-          setShowUserLocation(false);
+          handleUserLocationError();
         },
         {
           enableHighAccuracy: false,
@@ -98,16 +131,30 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
         },
       );
     };
+    
+    const handleUserLocationError = () => {
+      setShowUserLocation(false);
+    };
+    
+    const handleUserLocationUpdate = (params: {currentUserLocation: FBGeoLocation}) => {
+      const {currentUserLocation} = params;
+      // ensure restaurants are shown closest to last known location on first load until we have real location
+      dispatch(userUpdateLocationAction({userLocation: currentUserLocation}));
 
-    if (appState === 'active') {
-      getUserLocation();
-    }
+      // update restaurants distance to user
+      dispatch(restaurantDistanceUpdateAction({userLocation: currentUserLocation}));
 
+      // since we have access to the location show it on the map
+      setShowUserLocation(true);
+    };
+    
+    getUserLocation();  
+    
     return () => {
       Geolocation.stopObserving();
     };
-  }, [appState, dispatch]);
-
+  }, [dispatch]);
+  
   return (
     <>
       <MapView

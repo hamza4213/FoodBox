@@ -99,7 +99,10 @@ let store = createStore(persistedReducer);
 let persistor = persistStore(store);
 
 // ignore stupid warning from Geolocation library
-LogBox.ignoreLogs(['Warning: Called stopObserving with existing subscriptions']);
+LogBox.ignoreLogs([
+  'Warning: Called stopObserving with existing subscriptions',
+  '`new NativeEventEmitter()` was called with a non-null argument without'
+]);
 
 const ReduxApp = () => (
   <Provider store={store}>
