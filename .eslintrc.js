@@ -3,6 +3,9 @@ module.exports = {
   extends: '@react-native-community',
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
+  rules: {
+    'no-trailing-spaces': [1, {skipBlankLines: true}],
+  },
   overrides: [
     {
       files: ['*.ts', '*.tsx'],

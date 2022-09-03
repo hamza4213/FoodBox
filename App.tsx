@@ -14,7 +14,7 @@ import {FBLocale} from './src/redux/user/reducer';
 import {FBRootState} from './src/redux/store';
 import Toast from 'react-native-toast-message';
 import {useAppState} from '@react-native-community/hooks';
-import {check, PERMISSIONS, request} from 'react-native-permissions';
+import {check as checkPermission, PERMISSIONS, request as requestPermission} from 'react-native-permissions';
 import {Settings as FBSettings} from 'react-native-fbsdk-next';
 
 const messages = {
@@ -26,84 +26,39 @@ const CODE_PUSH_OPTIONS = {
   checkFrequency: CodePush.CheckFrequency.ON_APP_RESUME,
 };
 
+// initialize the FB sdk
+FBSettings.initializeSDK();
+
 let FBApp = () => {
-  // const {signOut} = useAuth();
-  // const dispatch = useDispatch();
   const selectedLocale = useSelector((state: FBRootState) => state.user.locale);
 
-  /** Intercept any unauthorized request.
-   * dispatch logout action accordingly **/
-    // const UNAUTHORIZED = 401;
-    // axiosClient.interceptors.response.use(
-    //   response => {
-    //     if (response && response.data) {
-    //       return response.data;
-    //     }
-    //     return response;
-    //   },
-    //   error => {
-    //     if (error && error.response) {
-    //       const status = error.response?.status;
-    //       if (status === UNAUTHORIZED) {
-    //         // signOut();
-    //         return
-    //       }
-    //
-    //       throw error.response.data;
-    //     }
-    //
-    //     throw error;
-    //   }
-    // );
-
-    // useEffect(() => {
-    //   CodePush.sync(
-    //     {installMode: CodePush.InstallMode.IMMEDIATE},
-    //     (status) => {
-    //       console.log('codepush status', status);
-    //     },
-    //   );
-    // }, []);
-
-  const state = useAppState();
+  const appState = useAppState();
   useEffect(() => {
-    const checkAttPermissions = async () => {
-      console.log('checkAttPermissions');
-      const att_check = await check(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
-      console.log('att_check ', att_check);
-      if (att_check === 'granted' || att_check === 'unavailable') {
-        await setupFB(true);
-      } else {
-        const att_request = await request(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
-        console.log('att_request ', att_request);
+    const setupFB = async (params: {attEnabled: boolean}) => {
+      await FBSettings.setAdvertiserTrackingEnabled(params.attEnabled);
+    };
 
-        if (att_request === 'granted') {
-          await setupFB(true);
+    const checkAttPermission = async () => {
+      const att_check = await checkPermission(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
+      if (att_check === 'granted' || att_check === 'unavailable') {
+        await setupFB({attEnabled: true});
+      } else if (att_check === 'blocked') {
+        await setupFB({attEnabled: true});
+      } else {
+        const att_request = await requestPermission(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
+        if (att_request === 'granted' || att_request === 'unavailable') {
+          await setupFB({attEnabled: true});
         } else {
-          await setupFB(false);
+          await setupFB({attEnabled: true});
         }
       }
-
     };
 
-    const setupFB = async (attEnabled: boolean) => {
-      console.log('setupFB ', attEnabled);
-
-      FBSettings.setAppID('1532703837120978');
-      FBSettings.initializeSDK();
-
-      await FBSettings.setAdvertiserTrackingEnabled(attEnabled);
-    };
-
-    if (state === 'active' && Platform.OS === 'ios') {
-      console.log('state ', state);
-      checkAttPermissions();
+    if (appState === 'active' && Platform.OS === 'ios') {
+      checkAttPermission();
     }
-    return () => {
-    };
-  }, [state]);
-
-
+  }, [appState]);
+  
   return (
     <>
       <IntlProvider messages={messages[selectedLocale]} locale={selectedLocale} defaultLocale={FBLocale.BG}>
