@@ -13,10 +13,10 @@ import {
   UserUpdateLocaleAction,
   UserUpdateLocationAction,
   UserUpdateLocPermissionAction,
-  USER_UPDATE_NOTIFICATION_PERMISSION, UserUpdateNotificationPermission
-} from "./actions";
-import {FBUser} from "../../models/User";
-import {FBGeoLocation} from "../../models/FBGeoLocation";
+  USER_UPDATE_NOTIFICATION_PERMISSION, UserUpdateNotificationPermission,
+} from './actions';
+import {FBUser} from '../../models/User';
+import {FBGeoLocation} from '../../models/FBGeoLocation';
 
 export enum FBLocale {
   EN = 'en',
@@ -40,7 +40,7 @@ export enum SystemPermissionStatus {
 
 export interface UserState {
   user: FBUser | null;
-  location: FBGeoLocation;
+  userLocation: FBGeoLocation;
   locationPermission: {
     userAnswer: UserPermissionAnswer;
     systemPermission: SystemPermissionStatus;
@@ -58,86 +58,86 @@ export interface UserState {
 
 export const userInitialState: UserState = {
   user: null,
-  location: {
+  userLocation: {
     latitude: 42.697572,
     longitude: 23.321806,
   },
   locationPermission: {
     userAnswer: UserPermissionAnswer.UNSET,
-    systemPermission: SystemPermissionStatus.UNKNOWN
+    systemPermission: SystemPermissionStatus.UNKNOWN,
   },
   notificationPermission: {
     userAnswer: UserPermissionAnswer.UNSET,
-    systemPermission: SystemPermissionStatus.UNKNOWN
+    systemPermission: SystemPermissionStatus.UNKNOWN,
   },
   defaultCity: {
     latitude: 0,
     longitude: 0,
   },
-  locale: FBLocale.BG
+  locale: FBLocale.BG,
 };
 
 
 const handleUserUnsetUserAction = (state: UserState, data: UserUnsetUserAction['data']): UserState => {
   return {
     ...state,
-    user: null
+    user: null,
   };
 };
 
 const handleUserSetUserAction = (state: UserState, data: UserSetUserAction['data']): UserState => {
   return {
     ...state,
-    user: data.user
+    user: data.user,
   };
 };
 
 const handleUserUpdateProfileAction = (state: UserState, data: UserUpdateProfileAction['data']): UserState => {
   return {
     ...state,
-    user: data.user
+    user: data.user,
   };
 };
 
-const handleUserUpdateLocaleAction = (state: UserState, data: UserUpdateLocaleAction['data']) : UserState => {
+const handleUserUpdateLocaleAction = (state: UserState, data: UserUpdateLocaleAction['data']): UserState => {
   return {
     ...state,
-    locale: data.locale
+    locale: data.locale,
   };
 };
 
 const handleUserUpdateLocationAction = (state: UserState, data: UserUpdateLocationAction['data']): UserState => {
   return {
     ...state,
-    location: data.location
+    userLocation: data.userLocation,
   };
 };
 
 const handleUserUpdateLocPermissionAction = (state: UserState, data: UserUpdateLocPermissionAction['data']): UserState => {
   state.locationPermission = {
     ...state.locationPermission,
-    ...data
+    ...data,
   };
-  
+
   return {
-    ...state
+    ...state,
   };
 };
 
 const handleUserUpdateNotificationPermissionAction = (state: UserState, data: UserUpdateNotificationPermission['data']): UserState => {
   state.notificationPermission = {
     ...state.notificationPermission,
-    ...data
+    ...data,
   };
-  
+
   return {
-    ...state
+    ...state,
   };
 };
 
 const userReducer = (
   state: UserState = userInitialState,
-  action: UserAction
+  action: UserAction,
 ): UserState => {
   switch (action.type) {
     case USER_UPDATE_LOC_PERMISSION:
@@ -157,7 +157,7 @@ const userReducer = (
     default:
       return state;
   }
-}
+};
 
 
 export default userReducer;

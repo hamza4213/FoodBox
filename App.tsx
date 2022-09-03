@@ -39,14 +39,14 @@ let FBApp = () => {
     };
 
     const checkAttPermission = async () => {
-      const att_check = await checkPermission(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
-      if (att_check === 'granted' || att_check === 'unavailable') {
+      const attCheck = await checkPermission(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
+      if (attCheck === 'granted' || attCheck === 'unavailable') {
         await setupFB({attEnabled: true});
-      } else if (att_check === 'blocked') {
+      } else if (attCheck === 'blocked') {
         await setupFB({attEnabled: true});
       } else {
-        const att_request = await requestPermission(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
-        if (att_request === 'granted' || att_request === 'unavailable') {
+        const attRequest = await requestPermission(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
+        if (attRequest === 'granted' || attRequest === 'unavailable') {
           await setupFB({attEnabled: true});
         } else {
           await setupFB({attEnabled: true});

@@ -9,17 +9,18 @@ import {
   RestaurantFetchAction,
   RestaurantSortAction,
   RestaurantUpdateFiltersAction,
-  RestaurantUpdateQuantityAction
-} from "./actions";
-import {RestaurantHomeListItem} from "../../models/Restaurant";
-import {DietType, FoodType} from "../../models/FoodBox";
-import {orderBy, set} from "lodash";
+  RestaurantUpdateQuantityAction,
+} from './actions';
+import {RestaurantHomeListItem} from '../../models/Restaurant';
+import {DietType, FoodType} from '../../models/FoodBox';
+import {orderBy, set} from 'lodash';
+import getDistanceToLocation from '../../utils/getDistanceToLocation';
 
 export interface FBRestaurantFilters {
-  isRestaurantOpen : {
+  isRestaurantOpen: {
     isEnabled: boolean;
     isOpen: boolean;
-  }
+  };
   hasRestaurantAvailableBoxes: {
     isEnabled: boolean;
     hasAvailableBoxes: boolean;
@@ -49,20 +50,20 @@ export interface FBRestaurantFilters {
     isEnabled: boolean;
     searchTerm: string | null;
     userInput: string;
-  }
+  };
 }
 
 export interface RestaurantFilters {
   active: {
-    activeOffers : boolean;
+    activeOffers: boolean;
   },
-  primary : {
+  primary: {
     1: boolean;
     2: boolean;
     3: boolean;
     4: boolean;
   },
-  secondary : {
+  secondary: {
     5: boolean;
     6: boolean;
   },
@@ -94,89 +95,104 @@ export const restaurantInitialState: RestaurantState = {
       5: false,
     },
     time: {
-      timeInterval: [0.0, 24.0]
-    }
+      timeInterval: [0.0, 24.0],
+    },
   },
   newFilters: {
     isRestaurantOpen: {
       isEnabled: true,
-      isOpen: true
+      isOpen: true,
     },
     hasRestaurantAvailableBoxes: {
       isEnabled: true,
-      hasAvailableBoxes: true
+      hasAvailableBoxes: true,
     },
     isNotFinished: {
       isEnabled: true,
-      isNotFinished: true
+      isNotFinished: true,
     },
     canCheckout: {
       isEnabled: true,
-      canCheckout: true
+      canCheckout: true,
     },
     pickUpPeriod: {
       isEnabled: true,
-      pickUpStartTimeLowerLimit: new Date(new Date().setHours(1,0,1)).getTime(),
-      pickUpEndTimeUpperLimit: new Date(new Date().setHours(23,59,59)).getTime()
+      pickUpStartTimeLowerLimit: new Date(new Date().setHours(1, 0, 1)).getTime(),
+      pickUpEndTimeUpperLimit: new Date(new Date().setHours(23, 59, 59)).getTime(),
     },
     foodType: {
       isEnabled: true,
-      types: [FoodType.GROCERIES, FoodType.OTHERS, FoodType.MEALS, FoodType.PASTRIES]
+      types: [FoodType.GROCERIES, FoodType.OTHERS, FoodType.MEALS, FoodType.PASTRIES],
     },
     dietType: {
       isEnabled: true,
-      types: []
+      types: [],
     },
     search: {
       isEnabled: true,
       searchTerm: null,
-      userInput: ''
-    }
-  }
+      userInput: '',
+    },
+  },
 };
 
-const handleRestaurantUpdateQuantityAction = (state: RestaurantState, data: RestaurantUpdateQuantityAction['data'] ): RestaurantState  => {
-  let updatedBox; 
+const handleRestaurantUpdateQuantityAction = (state: RestaurantState, data: RestaurantUpdateQuantityAction['data']): RestaurantState => {
+  let updatedBox;
   for (let restaurant of state.restaurant) {
-    if (updatedBox) break;
-    
+    if (updatedBox) {
+      break;
+    }
+
     if (restaurant.id === data.restaurantId) {
-      
+
       for (let box of restaurant.products) {
-        if (updatedBox) break;
-        
+        if (updatedBox) {
+          break;
+        }
+
         if (box.id === data.boxId) {
           updatedBox = box;
         }
       }
     }
   }
-  
+
   if (updatedBox) {
-    updatedBox.quantity += data.quantityUpdate;  
+    updatedBox.quantity += data.quantityUpdate;
   }
-  
+
   return {
     ...state,
     restaurant: state.restaurant,
   };
-}
+};
 
 const handleRestaurantDistanceUpdateAction = (state: RestaurantState, data: RestaurantDistanceUpdateAction['data']): RestaurantState => {
+  
+  const restaurants = state.restaurant.map(restaurant => {
+    return {
+      ...restaurant,
+      distance: getDistanceToLocation({
+        userLocation: data.userLocation,
+        location: {latitude: restaurant.latitude, longitude: restaurant.longitude},
+      }),
+    };
+  });
+
   return {
     ...state,
-    restaurant: data.restaurants,
-  }
-}
+    restaurant: restaurants,
+  };
+};
 
 const handleRestaurantFetchAction = (state: RestaurantState, data: RestaurantFetchAction['data']): RestaurantState => {
   return {
     ...state,
     restaurant: data.restaurants,
   };
-}
+};
 
-const handleRestaurantUpdateFiltersAction = (state: RestaurantState, data: RestaurantUpdateFiltersAction['data'] ): RestaurantState => {
+const handleRestaurantUpdateFiltersAction = (state: RestaurantState, data: RestaurantUpdateFiltersAction['data']): RestaurantState => {
   set(state, `newFilters.${data.filterCategory}.${data.filterCategoryProperty}`, data.newValue);
   return {
     ...state,
@@ -186,18 +202,18 @@ const handleRestaurantUpdateFiltersAction = (state: RestaurantState, data: Resta
 const handleRestaurantSortAction = (state: RestaurantState, data: RestaurantSortAction['data']): RestaurantState => {
   let restaurants = [...state.restaurant];
   restaurants = orderBy(restaurants, data.sortOption.id, 'asc');
-  
+
   return {
     ...state,
-    restaurant: restaurants
-  }
-}
+    restaurant: restaurants,
+  };
+};
 
 
-const restaurantReducer = ( 
-  state: RestaurantState = restaurantInitialState, 
-  action: RestaurantAction 
-): RestaurantState  => {
+const restaurantReducer = (
+  state: RestaurantState = restaurantInitialState,
+  action: RestaurantAction,
+): RestaurantState => {
   switch (action.type) {
     case RESTAURANT_UPDATE_QUANTITY: {
       return handleRestaurantUpdateQuantityAction(state, action.data);

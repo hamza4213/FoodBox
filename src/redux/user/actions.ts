@@ -63,7 +63,7 @@ export const userUpdateLocaleAction = (params: UserUpdateLocaleAction['data']): 
 export const USER_UPDATE_LOCATION: UserActionType = 'UPDATE_LOCATION';
 
 export interface UserUpdateLocationAction extends UserAction {
-  data: { location: FBGeoLocation };
+  data: { userLocation: FBGeoLocation };
 }
 
 export const userUpdateLocationAction = (params: UserUpdateLocationAction['data']): UserUpdateLocationAction => {

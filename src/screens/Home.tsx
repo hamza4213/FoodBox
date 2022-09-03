@@ -1,14 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  ActivityIndicator,
-  Dimensions,
-  Platform,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {ActivityIndicator, Dimensions, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import 'react-native-gesture-handler';
 import {showToastError} from '../common/FBToast';
@@ -22,7 +13,7 @@ import RestaurantListSortOptions from '../components/Home/restaurantListSortOpti
 import ExpandListButton from '../components/Home/expandListButton';
 import {FBRootState} from '../redux/store';
 import ClusteredMapView from '../components/Home/clusteredMapView';
-import {userSetUserAction, userUpdateLocPermissionAction} from '../redux/user/actions';
+import {userSetUserAction} from '../redux/user/actions';
 import {useAuth} from '../providers/AuthProvider';
 import FbModal from '../components/common/fbModal';
 import {WebView} from 'react-native-webview';
@@ -33,10 +24,6 @@ import {COLORS} from '../constants';
 import {useIntl} from 'react-intl';
 import {translateText} from '../lang/translate';
 import {UserRepository} from '../repositories/UserRepository';
-import {check, PERMISSIONS, request} from 'react-native-permissions';
-import {SystemPermissionStatus, UserPermissionAnswer} from '../redux/user/reducer';
-// @ts-ignore
-import RNSettings from 'react-native-settings';
 
 export interface HomeProps {
   route: any;
@@ -57,8 +44,7 @@ const Home = ({navigation}: HomeProps) => {
   const intl = useIntl();
   const user = useSelector((state: FBRootState) => state.user.user) as FBUser;
   const userLocale = useSelector((state: FBRootState) => state.user.locale);
-  const userLocationPermission = useSelector((state: FBRootState) => state.user.locationPermission);
-  const {location} = useSelector((state: FBRootState) => state.user);
+  const {userLocation} = useSelector((state: FBRootState) => state.user);
 
   const dispatch = useDispatch();
 
@@ -72,7 +58,7 @@ const Home = ({navigation}: HomeProps) => {
     try {
       const restaurantRepository = new RestaurantRepository({authData: authData!});
       const restaurantService = new RestaurantService({restaurantRepository});
-      const restaurantsListItems = await restaurantService.getRestaurantsForHome({userLocation: location});
+      const restaurantsListItems = await restaurantService.getRestaurantsForHome({userLocation});
       dispatch(restaurantsFetchedAction({restaurants: restaurantsListItems}));
     } catch (e) {
       showToastError(translateText(intl, 'backenderror.get_restaurant_error'));
@@ -85,78 +71,15 @@ const Home = ({navigation}: HomeProps) => {
     return navigation.addListener('focus', async () => {
       await analyticsPageOpen({userId: user.id, email: user.email, pageName: 'Home'});
     });
-  }, [navigation]);
-
-  const askForLocation = async () => {
-
-    if (
-      userLocationPermission.userAnswer === UserPermissionAnswer.NO ||
-      userLocationPermission.systemPermission === SystemPermissionStatus.GRANTED
-    ) {
-      return;
-    }
-
-    // add loading
-    const areLocationServicesEnabled = await RNSettings.getSetting(RNSettings.LOCATION_SETTING);
-    console.log('areLocationServicesEnabled ', areLocationServicesEnabled);
-
-    if (areLocationServicesEnabled === RNSettings.ENABLED) {
-      const locationPermission = Platform.select({
-        android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-        ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
-      });
-
-      if (!locationPermission) {
-        return;
-      }
-
-      const status = await check(locationPermission);
-
-      if (status === 'granted') {
-        dispatch(userUpdateLocPermissionAction({systemPermission: SystemPermissionStatus.GRANTED}));
-      } else if (status === 'unavailable' || status === 'limited' || status === 'blocked') {
-        dispatch(userUpdateLocPermissionAction({systemPermission: SystemPermissionStatus.UNAVAILABLE}));
-      } else if (status === 'denied') {
-        // ask if not already asked
-        const result = await request(
-          locationPermission,
-          {
-            title: translateText(intl, 'permission.request.location.title'),
-            message: translateText(intl, 'permission.request.location.message'),
-            buttonPositive: translateText(intl, 'ok'),
-          },
-        );
-
-        if (result === 'granted') {
-          dispatch(userUpdateLocPermissionAction({
-            userAnswer: UserPermissionAnswer.YES,
-            systemPermission: SystemPermissionStatus.GRANTED,
-          }));
-        } else {
-          dispatch(userUpdateLocPermissionAction({
-            userAnswer: UserPermissionAnswer.NO,
-            systemPermission: SystemPermissionStatus.DENIED,
-          }));
-        }
-      }
-    } else {
-      dispatch(userUpdateLocPermissionAction({systemPermission: SystemPermissionStatus.STOPPED}));
-    }
-  };
+  }, [navigation, user.email, user.id]);
 
   useEffect(() => {
     console.log('user.acceptedTC ', user.acceptedTC);
     if (!user.acceptedTC) {
       setTermsAndConditionsModalVisible(true);
-    } else {
-      init();
     }
-  }, []);
-
-  const init = async () => {
     fetchRestaurantList();
-    askForLocation();
-  };
+  }, []);
 
   const confirmTermsAndConditions = async () => {
     setTermsAndConditionsModalVisible(false);
@@ -174,9 +97,6 @@ const Home = ({navigation}: HomeProps) => {
 
     // stop loading
     setIsLoading(false);
-
-    // init
-    init();
   };
 
   const declineTermsAndConditions = async () => {
@@ -239,7 +159,7 @@ const Home = ({navigation}: HomeProps) => {
 
             <RestaurantList
               isFullScreen={isFullScreen}
-              userLocation={location}
+              userLocation={userLocation}
               onRefreshTriggered={() => refreshRestaurants()}
             />
 

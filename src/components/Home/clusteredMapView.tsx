@@ -1,5 +1,5 @@
 import MapView from 'react-native-map-clustering';
-import {AppState, Image, Platform, StyleSheet, Text, View} from 'react-native';
+import {Image, Platform, StyleSheet, Text, View} from 'react-native';
 import Map, {Callout, Marker} from 'react-native-maps';
 import {API_ENDPOINT_PRODUCT_PHOTOS} from '../../network/Server';
 import React, {useEffect, useRef, useState} from 'react';
@@ -17,11 +17,12 @@ import {useAuth} from '../../providers/AuthProvider';
 import {FoodBox} from '../../models/FoodBox';
 import {userUpdateLocationAction} from '../../redux/user/actions';
 import {FBGeoLocation} from '../../models/FBGeoLocation';
-import {SystemPermissionStatus} from '../../redux/user/reducer';
 import {translateText} from '../../lang/translate';
 import {useIntl} from 'react-intl';
 import {useAppState} from '@react-native-community/hooks';
 import {showToastError} from '../../common/FBToast';
+import {check as checkPermission, PERMISSIONS, request as requestPermission} from 'react-native-permissions';
+import RNSettings from 'react-native-settings';
 
 enum ZoomLevel {
   CLOSE,
@@ -40,16 +41,11 @@ type ClusteredMapProps = {
 };
 
 const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
-  const mapRef = useRef<Map>();
   const {navigate} = useNavigation();
   const dispatch = useDispatch();
-  const {authData} = useAuth();
-  const appState = useRef(AppState.currentState);
   const intl = useIntl();
 
-  const userLocation = useSelector((state: FBRootState) => state.user.location);
-  const locPermission = useSelector((state: FBRootState) => state.user.locationPermission);
-
+  const userLocation = useSelector((state: FBRootState) => state.user.userLocation);
   const [showUserLocation, setShowUserLocation] = useState(false);
 
   const restaurants = useSelector((state: FBRootState) => {
@@ -59,113 +55,68 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
     );
   });
 
-  const getCurrentLocation = () => {
-    Geolocation.getCurrentPosition(
-      (position) => {
-        const location = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        };
-
-        console.log('getCurrentPosition ', location);
-
-        dispatch(userUpdateLocationAction({location: location}));
-        const restaurantRepository = new RestaurantRepository({authData: authData!});
-        const restaurantService = new RestaurantService({restaurantRepository});
-        const restaurantsListItems = restaurantService.updateRestaurantsDistance(location, restaurants);
-        dispatch(restaurantDistanceUpdateAction({restaurants: restaurantsListItems}));
-
-        zoomToRegion({location: location, zoomLevel: ZoomLevel.CLOSE});
-
-      },
-      (error) => {
-        // See error code charts below.
-        console.log('getCurrentPosition error ', error.code, error.message);
-        if (error.code === 1 ) {
-          showToastError(translateText(intl, 'backenderror.no_loc_permission'));
-        } else {
-          showToastError(translateText(intl, 'backenderror.location_error'));
-        }
-      },
-      {enableHighAccuracy: true},
-    );
-  };
-
-
-  const state = useAppState();
-
+  const appState = useAppState();
   useEffect(() => {
-    if (state === 'active') {
-      console.log('state ', state);
-      // getCurrentLocation();
-    }
-  }, [state]);
-
-  const zoomToRegion = (params: { location: FBGeoLocation, zoomLevel: ZoomLevel }) => {
-    let region = {
-      latitude: params.location.latitude,
-      longitude: params.location.longitude,
-      ...zoomToDelta[params.zoomLevel],
+    const isLocationServiceEnabled = async () => {
+      const response = await RNSettings.getSetting(RNSettings.LOCATION_SETTING);
+      return response === 'ENABLED';
     };
 
-    mapRef?.current?.animateToRegion(region, 800);
-  };
+    const getIOSLocation = async () => {
+      const isLocationEnabled = await isLocationServiceEnabled();
 
-  useEffect(() => {
-    const isGrantedAccess = locPermission.systemPermission === SystemPermissionStatus.GRANTED;
-    setShowUserLocation(isGrantedAccess);
+      if (isLocationEnabled) {
+        Geolocation.requestAuthorization();
+        Geolocation.watchPosition(
+          (position) => {
+            const currentUserLocation = position.coords;
+            
+            // ensure restaurants are shown closest to last known location on first load until we have real location
+            dispatch(userUpdateLocationAction({userLocation: currentUserLocation}));
+            
+            // update restaurants distance to user
+            dispatch(restaurantDistanceUpdateAction({userLocation: currentUserLocation}));
+            
+            // since we have access to the location show it on the map
+            setShowUserLocation(true);
+          },
+          () => {
+            setShowUserLocation(false);
+          },
+          {
+            enableHighAccuracy: false,
+            timeout: 15000,
+            maximumAge: 10000,
+            distanceFilter: 100,
+          },
+        );
 
-    if (isGrantedAccess) {
+      } else {
+        // TODO: show dialog explaining the issue and prompt for enabling
+      }
+    };
+    
+    if (appState === 'active') {
+      if (Platform.OS === 'ios') {
+        getIOSLocation();
+      } else if (Platform.OS === 'android') {
 
-      console.log('creating watcher');
-
-      getCurrentLocation();
-
-      const watchId = Geolocation.watchPosition(
-        ({coords}) => {
-          const location: FBGeoLocation = {
-            latitude: coords.latitude,
-            longitude: coords.longitude,
-          };
-
-          console.log('update location', location);
-
-          dispatch(userUpdateLocationAction({location: location}));
-          const restaurantRepository = new RestaurantRepository({authData: authData!});
-          const restaurantService = new RestaurantService({restaurantRepository});
-          const restaurantsListItems = restaurantService.updateRestaurantsDistance(location, restaurants);
-          dispatch(restaurantDistanceUpdateAction({restaurants: restaurantsListItems}));
-        },
-        (e) => {
-          console.error(e);
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 5 * 1000,
-          distanceFilter: 150,
-          useSignificantChanges: true,
-        });
-
-      return () => {
-        Geolocation.clearWatch(watchId);
-      };
+      }
     }
-  }, [locPermission]);
+
+    return () => {
+      Geolocation.stopObserving();
+    };
+  }, [appState, dispatch]);
 
   return (
     <>
       <MapView
         initialRegion={{
-          latitude: userLocation.latitude,
-          longitude: userLocation.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0922,
+          ...userLocation,
+          ...zoomToDelta[ZoomLevel.MEDIUM],
         }}
-        // followsUserLocation={locationPermission}
         showsUserLocation={showUserLocation}
-        // @ts-ignore
-        ref={mapRef}
         style={{
           ...StyleSheet.absoluteFillObject,
           width: '100%',
@@ -223,7 +174,7 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
             );
           })}
       </MapView>
-      <MyLocationButton onPress={getCurrentLocation}/>
+      {/*<MyLocationButton onPress={getCurrentLocation}/>*/}
       <RestaurantSearch toHide={isFullScreen}/>
     </>
   );
