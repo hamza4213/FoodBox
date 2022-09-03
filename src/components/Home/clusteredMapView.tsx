@@ -1,6 +1,6 @@
 import MapView from 'react-native-map-clustering';
 import {Image, Platform, StyleSheet, Text, View} from 'react-native';
-import {Callout, Marker} from 'react-native-maps';
+import {Callout, Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {API_ENDPOINT_PRODUCT_PHOTOS} from '../../network/Server';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/core';
@@ -20,12 +20,12 @@ import RNSettings from 'react-native-settings';
 import {check as checkPermission, PERMISSIONS, request as requestPermission} from 'react-native-permissions';
 import {FBGeoLocation} from '../../models/FBGeoLocation';
 import MyLocationButton from './myLocationButton';
-import {Region} from 'react-native-maps/lib/sharedTypes';
+
 
 enum ZoomLevel {
-  CLOSE,
-  MEDIUM,
-  HIGH
+  CLOSE = 15,
+  MEDIUM = 12,
+  HIGH = 9
 }
 
 const zoomToDelta = {
@@ -58,13 +58,15 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
     );
   });
 
-  const zoomToLocation = useCallback((params: {location: FBGeoLocation}) => {
+  const zoomToLocation = useCallback((params: {location: FBGeoLocation, zoomLevel: ZoomLevel}) => {
+    
+    console.log('zooming to location', params.location);
     setHasUserMapOverride(true);
     if (map.current) {
       map.current.animateCamera(
         {
           center: params.location,
-          zoom: 20
+          zoom: params.zoomLevel
         },
         {duration: 1000}
       );
@@ -156,6 +158,7 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
     };
     
     const handleUserLocationUpdate = (params: { currentUserLocation: FBGeoLocation }) => {
+      console.log('handleUserLocationUpdate');
       const {currentUserLocation} = params;
       // ensure restaurants are shown closest to last known location on first load until we have real location
       dispatch(userUpdateLocationAction({userLocation: currentUserLocation}));
@@ -168,7 +171,7 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
       
       // zoom to current location
       if (!hasUserMapOverride) {
-        zoomToLocation({location: currentUserLocation});
+        zoomToLocation({location: currentUserLocation, zoomLevel: ZoomLevel.CLOSE});
       }
     };
 
@@ -179,14 +182,15 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
     };
   }, [dispatch, hasUserMapOverride, zoomToLocation]);
   
-  const handleRegionChange = () => {
+  const handleRegionChangeComplete = () => {
     setHasUserMapOverride(true);
   };
   
   return (
     <>
       <MapView
-        onRegionChange={handleRegionChange}
+        onRegionChangeComplete={handleRegionChangeComplete}
+        provider={PROVIDER_GOOGLE}
         ref={map}
         loadingEnabled={true}
         moveOnMarkerPress={true}
@@ -252,7 +256,7 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
             );
           })}
       </MapView>
-      <MyLocationButton onPress={() => zoomToLocation({location: userLocation})}/>
+      <MyLocationButton onPress={() => zoomToLocation({location: userLocation, zoomLevel: ZoomLevel.CLOSE})}/>
       <RestaurantSearch toHide={isFullScreen}/>
     </>
   );
