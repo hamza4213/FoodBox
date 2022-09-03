@@ -57,9 +57,9 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
     }
   };
 
-  const renderPickUpTime = (box: FoodBox) => {
-    const pickUpStart = RestaurantService.formatPickUpWindowDate(box.pickUpFrom);
-    const pickUpEnd = RestaurantService.formatPickUpWindowDate(box.pickUpTo);
+  const renderPickUpTime = (b: FoodBox) => {
+    const pickUpStart = RestaurantService.formatPickUpWindowDate(b.pickUpFrom);
+    const pickUpEnd = RestaurantService.formatPickUpWindowDate(b.pickUpTo);
 
     return (
       <Text style={styles.pickUpInfo}>

@@ -1,9 +1,8 @@
 import MapView from 'react-native-map-clustering';
 import {Image, Platform, StyleSheet, Text, View} from 'react-native';
-import Map, {Callout, Marker} from 'react-native-maps';
+import {Callout, Marker} from 'react-native-maps';
 import {API_ENDPOINT_PRODUCT_PHOTOS} from '../../network/Server';
-import React, {useEffect, useRef, useState} from 'react';
-import MyLocationButton from './myLocationButton';
+import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/core';
 import RestaurantSearch from './restaurantSearch';
 import {useDispatch, useSelector} from 'react-redux';
@@ -12,16 +11,12 @@ import {newFilterRestaurants} from '../../utils/filterRestaurants';
 import Geolocation from '@react-native-community/geolocation';
 import {RestaurantService} from '../../services/RestaurantService';
 import {restaurantDistanceUpdateAction} from '../../redux/restaurant/actions';
-import {RestaurantRepository} from '../../repositories/RestaurantRepository';
-import {useAuth} from '../../providers/AuthProvider';
 import {FoodBox} from '../../models/FoodBox';
 import {userUpdateLocationAction} from '../../redux/user/actions';
-import {FBGeoLocation} from '../../models/FBGeoLocation';
 import {translateText} from '../../lang/translate';
 import {useIntl} from 'react-intl';
 import {useAppState} from '@react-native-community/hooks';
-import {showToastError} from '../../common/FBToast';
-import {check as checkPermission, PERMISSIONS, request as requestPermission} from 'react-native-permissions';
+// @ts-ignore
 import RNSettings from 'react-native-settings';
 
 enum ZoomLevel {
@@ -62,46 +57,50 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
       return response === 'ENABLED';
     };
 
-    const getIOSLocation = async () => {
+    const getUserLocation = async () => {
       const isLocationEnabled = await isLocationServiceEnabled();
 
       if (isLocationEnabled) {
-        Geolocation.requestAuthorization();
-        Geolocation.watchPosition(
-          (position) => {
-            const currentUserLocation = position.coords;
-            
-            // ensure restaurants are shown closest to last known location on first load until we have real location
-            dispatch(userUpdateLocationAction({userLocation: currentUserLocation}));
-            
-            // update restaurants distance to user
-            dispatch(restaurantDistanceUpdateAction({userLocation: currentUserLocation}));
-            
-            // since we have access to the location show it on the map
-            setShowUserLocation(true);
-          },
-          () => {
-            setShowUserLocation(false);
-          },
-          {
-            enableHighAccuracy: false,
-            timeout: 15000,
-            maximumAge: 10000,
-            distanceFilter: 100,
-          },
-        );
+        if (Platform.OS === 'ios') {
+          getIOSLocation();
+        } else if (Platform.OS === 'android') {
 
+        }
       } else {
         // TODO: show dialog explaining the issue and prompt for enabling
       }
     };
-    
-    if (appState === 'active') {
-      if (Platform.OS === 'ios') {
-        getIOSLocation();
-      } else if (Platform.OS === 'android') {
 
-      }
+    const getIOSLocation = async () => {
+
+      Geolocation.requestAuthorization();
+      Geolocation.watchPosition(
+        (position) => {
+          const currentUserLocation = position.coords;
+
+          // ensure restaurants are shown closest to last known location on first load until we have real location
+          dispatch(userUpdateLocationAction({userLocation: currentUserLocation}));
+
+          // update restaurants distance to user
+          dispatch(restaurantDistanceUpdateAction({userLocation: currentUserLocation}));
+
+          // since we have access to the location show it on the map
+          setShowUserLocation(true);
+        },
+        () => {
+          setShowUserLocation(false);
+        },
+        {
+          enableHighAccuracy: false,
+          timeout: 15000,
+          maximumAge: 10000,
+          distanceFilter: 100,
+        },
+      );
+    };
+
+    if (appState === 'active') {
+      getUserLocation();
     }
 
     return () => {

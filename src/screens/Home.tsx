@@ -109,6 +109,9 @@ const Home = ({navigation}: HomeProps) => {
   return (
     <SafeAreaView style={styles.mainWrapper}>
       <View style={styles.mainView}>
+        <View>
+          <Text> OMG </Text>
+        </View>
         <View style={styles.mapView}>
           <ClusteredMapView
             isFullScreen={isFullScreen}
