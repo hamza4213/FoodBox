@@ -1,8 +1,8 @@
 import MapView from 'react-native-map-clustering';
-import {AppState, Image, PermissionsAndroid, Platform, StyleSheet, Text, View} from 'react-native';
+import {Image, Platform, StyleSheet, Text, View} from 'react-native';
 import {Callout, Marker} from 'react-native-maps';
 import {API_ENDPOINT_PRODUCT_PHOTOS} from '../../network/Server';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/core';
 import RestaurantSearch from './restaurantSearch';
 import {useDispatch, useSelector} from 'react-redux';
@@ -15,11 +15,12 @@ import {FoodBox} from '../../models/FoodBox';
 import {userUpdateLocationAction} from '../../redux/user/actions';
 import {translateText} from '../../lang/translate';
 import {useIntl} from 'react-intl';
-import {useAppState} from '@react-native-community/hooks';
 // @ts-ignore
 import RNSettings from 'react-native-settings';
 import {check as checkPermission, PERMISSIONS, request as requestPermission} from 'react-native-permissions';
 import {FBGeoLocation} from '../../models/FBGeoLocation';
+import MyLocationButton from './myLocationButton';
+import {Region} from 'react-native-maps/lib/sharedTypes';
 
 enum ZoomLevel {
   CLOSE,
@@ -42,6 +43,11 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
   const dispatch = useDispatch();
   const intl = useIntl();
 
+  const map = useRef<MapView>();
+  
+  // used to determine if the user has interacted with the map
+  const [hasUserMapOverride, setHasUserMapOverride] = useState(false);
+
   const userLocation = useSelector((state: FBRootState) => state.user.userLocation);
   const [showUserLocation, setShowUserLocation] = useState(false);
 
@@ -52,11 +58,24 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
     );
   });
 
+  const zoomToLocation = useCallback((params: {location: FBGeoLocation}) => {
+    setHasUserMapOverride(true);
+    if (map.current) {
+      map.current.animateCamera(
+        {
+          center: params.location,
+          zoom: 20
+        },
+        {duration: 1000}
+      );
+    }
+  }, []);
+
   useEffect(() => {
     const isLocationServiceEnabled = async () => {
       const locationSettingStatus = await RNSettings.getSetting(RNSettings.LOCATION_SETTING);
       const locationPermissionRequestStatus = await checkPermission(
-        Platform.OS === 'ios' ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION
+        Platform.OS === 'ios' ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
       );
       return locationSettingStatus === 'ENABLED' && locationPermissionRequestStatus !== 'unavailable';
     };
@@ -74,11 +93,11 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
         // TODO: show dialog explaining the issue and prompt for enabling
       }
     };
-    
+
     const isAndroidLocationPermissionGranted = async () => {
       const locationPermissionStatus = await checkPermission(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
 
-      if (locationPermissionStatus === 'granted' ) {
+      if (locationPermissionStatus === 'granted') {
         // user has granted it
         return true;
       } else if (locationPermissionStatus === 'denied') {
@@ -90,10 +109,10 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
           return true;
         }
       }
-      
+
       return false;
     };
-    
+
     const getAndroidLocation = async () => {
       if (await isAndroidLocationPermissionGranted()) {
         Geolocation.watchPosition(
@@ -131,12 +150,12 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
         },
       );
     };
-    
+
     const handleUserLocationError = () => {
       setShowUserLocation(false);
     };
     
-    const handleUserLocationUpdate = (params: {currentUserLocation: FBGeoLocation}) => {
+    const handleUserLocationUpdate = (params: { currentUserLocation: FBGeoLocation }) => {
       const {currentUserLocation} = params;
       // ensure restaurants are shown closest to last known location on first load until we have real location
       dispatch(userUpdateLocationAction({userLocation: currentUserLocation}));
@@ -146,18 +165,31 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
 
       // since we have access to the location show it on the map
       setShowUserLocation(true);
+      
+      // zoom to current location
+      if (!hasUserMapOverride) {
+        zoomToLocation({location: currentUserLocation});
+      }
     };
-    
-    getUserLocation();  
-    
+
+    getUserLocation();
+
     return () => {
       Geolocation.stopObserving();
     };
-  }, [dispatch]);
+  }, [dispatch, hasUserMapOverride, zoomToLocation]);
+  
+  const handleRegionChange = () => {
+    setHasUserMapOverride(true);
+  };
   
   return (
     <>
       <MapView
+        onRegionChange={handleRegionChange}
+        ref={map}
+        loadingEnabled={true}
+        moveOnMarkerPress={true}
         initialRegion={{
           ...userLocation,
           ...zoomToDelta[ZoomLevel.MEDIUM],
@@ -220,7 +252,7 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
             );
           })}
       </MapView>
-      {/*<MyLocationButton onPress={getCurrentLocation}/>*/}
+      <MyLocationButton onPress={() => zoomToLocation({location: userLocation})}/>
       <RestaurantSearch toHide={isFullScreen}/>
     </>
   );
