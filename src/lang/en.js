@@ -124,6 +124,7 @@ export default {
   'payment.promo_code': 'PromoCode: ',
   'payment.complete_order': 'Complete order',
 
+  'order.phone': 'Phone: ',
   'order.status.request': 'Ordered',
   'order.status.cancelled': 'Cancelled',
   'order.status.confirmed': 'Received',

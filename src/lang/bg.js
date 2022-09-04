@@ -124,7 +124,8 @@ export default {
   'payment.cash': 'Плати в брой',
   'payment.promo_code': 'Промо код : ',
   'payment.complete_order': 'Завърши поръчката',
-
+  
+  'order.phone': 'Телефон: ',
   'order.status.request': 'Заявена',
   'order.status.cancelled': 'Анулирана',
   'order.status.confirmed': 'Получена',

@@ -2,7 +2,7 @@ import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import {
   FlatList,
-  Image,
+  Image, Linking,
   ListRenderItemInfo,
   RefreshControl,
   SafeAreaView,
@@ -33,6 +33,7 @@ import {formatPrice} from '../utils/formatPrice';
 import {RestaurantService} from '../services/RestaurantService';
 import {showOnMap} from '../utils/showOnMap';
 import {isFBAppError, isFBBackendError, isFBGenericError} from '../network/axiosClient';
+import {useFbLoading} from '../providers/FBLoaderProvider';
 
 interface ListOrdersProps {
   navigation: any;
@@ -43,7 +44,7 @@ interface OrdersListItem extends FBOrder {
 }
 
 const ListOrders = ({navigation}: ListOrdersProps) => {
-  const [visibleLoading, setVisibleLoading] = useState(false);
+  const {showLoading, hideLoading} = useFbLoading();
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<OrdersListItem | null>(null);
   const {authData} = useAuth();
@@ -74,7 +75,7 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
   };
 
   const fetchOrders = async () => {
-    setVisibleLoading(true);
+    showLoading('orders');
 
     try {
       const orderRepository: OrderRepository = new OrderRepository({authData: authData!, user: user});
@@ -91,11 +92,11 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
       }
     }
 
-    setVisibleLoading(false);
+    hideLoading('orders');
   };
 
   const cancelOrder = async (order: OrdersListItem) => {
-    setVisibleLoading(true);
+    showLoading('orders');
 
     const orderId = order.id;
 
@@ -116,7 +117,7 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
       }
     }
 
-    setVisibleLoading(false);
+    hideLoading('orders');
   };
 
   const goToMap = (order: OrdersListItem) => {
@@ -124,7 +125,7 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
   };
 
   const ConfirmOrder = async (order: OrdersListItem) => {
-    setVisibleLoading(true);
+    showLoading('orders');
 
     try {
       const orderRepository: OrderRepository = new OrderRepository({authData: authData!, user: user});
@@ -143,7 +144,7 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
       }
     }
 
-    setVisibleLoading(false);
+    hideLoading('orders');
   };
 
   const renderItem = (item: ListRenderItemInfo<OrdersListItem>) => {
@@ -163,17 +164,19 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
       <View style={styles.listItemWrapper}>
         <View style={styles.items}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{flexDirection: 'row', flexGrow:1}}>
               <Image
                 source={{uri: API_ENDPOINT_ENV + 'products/' + order.boxPhoto}}
                 style={styles.boxImage}
               />
-              <View>
-                <Text style={styles.boxRestaurantNameWrapper}>
-                  <Text style={styles.boxRestaurantNameText}>{order.boxName}</Text>
-                  <Text style={styles.boxRestaurantNameText2}>{` ${translateText(intl, 'order.from')} `}</Text>
-                  <Text style={styles.boxRestaurantNameText}>{order.restaurantName}</Text>
-                </Text>
+              <View style={{flexGrow: 1}}>
+                <View style={{flexGrow: 1, flexDirection: 'row'}}>
+                  <Text style={{flex: 1, width: 1, color: '#29455f'}}>
+                    <Text style={styles.boxRestaurantNameText}>{order.boxName}</Text>
+                    <Text style={styles.boxRestaurantNameText2}>{` ${translateText(intl, 'order.from')} `}</Text>
+                    <Text style={styles.boxRestaurantNameText}>{order.restaurantName}</Text>
+                  </Text>
+                </View>
                 <TouchableOpacity
                   style={styles.boxRestaurantAddressWrapper}
                   onPress={() => goToMap(order)}>
@@ -217,9 +220,21 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
               <Text style={{marginTop: 5, fontSize: 12, color: '#29455f'}}>
                 {translateText(intl, 'order.pin')}{order.pin}
               </Text>
+              
               <Text style={{marginTop: 5, fontSize: 12, color: '#29455f'}}>
                 {translateText(intl, 'payment.promo_code')}{order.promoCode}
               </Text>
+
+              <TouchableOpacity
+                onPress={()=> {Linking.openURL(`tel:${order.restaurantPhoneNumber}`)}}
+              >
+                <Text style={{marginTop: 5, fontSize: 12, color: '#29455f'}}>
+                  {translateText(intl, 'order.phone')}{order.restaurantPhoneNumber}
+                </Text>
+                
+              </TouchableOpacity>
+              
+
             </View>
 
             <View>
@@ -301,7 +316,7 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
           keyExtractor={(item, index) => index.toString()}
           refreshControl={
             <RefreshControl
-              refreshing={visibleLoading}
+              refreshing={false}
               onRefresh={() => fetchOrders()}
             />
           }
@@ -312,8 +327,7 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
           setIsShown={setShowCancelDialog}
           onConfirm={() => cancelOrder(selectedOrder!)}
         />
-
-        <FBSpinner isVisible={visibleLoading}/>
+        
       </SafeAreaView>
     );
   }
@@ -324,7 +338,7 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
       <ScrollView
         refreshControl={
           <RefreshControl
-            refreshing={visibleLoading}
+            refreshing={false}
             onRefresh={() => fetchOrders()}
           />
         }
@@ -375,7 +389,10 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginTop: 8,
   },
-  boxRestaurantNameWrapper: {},
+  boxRestaurantNameWrapper: {
+    flex: 1,
+    width: 1
+  },
   boxRestaurantNameText: {
     fontSize: 14,
     fontWeight: '700',
