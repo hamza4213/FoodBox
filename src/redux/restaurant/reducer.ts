@@ -71,10 +71,16 @@ export interface RestaurantState {
   allRestaurants: RestaurantHomeListItem[],
   filters: FBRestaurantFilters,
   sortOrder: RESTAURANT_SORT_OPTION,
-  filteredRestaurants: RestaurantHomeListItem[]
+  filteredRestaurants: RestaurantHomeListItem[],
+  controls: {
+    isFetching: boolean
+  }
 }
 
 export const restaurantInitialState: RestaurantState = {
+  controls: {
+    isFetching: false,
+  },
   allRestaurants: [],
   filters: {
     isRestaurantOpen: {
@@ -137,7 +143,7 @@ const handleUpdateRestaurantDistanceToUserAction: RestaurantActionHandler = (sta
   };
 };
 
-const handleRestaurantFetchAction: RestaurantActionHandler = (state: RestaurantState, data: RestaurantFetchAction['data']): RestaurantState => {
+const handleRestaurantFetchedAction: RestaurantActionHandler = (state: RestaurantState, data: RestaurantFetchAction['data']): RestaurantState => {
 
   const filteredRestaurants: RestaurantHomeListItem[] = [];
 
@@ -186,7 +192,7 @@ const handleRestaurantResetAction: RestaurantActionHandler = (state, data: any) 
 
 const RESTAURANT_ACTION_TO_ACTION_HANDLER_MAP: { [p in RestaurantActionType]: RestaurantActionHandler } = {
   [RestaurantActionType.UPDATE_RESTAURANT_DISTANCE_TO_USER]: handleUpdateRestaurantDistanceToUserAction,
-  [RestaurantActionType.RESTAURANT_FETCH]: handleRestaurantFetchAction,
+  [RestaurantActionType.RESTAURANT_FETCHED]: handleRestaurantFetchedAction,
   [RestaurantActionType.RESTAURANT_UPDATE_FILTERS]: handleRestaurantUpdateFiltersAction,
   [RestaurantActionType.UPDATE_RESTAURANT_SORT_ORDER]: handleUpdateRestaurantSortOrderAction,
   [RestaurantActionType.RESET]: handleRestaurantResetAction,

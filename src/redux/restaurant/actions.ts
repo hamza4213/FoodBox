@@ -4,7 +4,7 @@ import {RESTAURANT_SORT_OPTION} from './reducer';
 
 export enum RestaurantActionType {
   RESTAURANT_UPDATE_FILTERS,
-  RESTAURANT_FETCH,
+  RESTAURANT_FETCHED,
   UPDATE_RESTAURANT_DISTANCE_TO_USER,
   UPDATE_RESTAURANT_SORT_ORDER,
   RESET
@@ -32,7 +32,7 @@ export interface RestaurantFetchAction extends RestaurantAction {
 
 export const restaurantsFetchedAction = (params: RestaurantFetchAction['data']): RestaurantFetchAction => {
   return {
-    type: RestaurantActionType.RESTAURANT_FETCH,
+    type: RestaurantActionType.RESTAURANT_FETCHED,
     data: params,
   };
 };
