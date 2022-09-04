@@ -10,7 +10,6 @@ import {FoodBox} from '../models/FoodBox';
 import FBSpinner from '../components/common/spinner';
 import FBButton from '../components/common/button';
 import {OrderRepository} from '../repositories/OrderRepository';
-import {restaurantUpdateQuantityAction} from '../redux/restaurant/actions';
 import {useAuth} from '../providers/AuthProvider';
 import {analyticsCheckoutStepChange} from '../analytics';
 import {FBRootState} from '../redux/store';
@@ -19,8 +18,8 @@ import {useIntl} from 'react-intl';
 import {translateText} from '../lang/translate';
 
 export interface PaymentMethodProps {
-  route: any,
-  navigation: any
+  route: any;
+  navigation: any;
 }
 
 const PaymentMethod = ({route, navigation}: PaymentMethodProps) => {
@@ -31,9 +30,8 @@ const PaymentMethod = ({route, navigation}: PaymentMethodProps) => {
   const numberOfBoxesToCheckout: number = route.params.count;
   const userVoucher: FBUserVoucher = route.params.userVoucher;
   const {authData} = useAuth();
-  const user = useSelector((state: FBRootState) => state.user.user) as FBUser;
-
-  const dispatch = useDispatch();
+  const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
+  
   const intl = useIntl();
 
   const createOrder = async () => {
@@ -58,12 +56,6 @@ const PaymentMethod = ({route, navigation}: PaymentMethodProps) => {
       });
 
       if (createResult.isCreated) {
-        dispatch(restaurantUpdateQuantityAction({
-          restaurantId: restaurant.id,
-          boxId: foodBox.id,
-          quantityUpdate: -numberOfBoxesToCheckout,
-        }));
-
         navigation.navigate('OrderFinalized', {
           orderPin: createResult.pin,
           foodBox: foodBox,

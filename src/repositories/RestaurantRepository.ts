@@ -1,29 +1,30 @@
-import {Restaurant, RestaurantMapper} from "../models/Restaurant";
-import axiosClient from "../network/axiosClient";
-import {FBBaseError} from "../common/FBBaseError";
-import {AuthData} from "../models/AuthData";
+import {Restaurant, RestaurantMapper} from '../models/Restaurant';
+import axiosClient from '../network/axiosClient';
+import {FBBaseError} from '../common/FBBaseError';
+import {AuthData} from '../models/AuthData';
 
 interface getRestaurantsWithProductResponse {
   success: boolean,
   restaurants: object[]
 }
 
-class RestaurantRepositoryError extends FBBaseError {}
+class RestaurantRepositoryError extends FBBaseError {
+}
 
 export interface BaseRestaurantRepository {
-  getAllWithProduct (): Promise<Restaurant[]>;
+  getAllWithProduct(): Promise<Restaurant[]>;
 }
 
 class RestaurantRepository implements BaseRestaurantRepository {
   private authData: AuthData;
-  
+
   constructor(params: {
     authData: AuthData
   }) {
     this.authData = params.authData;
   }
-  
-  public async getAllWithProduct ( ): Promise<Restaurant[]> {
+
+  public async getAllWithProduct(): Promise<Restaurant[]> {
     const url = '/user/restaurants?getProducts=true';
     try {
       const response: getRestaurantsWithProductResponse = await axiosClient.get(url, {
@@ -32,16 +33,15 @@ class RestaurantRepository implements BaseRestaurantRepository {
         },
       });
 
-      const restaurants = response.restaurants.map((r: any) => RestaurantMapper.fromApi(r));
-      
-      return restaurants;
+      return response.restaurants.map((r: any) => RestaurantMapper.fromApi(r));
     } catch (e) {
-      throw new RestaurantRepositoryError()
+      console.log(e);
+      throw new RestaurantRepositoryError();
     }
   }
 }
 
 export {
   RestaurantRepositoryError,
-  RestaurantRepository
-}
+  RestaurantRepository,
+};

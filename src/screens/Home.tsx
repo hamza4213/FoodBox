@@ -3,7 +3,7 @@ import {ActivityIndicator, Dimensions, SafeAreaView, StyleSheet, Text, View} fro
 import {useDispatch, useSelector} from 'react-redux';
 import 'react-native-gesture-handler';
 import {showToastError} from '../common/FBToast';
-import {restaurantsFetchedAction} from '../redux/restaurant/actions';
+import {restaurantResetAction, restaurantsFetchedAction} from '../redux/restaurant/actions';
 import {RestaurantService} from '../services/RestaurantService';
 import {RestaurantRepository} from '../repositories/RestaurantRepository';
 import FBSpinner from '../components/common/spinner';
@@ -40,9 +40,9 @@ const Home = ({navigation}: HomeProps) => {
 
   const {showLoading, hideLoading} = useFbLoading();
   const intl = useIntl();
-  const user = useSelector((state: FBRootState) => state.user.user) as FBUser;
-  const userLocale = useSelector((state: FBRootState) => state.user.locale);
-  const {userLocation} = useSelector((state: FBRootState) => state.user);
+  const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
+  const userLocale = useSelector((state: FBRootState) => state.userState.locale);
+  const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
 
   const dispatch = useDispatch();
 
@@ -59,7 +59,9 @@ const Home = ({navigation}: HomeProps) => {
       const restaurantsListItems = await restaurantService.getRestaurantsForHome({userLocation});
       dispatch(restaurantsFetchedAction({restaurants: restaurantsListItems}));
     } catch (e) {
+      console.log(e);
       showToastError(translateText(intl, 'backenderror.get_restaurant_error'));
+      dispatch(restaurantResetAction());
     }
     
     hideLoading('fetchRestaurants');
@@ -113,48 +115,8 @@ const Home = ({navigation}: HomeProps) => {
           <View style={styles.restaurantsWrapperInner}>
             <ExpandListButton isFullScreen={isFullScreen} setIsFullScreen={setIsFullScreen}/>
 
-            {/*<View style={{*/}
-            {/*  flexDirection: 'row',*/}
-            {/*  alignItems: 'center',*/}
-            {/*}}>*/}
-            {/*  <RestaurantListSortOptions/>*/}
-
-            {/*  <TouchableOpacity*/}
-            {/*    style={{*/}
-            {/*      marginHorizontal: 2,*/}
-            {/*      marginVertical: 10,*/}
-            {/*      shadowColor: 'rgba(0,0,0, .4)', // IOS*/}
-            {/*      shadowOffset: {height: 1, width: 1}, // IOS*/}
-            {/*      shadowOpacity: 1, // IOS*/}
-            {/*      shadowRadius: 1, //IOS*/}
-            {/*      elevation: 2, // Android*/}
-            {/*      padding: 10,*/}
-            {/*      justifyContent: 'center',*/}
-            {/*      alignItems: 'center',*/}
-            {/*      flexDirection: 'row',*/}
-            {/*      borderRadius: 20,*/}
-            {/*      backgroundColor: COLORS.red,*/}
-            {/*    }}*/}
-            {/*    onPress={() => refreshRestaurants()}*/}
-            {/*  >*/}
-            {/*    <Text style={{*/}
-            {/*      color: 'white',*/}
-            {/*      fontSize: 12,*/}
-            {/*    }}*/}
-            {/*    >*/}
-            {/*      {translateText(intl, 'home.refresh')}*/}
-            {/*    </Text>*/}
-            {/*  </TouchableOpacity>*/}
-            {/*</View>*/}
-            {/*<View style={{marginTop: 10}}>*/}
-            {/*  <Text style={{fontWeight: '700'}}>*/}
-            {/*    {translateText(intl, 'home.save_food')}*/}
-            {/*  </Text>*/}
-            {/*</View>*/}
-
             <RestaurantList
               isFullScreen={isFullScreen}
-              userLocation={userLocation}
               onRefreshTriggered={() => refreshRestaurants()}
             />
 

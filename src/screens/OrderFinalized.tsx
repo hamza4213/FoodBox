@@ -25,7 +25,7 @@ const OrderFinalized = ({route, navigation}: OrderFinalizedProps) => {
   const foodBox: FoodBox = route.params.foodBox;
   const userVoucher: FBUserVoucher = route.params.userVoucher;
   const {authData} = useAuth();
-  const userNotificationPermission = useSelector((state: FBRootState) => state.user.notificationPermission);
+  const userNotificationPermission = useSelector((state: FBRootState) => state.userState.notificationPermission);
   const [toShowNotificationPermissionModal, setToShowNotificationPermissionModal] = useState(false);
   const intl = useIntl();
   const dispatch = useDispatch();

@@ -7,7 +7,6 @@ import {useNavigation} from '@react-navigation/core';
 import RestaurantSearch from './restaurantSearch';
 import {useDispatch, useSelector} from 'react-redux';
 import {FBRootState} from '../../redux/store';
-import {newFilterRestaurants} from '../../utils/filterRestaurants';
 import Geolocation from '@react-native-community/geolocation';
 import {RestaurantService} from '../../services/RestaurantService';
 import {restaurantDistanceUpdateAction} from '../../redux/restaurant/actions';
@@ -44,31 +43,24 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
   const intl = useIntl();
 
   const map = useRef<MapView>();
-  
+
   // used to determine if the user has interacted with the map
   const [hasUserMapOverride, setHasUserMapOverride] = useState(false);
-
-  const userLocation = useSelector((state: FBRootState) => state.user.userLocation);
   const [showUserLocation, setShowUserLocation] = useState(false);
 
-  const restaurants = useSelector((state: FBRootState) => {
-    return newFilterRestaurants(
-      state.restaurant.restaurant,
-      state.restaurant.newFilters,
-    );
-  });
+  const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
+  const restaurants = useSelector((state: FBRootState) => state.restaurantState.filteredRestaurants);
 
-  const zoomToLocation = useCallback((params: {location: FBGeoLocation, zoomLevel: ZoomLevel}) => {
-    
-    console.log('zooming to location', params.location);
+  const zoomToLocation = useCallback((params: { location: FBGeoLocation, zoomLevel: ZoomLevel }) => {
     setHasUserMapOverride(true);
     if (map.current) {
+      // @ts-ignore
       map.current.animateCamera(
         {
           center: params.location,
-          zoom: params.zoomLevel
+          zoom: params.zoomLevel,
         },
-        {duration: 1000}
+        {duration: 1000},
       );
     }
   }, []);
@@ -156,9 +148,8 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
     const handleUserLocationError = () => {
       setShowUserLocation(false);
     };
-    
+
     const handleUserLocationUpdate = (params: { currentUserLocation: FBGeoLocation }) => {
-      console.log('handleUserLocationUpdate');
       const {currentUserLocation} = params;
       // ensure restaurants are shown closest to last known location on first load until we have real location
       dispatch(userUpdateLocationAction({userLocation: currentUserLocation}));
@@ -168,7 +159,7 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
 
       // since we have access to the location show it on the map
       setShowUserLocation(true);
-      
+
       // zoom to current location
       if (!hasUserMapOverride) {
         zoomToLocation({location: currentUserLocation, zoomLevel: ZoomLevel.CLOSE});
@@ -181,16 +172,18 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
       Geolocation.stopObserving();
     };
   }, [dispatch, hasUserMapOverride, zoomToLocation]);
-  
+
   const handleRegionChangeComplete = () => {
     setHasUserMapOverride(true);
   };
+
   
   return (
     <>
       <MapView
         onRegionChangeComplete={handleRegionChangeComplete}
         provider={PROVIDER_GOOGLE}
+        // @ts-ignore
         ref={map}
         loadingEnabled={true}
         moveOnMarkerPress={true}

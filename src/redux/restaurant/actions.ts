@@ -5,9 +5,9 @@ import {RESTAURANT_SORT_OPTION} from './reducer';
 export enum RestaurantActionType {
   RESTAURANT_UPDATE_FILTERS,
   RESTAURANT_FETCH,
-  RESTAURANT_UPDATE_QUANTITY,
   UPDATE_RESTAURANT_DISTANCE_TO_USER,
-  UPDATE_RESTAURANT_SORT_ORDER
+  UPDATE_RESTAURANT_SORT_ORDER,
+  RESET
 }
 
 export interface RestaurantAction {
@@ -37,17 +37,6 @@ export const restaurantsFetchedAction = (params: RestaurantFetchAction['data']):
   };
 };
 
-export interface RestaurantUpdateQuantityAction extends RestaurantAction {
-  data: { restaurantId: number; boxId: number; quantityUpdate: number };
-}
-
-export const restaurantUpdateQuantityAction = (params: RestaurantUpdateQuantityAction['data']): RestaurantUpdateQuantityAction => {
-  return {
-    type: RestaurantActionType.RESTAURANT_UPDATE_QUANTITY,
-    data: params,
-  };
-};
-
 export interface RestaurantDistanceUpdateAction extends RestaurantAction {
   data: { userLocation: FBGeoLocation };
 }
@@ -67,5 +56,15 @@ export const updateRestaurantSortOrderAction = (params: UpdateRestaurantSortOrde
   return {
     type: RestaurantActionType.UPDATE_RESTAURANT_SORT_ORDER,
     data: params,
+  };
+};
+
+export interface RestaurantResetAction extends RestaurantAction {
+}
+
+export const restaurantResetAction = (): RestaurantResetAction => {
+  return {
+    type: RestaurantActionType.RESET,
+    data: undefined,
   };
 };

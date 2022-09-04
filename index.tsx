@@ -25,7 +25,7 @@ import {name as appName} from './app.json';
 const migrations = {
   0: async (state: any) => {
 
-    set(state, 'restaurant.newFilters', restaurantInitialState.newFilters);
+    set(state, 'restaurant.newFilters', restaurantInitialState.filters);
     set(state, 'orders', ordersInitialState);
     set(state, 'user', userInitialState);
 

@@ -57,7 +57,7 @@ const Offer = ({route, navigation}: OfferProps) => {
   const isStarted = RestaurantService.isStarted(foodBox);
   const intl = useIntl();
 
-  const user = useSelector((state: FBRootState) => state.user.user) as FBUser;
+  const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
 
   useEffect(() => {
     return navigation.addListener('focus', async () => {

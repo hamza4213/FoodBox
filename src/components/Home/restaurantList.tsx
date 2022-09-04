@@ -5,8 +5,6 @@ import {RestaurantHomeListItem} from '../../models/Restaurant';
 import {FBRootState} from '../../redux/store';
 import RestaurantListItemEmpty from './restaurantListItemEmpty';
 import {useDispatch, useSelector} from 'react-redux';
-import {newFilterRestaurants} from '../../utils/filterRestaurants';
-import {FBGeoLocation} from '../../models/FBGeoLocation';
 import {translateText} from '../../lang/translate';
 import {useIntl} from 'react-intl';
 import {COLORS} from '../../constants';
@@ -16,32 +14,21 @@ import {useFbLoading} from '../../providers/FBLoaderProvider';
 
 export interface RestaurantListProps {
   isFullScreen: boolean,
-  userLocation: FBGeoLocation,
   onRefreshTriggered: () => any
 }
 
 const RestaurantList = ({
                           isFullScreen,
-                          userLocation,
                           onRefreshTriggered,
                         }: RestaurantListProps) => {
-
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  
   const intl = useIntl();
   const {showLoading, hideLoading} = useFbLoading();
   const dispatch = useDispatch();
   const [rerenderRestaurantsList, setRerenderRestaurantsList] = useState(false);
-  const sortOrder = useSelector((state: FBRootState) => state.restaurant.sortOrder);
-  const restaurants = useSelector((state: FBRootState) => {
-    return state.restaurant.restaurant
-    
-    // const r = newFilterRestaurants(
-    //   state.restaurant.restaurant,
-    //   state.restaurant.newFilters,
-    // );
-    //
-    // return r;
-  });
+  const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
+  const sortOrder = useSelector((state: FBRootState) => state.restaurantState.sortOrder);
+  const restaurants = useSelector((state: FBRootState) => state.restaurantState.filteredRestaurants);
 
   useEffect(() => {
     if (restaurants.length) {
@@ -51,9 +38,7 @@ const RestaurantList = ({
       hideLoading('sortingRestaurants');
     }
   }, [sortOrder, restaurants, showLoading, hideLoading]);
-  
-  
-  
+
   const renderRestaurantItem = (item: ListRenderItemInfo<RestaurantHomeListItem>) => {
     return <RestaurantListItem
       restaurant={item.item}
@@ -98,9 +83,7 @@ const RestaurantList = ({
   };
 
   const onRestaurantListRefresh = () => {
-    setIsRefreshing(true);
     onRefreshTriggered();
-    setIsRefreshing(false);
   };
 
   if (restaurants.length === 0) {
@@ -164,7 +147,7 @@ const RestaurantList = ({
           keyExtractor={(item) => item.listIndex.toString()}
           refreshControl={
             <RefreshControl
-              refreshing={isRefreshing}
+              refreshing={false}
               onRefresh={onRestaurantListRefresh}
             />
           }

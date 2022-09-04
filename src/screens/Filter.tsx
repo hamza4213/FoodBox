@@ -18,7 +18,7 @@ const Filter = ({navigation}: { navigation: any }) => {
 
   const dispatch = useDispatch();
 
-  const newFilters = useSelector((state: FBRootState) => state.restaurant.newFilters);
+  const newFilters = useSelector((state: FBRootState) => state.restaurantState.filters);
 
   const [isRestaurantOpen, setIsRestaurantOpen] = useState(newFilters.isRestaurantOpen.isOpen);
   const [hasRestaurantAvailableBoxes, setHasRestaurantAvailableBoxes] = useState(newFilters.hasRestaurantAvailableBoxes.hasAvailableBoxes);
@@ -34,7 +34,7 @@ const Filter = ({navigation}: { navigation: any }) => {
   const [dietTypes, setDietTypes] = useState(newFilters.dietType.types);
   const [foodTypes, setFoodTypes] = useState(newFilters.foodType.types);
 
-  const user = useSelector((state: FBRootState) => state.user.user) as FBUser;
+  const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
   const intl = useIntl();
 
   const newApplyFilter = (data: RestaurantUpdateFiltersAction['data']) => {

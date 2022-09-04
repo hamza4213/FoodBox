@@ -1,6 +1,6 @@
 import {AuthData} from '../models/AuthData';
 import {FBBaseError} from '../common/FBBaseError';
-import axiosClient from '../network/axiosClient';
+import axiosClient, {isFBAppError, isFBBackendError, isFBGenericError} from '../network/axiosClient';
 import QueryString from 'query-string';
 import {FBUser, FBUserMapper} from '../models/User';
 import {
@@ -65,20 +65,27 @@ class NotAuthenticatedUserRepository implements BaseNotAuthenticatedUserReposito
 
       return result.success;
     } catch (e) {
-      if (axios.isAxiosError(e)) {
+
+      if (isFBGenericError(e) || isFBAppError(e)) {
         await analyticsResetPassword({
-          step: 'failed', data: {
+          step: 'failed',
+          data: {
             email: params.email,
-            errorCode: e.response?.status,
-            errorString: e.response?.data.message,
+            errorCode: e.status,
           },
         });
-        throw new UserRepositoryError(e.response?.data.message);
-      } else {
-
-        await analyticsResetPassword({step: 'failed', data: {email: params.email}});
-        throw new UserRepositoryError();
+      } else if (isFBBackendError(e)) {
+        await analyticsResetPassword({
+          step: 'failed',
+          data: {
+            email: params.email,
+            errorCode: e.status,
+            errorString: e.message,
+          },
+        });
       }
+
+      throw e;
     }
   }
 
@@ -110,23 +117,24 @@ class NotAuthenticatedUserRepository implements BaseNotAuthenticatedUserReposito
         user, authData,
       };
     } catch (e) {
-      if (axios.isAxiosError(e)) {
+      if (isFBGenericError(e) || isFBAppError(e)) {
+        await analyticsSocialLogin({
+          type: isFbLogin ? 'fb' : 'google',
+          step: 'failed',
+          data: {errorCode: e.status},
+        });
+      } else if (isFBBackendError(e)) {
         await analyticsSocialLogin({
           type: isFbLogin ? 'fb' : 'google',
           step: 'failed',
           data: {
-            errorCode: e.response?.status,
-            errorString: e.response?.data.message,
+            errorCode: e.status,
+            errorString: e.message,
           },
         });
-        throw new UserRepositoryError(e.response?.data.message);
-      } else {
-        await analyticsSocialLogin({
-          type: isFbLogin ? 'fb' : 'google',
-          step: 'failed',
-        });
-        throw new UserRepositoryError();
       }
+
+      throw e;
     }
   }
 
@@ -155,24 +163,24 @@ class NotAuthenticatedUserRepository implements BaseNotAuthenticatedUserReposito
         user, authData,
       };
     } catch (e) {
-      if (axios.isAxiosError(e)) {
-
+      if (isFBGenericError(e) || isFBAppError(e)) {
+        await analyticsSocialLogin({
+          type: 'apple',
+          step: 'failed',
+          data: {errorCode: e.status}
+        });
+      } else if (isFBBackendError(e)) {
         await analyticsSocialLogin({
           type: 'apple',
           step: 'failed',
           data: {
-            errorCode: e.response?.status,
-            errorString: e.response?.data.message,
+            errorCode: e.status,
+            errorString: e.message,
           },
         });
-        throw new UserRepositoryError(e.response?.data.message);
-      } else {
-        await analyticsSocialLogin({
-          type: 'apple',
-          step: 'failed',
-        });
-        throw new UserRepositoryError();
       }
+      
+      throw e;
     }
   }
 
@@ -186,6 +194,7 @@ class NotAuthenticatedUserRepository implements BaseNotAuthenticatedUserReposito
         QueryString.stringify({
           email: params.email,
           password: params.password,
+          locale: params.locale,
         }),
       );
 
@@ -202,27 +211,30 @@ class NotAuthenticatedUserRepository implements BaseNotAuthenticatedUserReposito
         user, authData,
       };
     } catch (e) {
-      if (axios.isAxiosError(e)) {
+      if (isFBGenericError(e) || isFBAppError(e)) {
         await analyticsEmailLogin({
           email: params.email,
           step: 'failed',
           data: {
-            errorCode: e.response?.status,
-            errorString: e.response?.data.message,
+            errorCode: e.status,
           },
         });
-        throw new UserRepositoryError(e.response?.data.message);
-      } else {
+      } else if (isFBBackendError(e)) {
         await analyticsEmailLogin({
           email: params.email,
           step: 'failed',
+          data: {
+            errorCode: e.status,
+            errorString: e.message,
+          },
         });
-        throw new UserRepositoryError();
       }
+
+      throw e;
     }
   }
 
-  async register(params: { email: string; firstName: string; lastName: string; password: string; }): Promise<boolean> {
+  async register(params: { email: string; firstName: string; lastName: string; password: string; locale: FBLocale}): Promise<boolean> {
     const url = '/user/register';
     try {
       await analyticsRegistration({email: params.email, step: 'initiated'});
@@ -235,30 +247,31 @@ class NotAuthenticatedUserRepository implements BaseNotAuthenticatedUserReposito
           lastName: params.lastName,
           password: params.password,
           registrationToken: null,
+          locale: params.locale
         }),
       );
 
       await analyticsRegistration({email: params.email, step: 'completed', data: {userId: result.userId}});
       return true;
     } catch (e) {
-      if (axios.isAxiosError(e)) {
+      if (isFBGenericError(e) || isFBAppError(e)) {
+        await analyticsRegistration({
+          email: params.email,
+          step: 'failed',
+          data: { errorCode: e.status }
+        });
+      } else if (isFBBackendError(e)) {
         await analyticsRegistration({
           email: params.email,
           step: 'failed',
           data: {
-            errorCode: e.response?.status,
-            errorString: e.response?.data.message,
+            errorCode: e.status,
+            errorString: e.message,
           },
         });
-
-        throw new UserRepositoryError(e.response?.data.message);
-      } else {
-        await analyticsRegistration({
-          email: params.email,
-          step: 'failed',
-        });
-        throw new UserRepositoryError();
       }
+      
+      throw e;
     }
   }
 }

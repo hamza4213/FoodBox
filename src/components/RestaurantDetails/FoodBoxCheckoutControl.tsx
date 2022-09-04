@@ -33,7 +33,7 @@ const FoodBoxCheckoutControl = (params: FoodBoxCheckoutControlProps) => {
     isOnFocus,
   } = params;
 
-  const user = useSelector((state: FBRootState) => state.user.user) as FBUser;
+  const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
   const styles = stylesCreator({});
   const navigation = useNavigation();
   const intl = useIntl();

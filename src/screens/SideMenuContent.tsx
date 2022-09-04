@@ -15,7 +15,7 @@ import {translateText} from '../lang/translate';
 const SideMenuContent = (props: any) => {
   const navigation = props.navigation;
   const {signOut} = useAuth();
-  const user = useSelector((state: FBRootState) => state.user.user, shallowEqual) as FBUser;
+  const user = useSelector((state: FBRootState) => state.userState.user, shallowEqual) as FBUser;
   const styles = stylesCreator();
   const intl = useIntl();
   return (

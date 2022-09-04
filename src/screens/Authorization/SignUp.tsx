@@ -15,9 +15,11 @@ import FBFormInput from '../../components/common/FBFormInput';
 import FBFormCheckbox from '../../components/common/FBFormCheckbox';
 import {useIntl} from 'react-intl';
 import {translateText} from '../../lang/translate';
+import {isFBAppError, isFBBackendError, isFBGenericError} from '../../network/axiosClient';
 
 interface SignUpProps {
-  navigation: any
+  navigation: any;
+  route: any;
 }
 
 interface SignUpFormData {
@@ -31,17 +33,19 @@ interface SignUpFormData {
 
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
-const SignUp = ({navigation}: SignUpProps) => {
-  
+const SignUp = ({navigation, route}: SignUpProps) => {
+
   const [isLoading, setIsLoading] = useState(false);
   const [isRegistrationCompleteDialogVisible, setIsRegistrationCompleteDialogVisible] = useState(false);
 
   const intl = useIntl();
 
+  const userLocale = route.params.locale;
+
   const {control, handleSubmit, watch} = useForm<SignUpFormData>({
     defaultValues: {
-      terms_and_conditions: false
-    }
+      terms_and_conditions: false,
+    },
   });
   const password = watch('password');
 
@@ -51,26 +55,28 @@ const SignUp = ({navigation}: SignUpProps) => {
     try {
       const userRepo = new NotAuthenticatedUserRepository();
       await userRepo.register({
-        email: data.email, 
-        firstName: data.firstName, 
-        lastName: data.lastName, 
-        password: data.password
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        password: data.password,
+        locale: userLocale,
       });
 
       setIsLoading(false);
       setIsRegistrationCompleteDialogVisible(true);
     } catch (error: any) {
-      if (error?.message !== '') {
+      if (isFBAppError(error) || isFBGenericError(error)) {
+        showToastError(translateText(intl, error.key));
+      } else if (isFBBackendError(error)) {
         showToastError(error.message);
       } else {
-        let text = translateText(intl,'backenderror.signup_error');
-        showToastError(translateText(intl,'backenderror.signup_error'));
+        showToastError(translateText(intl, 'genericerror'));
       }
     }
 
     setIsLoading(false);
   };
-  
+
   useEffect(() => {
     return navigation.addListener('focus', async () => {
       await analyticsPageOpen({userId: 0, email: '', pageName: 'Registration'});
@@ -83,10 +89,10 @@ const SignUp = ({navigation}: SignUpProps) => {
         <KeyboardAwareScrollView style={{paddingHorizontal: 24, flex: 1}}>
 
           <View style={{flex: 1}}>
-            
+
             <View style={styles.titleWrapper}>
               <Text style={styles.titleText}>
-                {translateText(intl,'signup.title')}
+                {translateText(intl, 'signup.title')}
               </Text>
             </View>
 
@@ -97,21 +103,21 @@ const SignUp = ({navigation}: SignUpProps) => {
                 resizeMode={'contain'}
               />
             </View>
-            
+
             <FBFormInput
               name={'firstName'}
-              control={control} 
-              rules={{required: translateText(intl,'formErrors.required')}}
-              placeholder={translateText(intl,'signup.firstName')} 
-              secureTextEntry={false} 
-              image={images.app_user} 
+              control={control}
+              rules={{required: translateText(intl, 'formErrors.required')}}
+              placeholder={translateText(intl, 'signup.firstName')}
+              secureTextEntry={false}
+              image={images.app_user}
             />
 
             <FBFormInput
               name={'lastName'}
               control={control}
-              rules={{required: translateText(intl,'formErrors.required')}}
-              placeholder={translateText(intl,'signup.lastName')}
+              rules={{required: translateText(intl, 'formErrors.required')}}
+              placeholder={translateText(intl, 'signup.lastName')}
               secureTextEntry={false}
               image={images.app_user}
             />
@@ -120,13 +126,13 @@ const SignUp = ({navigation}: SignUpProps) => {
               name={'email'}
               control={control}
               rules={{
-                required: translateText(intl,'formErrors.required'),
+                required: translateText(intl, 'formErrors.required'),
                 patter: {
                   value: EMAIL_REGEX,
-                  message: translateText(intl,'formErrors.email')
-                }
+                  message: translateText(intl, 'formErrors.email'),
+                },
               }}
-              placeholder={translateText(intl,'signup.email')}
+              placeholder={translateText(intl, 'signup.email')}
               secureTextEntry={false}
               image={images.mail}
             />
@@ -135,13 +141,13 @@ const SignUp = ({navigation}: SignUpProps) => {
               name={'password'}
               control={control}
               rules={{
-                required: translateText(intl,'formErrors.required'), 
+                required: translateText(intl, 'formErrors.required'),
                 minLength: {
                   value: 8,
-                  message: translateText(intl,'formErrors.password')
-                }
+                  message: translateText(intl, 'formErrors.password'),
+                },
               }}
-              placeholder={translateText(intl,'signup.password')}
+              placeholder={translateText(intl, 'signup.password')}
               secureTextEntry={true}
               image={images.lock}
             />
@@ -150,25 +156,25 @@ const SignUp = ({navigation}: SignUpProps) => {
               name={'repeatPassword'}
               control={control}
               rules={{
-                required: translateText(intl,'formErrors.required'),
-                validate: (value: string) => password === value || translateText(intl,'signup.error_password')
+                required: translateText(intl, 'formErrors.required'),
+                validate: (value: string) => password === value || translateText(intl, 'signup.error_password'),
               }}
-              placeholder={translateText(intl,'signup.repeat_password')}
+              placeholder={translateText(intl, 'signup.repeat_password')}
               secureTextEntry={true}
               image={images.lock}
             />
-            
+
             <FBFormCheckbox
               name={'terms_and_conditions'}
               control={control}
-              rules={{required: translateText(intl,'formErrors.required')}}
+              rules={{required: translateText(intl, 'formErrors.required')}}
             />
-            
+
             <FBButton
-              onClick={handleSubmit(doSignUp)} 
-              title={translateText(intl,'signup.sign_up')}
+              onClick={handleSubmit(doSignUp)}
+              title={translateText(intl, 'signup.sign_up')}
             />
-            
+
             <TouchableOpacity
               style={{
                 justifyContent: 'flex-end',
@@ -176,9 +182,9 @@ const SignUp = ({navigation}: SignUpProps) => {
               }}
               onPress={() => Linking.openURL(WEBSITE_CONTACT_US)}
             >
-              <View style={{flexDirection: "row"}}>
+              <View style={{flexDirection: 'row'}}>
                 <Text style={{color: '#fff'}}>
-                  {`${translateText(intl,'signup.help')} `}
+                  {`${translateText(intl, 'signup.help')} `}
                 </Text>
 
                 <Text style={{color: '#0bd53a'}}>
@@ -187,9 +193,9 @@ const SignUp = ({navigation}: SignUpProps) => {
               </View>
             </TouchableOpacity>
 
-            <FBButton 
-              onClick={() => navigation.navigate('SignInScreen')} 
-              title={translateText(intl,'back')}
+            <FBButton
+              onClick={() => navigation.navigate('SignInScreen')}
+              title={translateText(intl, 'back')}
               backgroundColor={COLORS.red}
             />
 
@@ -216,7 +222,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: Utils.height,
-    backgroundColor: '#0f2b49'
+    backgroundColor: '#0f2b49',
   },
   backgroundImage: {
     flex: 1,

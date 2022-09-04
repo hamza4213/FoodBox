@@ -4,15 +4,15 @@ import restaurantReducer, {RestaurantState} from './restaurant/reducer';
 import ordersReducer, {OrdersState} from './order/reducer';
 
 export interface FBRootState {
-  user: UserState,
-  restaurant: RestaurantState,
-  orders: OrdersState
+  userState: UserState,
+  restaurantState: RestaurantState,
+  ordersState: OrdersState
 }
 
 const allReducer = combineReducers<FBRootState>({
-  user: userReducer,
-  restaurant: restaurantReducer,
-  orders: ordersReducer,
+  userState: userReducer,
+  restaurantState: restaurantReducer,
+  ordersState: ordersReducer,
 });
 
 export default allReducer;

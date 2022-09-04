@@ -44,7 +44,7 @@ const Profile = () => {
   const {authData} = useAuth();
   const intl = useIntl();
 
-  const user = useSelector((state: FBRootState) => state.user.user) as FBUser;
+  const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
 
   const [modalProps, setModalProps] = useState<ModalProps>({
     toShow: false, inputPlaceholder: '', inputValue: '', onSubmit: async () => {

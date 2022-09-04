@@ -42,6 +42,7 @@ import ENFLag from '../../../assets/flags/us.svg';
 // @ts-ignore
 import ROFLag from '../../../assets/flags/ro.svg';
 import {useFbLoading} from '../../providers/FBLoaderProvider';
+import {FBAppError, FBError, isFBAppError, isFBBackendError, isFBGenericError} from '../../network/axiosClient';
 
 
 interface LoginProps {
@@ -58,7 +59,7 @@ const Login = ({navigation}: LoginProps) => {
   const {signIn} = useAuth();
   const [showForgetPasswordDialog, setShowForgetPasswordDialog] = useState(false);
   const {showLoading, hideLoading} = useFbLoading();
-  const userLocale = useSelector((state: FBRootState) => state.user.locale);
+  const userLocale = useSelector((state: FBRootState) => state.userState.locale);
   const intl = useIntl();
   const dispatch = useDispatch();
 
@@ -95,10 +96,12 @@ const Login = ({navigation}: LoginProps) => {
       const res = await userRepo.login({email, password, locale: userLocale});
       await signIn(res);
     } catch (error: any) {
-      if (error?.message !== '') {
+      if (isFBAppError(error) || isFBGenericError(error)) {
+        showToastError(translateText(intl, error.key));
+      } else if (isFBBackendError(error)) {
         showToastError(error.message);
       } else {
-        showToastError(translateText(intl, 'backenderror.login_error'));
+        showToastError(translateText(intl, 'genericerror'));
       }
     }
 
@@ -133,29 +136,29 @@ const Login = ({navigation}: LoginProps) => {
         await analyticsSocialLogin({type: 'google', step: 'refused'});
       }
     } catch (error) {
-      await analyticsSocialLogin({type: 'google', step: 'failed'});
-
-      showToastError(translateText(intl, 'backenderror.user_login_social_error'));
+      if (isFBAppError(error) || isFBGenericError(error)) {
+        showToastError(translateText(intl, error.key));
+      } else if (isFBBackendError(error)) {
+        showToastError(error.message);
+      } else {
+        await analyticsSocialLogin({type: 'google', step: 'failed'});
+        showToastError(translateText(intl, 'backenderror.user_login_social_error'));
+      }
     }
     hideLoading('login');
   };
 
   const onFacebookLogin = async () => {
-    console.log('onFacebookLogin 1');
     showLoading('login');
     await analyticsSocialLogin({type: 'fb', step: 'initiated'});
-    console.log('onFacebookLogin 2');
     try {
       if (Platform.OS === 'android') {
         LoginManager.setLoginBehavior('native_with_fallback');
       }
 
-      console.log('onFacebookLogin 3');
-
       LoginManager.logOut();
-      console.log('onFacebookLogin 4');
       const loginResult = await LoginManager.logInWithPermissions(['email', 'public_profile']);
-      console.log('onFacebookLogin 5', loginResult);
+      
       if (loginResult.isCancelled) {
         await analyticsSocialLogin({type: 'fb', step: 'completed', data: {isAuthorized: false, isCancelled: true}});
         showToastError(translateText(intl, 'login.social_refused'));
@@ -184,8 +187,14 @@ const Login = ({navigation}: LoginProps) => {
         }
       }
     } catch (error) {
-      await analyticsSocialLogin({type: 'fb', step: 'failed'});
-      showToastError(translateText(intl, 'backenderror.user_login_social_error'));
+      if (isFBAppError(error) || isFBGenericError(error)) {
+        showToastError(translateText(intl, error.key));
+      } else if (isFBBackendError(error)) {
+        showToastError(error.message);
+      } else {
+        await analyticsSocialLogin({type: 'fb', step: 'failed'});
+        showToastError(translateText(intl, 'backenderror.user_login_social_error'));
+      }
     }
 
     hideLoading('login');
@@ -227,8 +236,14 @@ const Login = ({navigation}: LoginProps) => {
         await analyticsSocialLogin({type: 'apple', step: 'refused'});
       }
     } catch (error) {
-      await analyticsSocialLogin({type: 'apple', step: 'failed'});
-      showToastError(translateText(intl, 'backenderror.user_login_social_error'));
+      if (isFBAppError(error) || isFBGenericError(error)) {
+        showToastError(translateText(intl, error.key));
+      } else if (isFBBackendError(error)) {
+        showToastError(error.message);
+      } else {
+        await analyticsSocialLogin({type: 'apple', step: 'failed'});
+        showToastError(translateText(intl, 'backenderror.user_login_social_error'));
+      }
     }
     hideLoading('login');
   };
@@ -242,15 +257,17 @@ const Login = ({navigation}: LoginProps) => {
 
     try {
       const userRepo = new NotAuthenticatedUserRepository();
-      const didReset = await userRepo.resetPassword({email});
+      await userRepo.resetPassword({email});
 
-      if (didReset) {
-        showToast(translateText(intl, 'resetpassword.success'));
-      } else {
-        showToastError(translateText(intl, 'backenderror.user_reset_pass_error'));
-      }
+      showToast(translateText(intl, 'resetpassword.success'));
     } catch (error) {
-      showToastError(translateText(intl, 'backenderror.user_reset_pass_error'));
+      if (isFBAppError(error) || isFBGenericError(error)) {
+        showToastError(translateText(intl, error.key));
+      } else if (isFBBackendError(error)) {
+        showToastError(error.message);
+      } else {
+        showToastError(translateText(intl, 'genericerror'));
+      }
     }
 
     hideLoading('login');
@@ -400,7 +417,7 @@ const Login = ({navigation}: LoginProps) => {
 
             <TouchableOpacity
               style={{alignItems: 'center'}}
-              onPress={() => navigation.navigate('SignUpScreen')}
+              onPress={() => navigation.navigate('SignUpScreen', {locale: userLocale})}
             >
               <Text style={{color: '#0bd53a'}}>
                 {`${translateText(intl, 'login.not_have_account')} ${translateText(intl, 'login.sign_up')}`}

@@ -4,13 +4,13 @@ import {
   RestaurantDistanceUpdateAction,
   RestaurantFetchAction,
   RestaurantUpdateFiltersAction,
-  RestaurantUpdateQuantityAction,
   UpdateRestaurantSortOrderAction,
 } from './actions';
 import {RestaurantHomeListItem} from '../../models/Restaurant';
 import {DietType, FoodType} from '../../models/FoodBox';
 import {set} from 'lodash';
 import getDistanceToLocation from '../../utils/getDistanceToLocation';
+import {toShowRestaurant} from '../../utils/toShowRestaurant';
 
 export interface FBRestaurantFilters {
   isRestaurantOpen: {
@@ -57,10 +57,10 @@ export enum RESTAURANT_SORT_OPTION {
 }
 
 export interface RestaurantSortFunction {
-  (r1: RestaurantHomeListItem, r2: RestaurantHomeListItem): number
+  (r1: RestaurantHomeListItem, r2: RestaurantHomeListItem): number;
 }
 
-export const RESTAURANT_SORT_OPTION_TO_SORT_FUNCTION: {[key in RESTAURANT_SORT_OPTION]: RestaurantSortFunction} = {
+export const RESTAURANT_SORT_OPTION_TO_SORT_FUNCTION: { [key in RESTAURANT_SORT_OPTION]: RestaurantSortFunction } = {
   [RESTAURANT_SORT_OPTION.LOWEST_PRICE_FIRST]: (r1, r2) => r1.priceAfaterDiscount - r2.priceAfaterDiscount,
   [RESTAURANT_SORT_OPTION.CLOSEST_DISTANCE_FIRST]: (r1, r2) => r1.distance - r2.distance,
   [RESTAURANT_SORT_OPTION.STARTING_SOONEST_FIRST]: (r1, r2) => r1.openTime - r2.openTime,
@@ -68,14 +68,15 @@ export const RESTAURANT_SORT_OPTION_TO_SORT_FUNCTION: {[key in RESTAURANT_SORT_O
 };
 
 export interface RestaurantState {
-  restaurant: RestaurantHomeListItem[],
-  newFilters: FBRestaurantFilters,
-  sortOrder: RESTAURANT_SORT_OPTION
+  allRestaurants: RestaurantHomeListItem[],
+  filters: FBRestaurantFilters,
+  sortOrder: RESTAURANT_SORT_OPTION,
+  filteredRestaurants: RestaurantHomeListItem[]
 }
 
 export const restaurantInitialState: RestaurantState = {
-  restaurant: [],
-  newFilters: {
+  allRestaurants: [],
+  filters: {
     isRestaurantOpen: {
       isEnabled: true,
       isOpen: true,
@@ -112,47 +113,17 @@ export const restaurantInitialState: RestaurantState = {
     },
   },
   sortOrder: RESTAURANT_SORT_OPTION.CLOSEST_DISTANCE_FIRST,
+  filteredRestaurants: [],
 };
 
 interface RestaurantActionHandler {
   (state: RestaurantState, data: any): RestaurantState;
 }
 
-const handleRestaurantUpdateQuantityAction: RestaurantActionHandler = (state: RestaurantState, data: RestaurantUpdateQuantityAction['data']): RestaurantState => {
-  let updatedBox;
-  for (let restaurant of state.restaurant) {
-    if (updatedBox) {
-      break;
-    }
-
-    if (restaurant.id === data.restaurantId) {
-
-      for (let box of restaurant.products) {
-        if (updatedBox) {
-          break;
-        }
-
-        if (box.id === data.boxId) {
-          updatedBox = box;
-        }
-      }
-    }
-  }
-
-  if (updatedBox) {
-    updatedBox.quantity += data.quantityUpdate;
-  }
-
-  return {
-    ...state,
-    restaurant: state.restaurant,
-  };
-};
-
 const handleUpdateRestaurantDistanceToUserAction: RestaurantActionHandler = (state: RestaurantState, data: RestaurantDistanceUpdateAction['data']): RestaurantState => {
 
   const restaurants = [];
-  for (const restaurant of state.restaurant) {
+  for (const restaurant of state.filteredRestaurants) {
     restaurant.distance = getDistanceToLocation({
       userLocation: data.userLocation,
       location: {latitude: restaurant.latitude, longitude: restaurant.longitude},
@@ -162,37 +133,63 @@ const handleUpdateRestaurantDistanceToUserAction: RestaurantActionHandler = (sta
 
   return {
     ...state,
-    restaurant: restaurants,
+    allRestaurants: restaurants,
   };
 };
 
 const handleRestaurantFetchAction: RestaurantActionHandler = (state: RestaurantState, data: RestaurantFetchAction['data']): RestaurantState => {
+
+  const filteredRestaurants: RestaurantHomeListItem[] = [];
+
+  for (const restaurant of data.restaurants) {
+    if (toShowRestaurant(restaurant, state.filters)) {
+      filteredRestaurants.push(restaurant);
+    }
+  }
+
   return {
     ...state,
-    restaurant: data.restaurants,
+    allRestaurants: data.restaurants,
+    filteredRestaurants: filteredRestaurants,
   };
 };
 
 const handleRestaurantUpdateFiltersAction: RestaurantActionHandler = (state: RestaurantState, data: RestaurantUpdateFiltersAction['data']): RestaurantState => {
   set(state, `newFilters.${data.filterCategory}.${data.filterCategoryProperty}`, data.newValue);
+
+  const filteredRestaurants: RestaurantHomeListItem[] = [];
+  for (const restaurant of state.allRestaurants) {
+    if (toShowRestaurant(restaurant, state.filters)) {
+      filteredRestaurants.push(restaurant);
+    }
+  }
+
   return {
     ...state,
+    filteredRestaurants: filteredRestaurants,
   };
 };
 
-const handleUpdateRestaurantSortOrderAction: RestaurantActionHandler = (state: RestaurantState, data: UpdateRestaurantSortOrderAction['data']): RestaurantState => {
+const handleUpdateRestaurantSortOrderAction: RestaurantActionHandler = (state, data: UpdateRestaurantSortOrderAction['data']): RestaurantState => {
   return {
     ...state,
     sortOrder: data.sortOrder,
   };
 };
 
+const handleRestaurantResetAction: RestaurantActionHandler = (state, data: any) => {
+  state.allRestaurants = [];
+  state.filteredRestaurants = [];
+  
+  return {...state};
+}
+
 const RESTAURANT_ACTION_TO_ACTION_HANDLER_MAP: { [p in RestaurantActionType]: RestaurantActionHandler } = {
-  [RestaurantActionType.RESTAURANT_UPDATE_QUANTITY]: handleRestaurantUpdateQuantityAction,
   [RestaurantActionType.UPDATE_RESTAURANT_DISTANCE_TO_USER]: handleUpdateRestaurantDistanceToUserAction,
   [RestaurantActionType.RESTAURANT_FETCH]: handleRestaurantFetchAction,
   [RestaurantActionType.RESTAURANT_UPDATE_FILTERS]: handleRestaurantUpdateFiltersAction,
   [RestaurantActionType.UPDATE_RESTAURANT_SORT_ORDER]: handleUpdateRestaurantSortOrderAction,
+  [RestaurantActionType.RESET]: handleRestaurantResetAction,
 };
 
 const restaurantReducer = (

@@ -17,25 +17,23 @@ import {showToastError} from '../common/FBToast';
 import {useDispatch, useSelector} from 'react-redux';
 import {API_ENDPOINT_ENV} from '../network/Server';
 import {COLORS} from './../constants';
-import FBSpinner from "../components/common/spinner";
-import CancelOrderDialog from "../components/OrdersDetails/CancelOrderDialog";
-import {OrderRepository} from "../repositories/OrderRepository";
-import {orderCancelledAction, orderConfirmedAction, ordersFetchedAction} from "../redux/order/actions";
-import {FBRootState} from "../redux/store";
-import {FBOrder} from "../models/FBOrder";
-import {useAuth} from "../providers/AuthProvider";
-import {analyticsOrderStatusChange, analyticsPageOpen} from "../analytics";
-import {FBUser} from "../models/User";
-import {useIntl} from "react-intl";
-import {translateText} from "../lang/translate";
-import {restaurantUpdateQuantityAction} from "../redux/restaurant/actions";
+import FBSpinner from '../components/common/spinner';
+import CancelOrderDialog from '../components/OrdersDetails/CancelOrderDialog';
+import {OrderRepository} from '../repositories/OrderRepository';
+import {orderCancelledAction, orderConfirmedAction, ordersFetchedAction} from '../redux/order/actions';
+import {FBRootState} from '../redux/store';
+import {FBOrder} from '../models/FBOrder';
+import {useAuth} from '../providers/AuthProvider';
+import {analyticsOrderStatusChange, analyticsPageOpen} from '../analytics';
+import {FBUser} from '../models/User';
+import {useIntl} from 'react-intl';
+import {translateText} from '../lang/translate';
 import {orderBy} from 'lodash';
-import {formatPrice} from "../utils/formatPrice";
-import {RestaurantService} from "../services/RestaurantService";
-import {showOnMap} from "../utils/showOnMap";
+import {formatPrice} from '../utils/formatPrice';
+import {RestaurantService} from '../services/RestaurantService';
+import {showOnMap} from '../utils/showOnMap';
 
 interface ListOrdersProps {
-  route: any;
   navigation: any;
 }
 
@@ -43,18 +41,18 @@ interface OrdersListItem extends FBOrder {
   boxSavedAmount: number;
 }
 
-const ListOrders = ({route, navigation}: ListOrdersProps) => {
+const ListOrders = ({navigation}: ListOrdersProps) => {
   const [visibleLoading, setVisibleLoading] = useState(false);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<OrdersListItem | null>(null);
   const {authData} = useAuth();
   const dispatch = useDispatch();
-  const user = useSelector((state: FBRootState) => state.user.user) as FBUser;
-  const orders = useSelector<FBRootState, OrdersListItem[]>((state: FBRootState) => state.orders.orders.map((o => {
+  const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
+  const orders = useSelector<FBRootState, OrdersListItem[]>((state: FBRootState) => state.ordersState.orders.map((o => {
     return {
       ...o,
-      boxSavedAmount: o.boxOriginalPrice - (o.boxOriginalPrice * o.boxDiscount / 100)
-    }
+      boxSavedAmount: o.boxOriginalPrice - (o.boxOriginalPrice * o.boxDiscount / 100),
+    };
   })));
 
   const intl = useIntl();
@@ -62,16 +60,16 @@ const ListOrders = ({route, navigation}: ListOrdersProps) => {
   const statusDisplays = {
     0: {
       text: translateText(intl, 'order.status.request'),
-      style: {color: '#D55C10', fontWeight: '700'}
+      style: {color: '#D55C10', fontWeight: '700'},
     },
     2: {
       text: translateText(intl, 'order.status.cancelled'),
-      style: {color: '#f86c6c', fontWeight: '800'}
+      style: {color: '#f86c6c', fontWeight: '800'},
     },
     1: {
       text: translateText(intl, 'order.status.confirmed'),
-      style: {color: '#00FF00', fontWeight: '800'}
-    }
+      style: {color: '#00FF00', fontWeight: '800'},
+    },
   };
 
   const fetchOrders = async () => {
@@ -101,11 +99,6 @@ const ListOrders = ({route, navigation}: ListOrdersProps) => {
 
       if (wasCancelled) {
         dispatch(orderCancelledAction({orderId}));
-        dispatch(restaurantUpdateQuantityAction({
-          restaurantId: order.restaurantId,
-          quantityUpdate: 1,
-          boxId: order.boxId
-        }));
         await analyticsOrderStatusChange({userId: user.id, email: user.email, orderId: orderId, status: 'cancelled'});
       } else {
         showToastError(translateText(intl, 'backenderror.cancel_order_error'));
@@ -149,11 +142,11 @@ const ListOrders = ({route, navigation}: ListOrdersProps) => {
     const statusDisplay = statusDisplays[order.status];
     const pickUpFromDate = moment(order.createdAt).toDate();
     const today = moment().toDate();
-    const isForToday = 
-      pickUpFromDate.getFullYear() === today.getFullYear() && 
+    const isForToday =
+      pickUpFromDate.getFullYear() === today.getFullYear() &&
       pickUpFromDate.getMonth() === today.getMonth() &&
       pickUpFromDate.getDate() === today.getDate();
-      
+
 
     return (
       <View style={styles.listItemWrapper}>
@@ -161,13 +154,13 @@ const ListOrders = ({route, navigation}: ListOrdersProps) => {
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <View style={{flexDirection: 'row'}}>
               <Image
-                source={{uri: API_ENDPOINT_ENV + 'products/' + order.boxPhoto,}}
+                source={{uri: API_ENDPOINT_ENV + 'products/' + order.boxPhoto}}
                 style={styles.boxImage}
               />
               <View>
                 <Text style={styles.boxRestaurantNameWrapper}>
                   <Text style={styles.boxRestaurantNameText}>{order.boxName}</Text>
-                  <Text style={styles.boxRestaurantNameText2}>{` ${translateText(intl,'order.from')} `}</Text>
+                  <Text style={styles.boxRestaurantNameText2}>{` ${translateText(intl, 'order.from')} `}</Text>
                   <Text style={styles.boxRestaurantNameText}>{order.restaurantName}</Text>
                 </Text>
                 <TouchableOpacity
@@ -186,38 +179,38 @@ const ListOrders = ({route, navigation}: ListOrdersProps) => {
               justifyContent: 'space-between',
               marginTop: 20,
             }}>
-            
+
             <View>
-              
-              { isForToday &&
+
+              {isForToday &&
                 <Text style={{color: '#29455f', fontWeight: '700'}}>
-                  {translateText(intl,'order.pick_up_window')}
-                  {`${translateText(intl,'offer.from')} `}
+                  {translateText(intl, 'order.pick_up_window')}
+                  {`${translateText(intl, 'offer.from')} `}
                   {`${RestaurantService.formatPickUpWindowDate(order.pickUpFrom)}`}
-                  {` ${translateText(intl,'offer.to')} `}
+                  {` ${translateText(intl, 'offer.to')} `}
                   {RestaurantService.formatPickUpWindowDate(order.pickUpTo)}
                 </Text>
               }
-              
-              { !isForToday &&
+
+              {!isForToday &&
                 <Text style={{color: '#29455f'}}>
-                  {translateText(intl,'order.pick_up_window')}
-                  {` ${translateText(intl,'order.pick_up_expired')} `}
+                  {translateText(intl, 'order.pick_up_window')}
+                  {` ${translateText(intl, 'order.pick_up_expired')} `}
                 </Text>
               }
-              
+
               <Text style={{color: '#29455f'}}>
-                {translateText(intl,'order.created_at')}{moment(order.createdAt).format('DD/MM/YYYY')}
+                {translateText(intl, 'order.created_at')}{moment(order.createdAt).format('DD/MM/YYYY')}
               </Text>
-              
+
               <Text style={{marginTop: 5, fontSize: 12, color: '#29455f'}}>
-                {translateText(intl,'order.pin')}{order.pin}
+                {translateText(intl, 'order.pin')}{order.pin}
               </Text>
               <Text style={{marginTop: 5, fontSize: 12, color: '#29455f'}}>
-                {translateText(intl,'payment.promo_code')}{order.promoCode}
+                {translateText(intl, 'payment.promo_code')}{order.promoCode}
               </Text>
             </View>
-            
+
             <View>
               <Text style={statusDisplay.style}>
                 {statusDisplay.text}
@@ -311,7 +304,7 @@ const ListOrders = ({route, navigation}: ListOrdersProps) => {
 
         <FBSpinner isVisible={visibleLoading}/>
       </SafeAreaView>
-    )
+    );
   }
 
   // EMPTY LIST
@@ -351,7 +344,7 @@ const styles = StyleSheet.create({
   emptyListTitleText: {
     marginTop: 50,
     fontSize: 16,
-    fontWeight: '600'
+    fontWeight: '600',
   },
   emptyListContentText: {
     marginTop: 20,
@@ -456,4 +449,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ListOrders
+export default ListOrders;

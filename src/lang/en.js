@@ -7,9 +7,10 @@ export default {
   'login.sign_up_with_social_media': 'Or login with socials',
   'login.login_facebook': 'Login with Facebook',
   'login.login_google': 'Login with Google',
-  'login.not_have_account': 'You don\'t have an account?',
+  'login.not_have_account': "You don't have an account?",
   'login.sign_up': 'Register with email!',
-  'login.forgotten_email_hint': 'We will send you a reset password link on the specified email :)',
+  'login.forgotten_email_hint':
+    'We will send you a reset password link on the specified email :)',
   'login.new_password': 'New password.',
   'login.social_refused': 'Access denied!',
 
@@ -25,26 +26,43 @@ export default {
   'signup.repeat_password': 'Repeat password',
   'signup.sign_up': 'Register!',
   'signup.help': 'Help? Contact us :)',
-  'signup.error_password': 'Passwords don\'t match!',
-  'signup.email_confirm': 'Account created. Please active through the link we send you. Please check your SPAM folder and contact us if you don\'t receive the email.',
+  'signup.error_password': "Passwords don't match!",
+  'signup.email_confirm':
+    "Account created. Please active through the link we send you. Please check your SPAM folder and contact us if you don't receive the email.",
   'signup.agree_with': 'Agree with ',
   'signup.conditionals': 'terms and conditions',
 
-  'prompts.location': 'Please give us access to your location. We will use it only to show you relevant offers.',
-  'prompts.notification': 'Please give us access to send you notifications so that we remind you about your order',
-  'prompts.no_loc_permission': 'Permission Denied. Please allow use to locate you from Settings.',
+  'prompts.location':
+    'Please give us access to your location. We will use it only to show you relevant offers.',
+  'prompts.notification':
+    'Please give us access to send you notifications so that we remind you about your order',
+  'prompts.no_loc_permission':
+    'Permission Denied. Please allow use to locate you from Settings.',
   'prompts.location_error': "Couldn't locate you. Plesae check your settings.",
 
-  'backenderror.login_error': 'Couldn\'t log you in. Please check your email and password.',
-  'backenderror.signup_error': 'Couldn\'t register you. Please contact us.',
-  'backenderror.user_login_social_error': 'Couldn\'t log you in. Please contact us.',
-  'backenderror.user_reset_pass_error': 'Couldn\'t reset you pass. Please contact us.',
-  'backenderror.get_restaurant_error': 'Couldn\'t fetch available boxes. Please contact us.',
-  'backenderror.get_order_error': 'Couldn\'t fetch your orders. Please contact us.',
-  'backenderror.cancel_order_error': 'Couldn\'t cancel your order. Please contact us.',
-  'backenderror.confirm_order_error': 'Couldn\'t confirm your order. Please contact us.',
-  'backenderror.order_error': 'Couldn\'t complete your order. Please contact us.',
-  'backenderror.validate_promocode_error': 'Couldn\'t validate promo code. Please contact us.',
+  'backenderror.login_error':
+    "Couldn't log you in. Please check your email and password.",
+  'backenderror.signup_error': "Couldn't register you. Please contact us.",
+  'backenderror.user_login_social_error':
+    "Couldn't log you in. Please contact us.",
+  'backenderror.user_reset_pass_error':
+    "Couldn't reset you pass. Please contact us.",
+  'backenderror.get_restaurant_error':
+    "Couldn't fetch available boxes. Please contact us.",
+  'backenderror.get_order_error':
+    "Couldn't fetch your orders. Please contact us.",
+  'backenderror.cancel_order_error':
+    "Couldn't cancel your order. Please contact us.",
+  'backenderror.confirm_order_error':
+    "Couldn't confirm your order. Please contact us.",
+  'backenderror.order_error':
+    "Couldn't complete your order. Please contact us.",
+  'backenderror.validate_promocode_error':
+    "Couldn't validate promo code. Please contact us.",
+
+  'networkerror.no_network': 'No internet access',
+
+  genericerror: "We don't know what happened. Please contact us",
 
   'resetpassword.success': 'Please check your email.',
 
@@ -56,17 +74,17 @@ export default {
 
   'home.find_object': 'Find by name.',
 
-  'distance_unit': 'm',
-  'price_unit': '€',
-  'box': 'box',
-  'boxes': 'boxes',
-  'back': 'Back',
-  'accept': 'Agree',
-  'decline': 'Don\'t agree',
-  'yes': 'Yes',
-  'no': 'No',
-  'continue': 'Continue',
-  'ok': 'OK',
+  distance_unit: 'm',
+  price_unit: '€',
+  box: 'box',
+  boxes: 'boxes',
+  back: 'Back',
+  accept: 'Agree',
+  decline: "Don't agree",
+  yes: 'Yes',
+  no: 'No',
+  continue: 'Continue',
+  ok: 'OK',
 
   'offer.pick_up_window': 'Pick up today',
   'offer.from': 'from',
@@ -75,7 +93,8 @@ export default {
   'offer.sale_end': 'Pick up will close in',
   'offer.sale_start': 'Pick up will be available in',
   'offer.description_start': 'In your Foodobox you will most often find',
-  'offer.description_end': 'If you don\'t eat something, please share it with your friend and family. Shared food is tastier :)',
+  'offer.description_end':
+    "If you don't eat something, please share it with your friend and family. Shared food is tastier :)",
   'offer.allergens': 'Allergens',
   'offer.price_in_store': 'Price in store',
   'offer.price_in_foodobox': 'Through Foodobox',
@@ -89,10 +108,12 @@ export default {
   'offer.invalid_promo_code': 'Invalid voucher.',
   'offer.promo_code_hint': 'Enter voucher.',
   'offer.add_promo_code': 'Add voucher.',
-  'offer.user_promo_add_hint': 'Please add 1 box to checkout and the add voucher.',
+  'offer.user_promo_add_hint':
+    'Please add 1 box to checkout and the add voucher.',
   'offer.promo_code_added': 'Voucher successfully added.',
   'offer.promo_code': 'Voucher: ',
-  'offer_confirm.text': 'You Foodobox is a surprise box full of surplus food. You will give this food a second chance. This means we are not able to guarantee exactly what you will get. In case you have allergies or need other information, please ask the waiter in the location when you pick up your Foodobox.',
+  'offer_confirm.text':
+    'You Foodobox is a surprise box full of surplus food. You will give this food a second chance. This means we are not able to guarantee exactly what you will get. In case you have allergies or need other information, please ask the waiter in the location when you pick up your Foodobox.',
 
   'sort.lowest_price_first': 'Cheapest',
   'sort.closest_distance_first': 'Closest',
@@ -112,11 +133,15 @@ export default {
   'order.cancel_offer': 'Cancel!',
   'order.confirm_order': 'Received!',
   'order.empty_title': 'No previous orders found.',
-  'order.empty_content': 'It is never to late to start saving food. Browse through available offers.',
+  'order.empty_content':
+    'It is never to late to start saving food. Browse through available offers.',
   'order.empty_button': 'To the offers.',
-  'order.cancel_alert': 'I remind you that in the T&C of Foodobox, to which you have agreed to, you can cancel an order up to 90 minutes before the pick up starts. This way you allow enough time for someone else to save the food. Are you sure you want to cancel your order ?',
-  'order.congratulation': 'Congratulations. You will save food in danger of being thrown away.',
-  'order.confirm_from_app': 'When you pick up your order, please confirm it in the app as well.',
+  'order.cancel_alert':
+    'I remind you that in the T&C of Foodobox, to which you have agreed to, you can cancel an order up to 90 minutes before the pick up starts. This way you allow enough time for someone else to save the food. Are you sure you want to cancel your order ?',
+  'order.congratulation':
+    'Congratulations. You will save food in danger of being thrown away.',
+  'order.confirm_from_app':
+    'When you pick up your order, please confirm it in the app as well.',
   'order.confirm_pin': 'Your order PIN is: ',
   'order.time': 'You can pick up your Foodobox between ',
   'order.pin': 'PIN: ',
@@ -126,12 +151,16 @@ export default {
   'order.pick_up_window': 'Pick up: ',
   'order.pick_up_expired': 'Expired',
 
-  'order_error.general': 'I am sorry, but we can not complete your order, because: ',
-  'order_error.reason_1': '- someone just book the last Foodobox under your nose.',
-  'order_error.reason_2': '- the restaurant indicated it doesn\'t have more surplus food today.',
-  'order_error.reason_3': '- you have been temporary banned. Please contact us if you feel this is not fair.',
+  'order_error.general':
+    'I am sorry, but we can not complete your order, because: ',
+  'order_error.reason_1':
+    '- someone just book the last Foodobox under your nose.',
+  'order_error.reason_2':
+    "- the restaurant indicated it doesn't have more surplus food today.",
+  'order_error.reason_3':
+    '- you have been temporary banned. Please contact us if you feel this is not fair.',
 
-  'profile.user_update_error': 'Couldn\'t update user data. Please contact us.',
+  'profile.user_update_error': "Couldn't update user data. Please contact us.",
   'profile.apply': 'Save',
   'profile.first_name': 'Name',
   'profile.first_name_hint': 'New name',
@@ -177,5 +206,6 @@ export default {
   'tab.menu': 'Menu',
 
   'permission.request.location.title': 'Location Permission Request',
-  'permission.request.location.message': 'Please grant us access to your location so that we can provide you more relevant offers.',
+  'permission.request.location.message':
+    'Please grant us access to your location so that we can provide you more relevant offers.',
 };

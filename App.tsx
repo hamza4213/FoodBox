@@ -32,7 +32,7 @@ const CODE_PUSH_OPTIONS = {
 FBSettings.initializeSDK();
 
 let FBApp = () => {
-  const selectedLocale = useSelector((state: FBRootState) => state.user.locale);
+  const selectedLocale = useSelector((state: FBRootState) => state.userState.locale);
 
   const appState = useAppState();
   useEffect(() => {

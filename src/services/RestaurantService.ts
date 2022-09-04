@@ -45,6 +45,7 @@ class RestaurantService {
     const {userLocation} = params;
 
     const restaurants = await this.restaurantRepository.getAllWithProduct();
+    console.log('restaurants ', restaurants.length);
     let index = 0;
 
     return restaurants.reduce((acc: RestaurantHomeListItem[], r: Restaurant) => {
