@@ -18,9 +18,10 @@ import {check as checkPermission, PERMISSIONS, request as requestPermission} fro
 import {Settings as FBSettings} from 'react-native-fbsdk-next';
 import {FBLoadingProvider} from './src/providers/FBLoaderProvider';
 
-const messages = {
+const messages: {[p in FBLocale]: any} = {
   [FBLocale.BG]: MessagesInBulgarian,
   [FBLocale.EN]: MessagesInEnglish,
+  [FBLocale.RO]: MessagesInEnglish
 };
 
 const CODE_PUSH_OPTIONS = {

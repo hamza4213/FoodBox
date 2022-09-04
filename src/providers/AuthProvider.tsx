@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useEffect, useRef, useState} from 'react';
+import React, {createContext, ReactNode, useContext, useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import {FBUser} from '../models/User';
 import {AuthData} from '../models/AuthData';
@@ -7,7 +7,7 @@ import {userSetUserAction, userUnsetUserAction} from '../redux/user/actions';
 
 interface AuthContextData {
   authData?: AuthData;
-  loading: boolean;
+  authLoading: boolean;
 
   signIn(params: { user: FBUser, authData: AuthData }): Promise<void>;
 
@@ -28,7 +28,7 @@ const useAuth = (): AuthContextData => {
   return context;
 };
 
-const FBAuthProvider: React.FC = ({children}: any) => {
+const FBAuthProvider = ({children}: {children?: ReactNode}) => {
   const [authData, setAuthData] = useState<AuthData>();
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
@@ -66,7 +66,7 @@ const FBAuthProvider: React.FC = ({children}: any) => {
   };
 
   return (
-    <FBAuthContext.Provider value={{authData, loading, signIn, signOut}}>
+    <FBAuthContext.Provider value={{authData, authLoading: loading, signIn, signOut}}>
       {children}
     </FBAuthContext.Provider>
   );

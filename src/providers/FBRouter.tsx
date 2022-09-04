@@ -19,13 +19,11 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 const Drawer = createDrawerNavigator();
 const AuthStack = createStackNavigator();
-// const AppStack = createStackNavigator();
-
 
 const FBRouter = () => {
-  const {authData, loading} = useAuth();
+  const {authData, authLoading} = useAuth();
 
-  if (loading) {
+  if (authLoading) {
     return (
       <ImageBackground
         source={images.app_background}
@@ -48,7 +46,7 @@ const FBRouter = () => {
       <NavigationContainer>
         <AuthStack.Navigator screenOptions={{
           headerShown: false,
-          animationEnabled: false
+          animationEnabled: false,
         }} initialRouteName={'SignInScreen'}>
           <AuthStack.Screen name="SignInScreen" component={SignInScreen}/>
           <AuthStack.Screen name="SignUpScreen" component={SignUpScreen}/>
