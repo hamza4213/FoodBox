@@ -129,7 +129,7 @@ const handleUpdateRestaurantDistanceToUserAction: RestaurantActionHandler = (sta
 
   const allRestaurants: RestaurantHomeListItem[] = [];
   const filteredRestaurants: RestaurantHomeListItem[] = [];
-  
+
   // update distance to all restaurants
   for (const restaurant of state.allRestaurants) {
     restaurant.distance = getDistanceToLocation({
@@ -137,7 +137,7 @@ const handleUpdateRestaurantDistanceToUserAction: RestaurantActionHandler = (sta
       location: {latitude: restaurant.latitude, longitude: restaurant.longitude},
     });
     allRestaurants.push(restaurant);
-    
+
     if (toShowRestaurant(restaurant, state.filters)) {
       filteredRestaurants.push(restaurant);
     }
@@ -174,7 +174,7 @@ const handleRestaurantFetchedAction: RestaurantActionHandler = (state: Restauran
 const handleRestaurantUpdateFiltersAction: RestaurantActionHandler = (state: RestaurantState, data: RestaurantUpdateFiltersAction['data']): RestaurantState => {
   // update filters
   state.filters[data.filterCategory][data.filterCategoryProperty] = data.newValue;
-  
+
   // find new filtered restaurants
   const filteredRestaurants: RestaurantHomeListItem[] = [];
   for (const restaurant of state.allRestaurants) {
@@ -193,22 +193,18 @@ const handleRestaurantUpdateFiltersAction: RestaurantActionHandler = (state: Res
 };
 
 const handleUpdateRestaurantSortOrderAction: RestaurantActionHandler = (state, data: UpdateRestaurantSortOrderAction['data']): RestaurantState => {
+  state.sortOrder = data.sortOrder;
+  state.filteredRestaurants.sort(RESTAURANT_SORT_OPTION_TO_SORT_FUNCTION[data.sortOrder]);
 
-  // resort restaurants
-  const filteredRestaurants = [...state.filteredRestaurants];
-  filteredRestaurants.sort(RESTAURANT_SORT_OPTION_TO_SORT_FUNCTION[state.sortOrder]);
-  
   return {
     ...state,
-    filteredRestaurants: filteredRestaurants,
-    sortOrder: data.sortOrder,
   };
 };
 
 const handleRestaurantResetAction: RestaurantActionHandler = (state, _data: any) => {
   state.allRestaurants = [];
   state.filteredRestaurants = [];
-  
+
   return {...state};
 };
 

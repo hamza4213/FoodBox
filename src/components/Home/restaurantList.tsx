@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React from 'react';
 import {FlatList, ListRenderItemInfo, RefreshControl, Text, TouchableOpacity, View} from 'react-native';
 import RestaurantListItem from './restaurantListItem';
 import {RestaurantHomeListItem} from '../../models/Restaurant';
@@ -7,9 +7,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {translateText} from '../../lang/translate';
 import {useIntl} from 'react-intl';
 import {COLORS} from '../../constants';
-import {RESTAURANT_SORT_OPTION, RESTAURANT_SORT_OPTION_TO_SORT_FUNCTION} from '../../redux/restaurant/reducer';
+import {RESTAURANT_SORT_OPTION} from '../../redux/restaurant/reducer';
 import {updateRestaurantSortOrderAction} from '../../redux/restaurant/actions';
-import {useFbLoading} from '../../providers/FBLoaderProvider';
 
 export interface RestaurantListProps {
   isFullScreen: boolean,
