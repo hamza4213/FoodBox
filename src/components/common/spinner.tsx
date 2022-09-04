@@ -1,11 +1,11 @@
-import React from "react";
-import {ActivityIndicator, Modal, SafeAreaView, StyleSheet, View} from "react-native";
+import React from 'react';
+import {ActivityIndicator, Modal, SafeAreaView, StyleSheet, View} from 'react-native';
 
 export interface FBSpinnerProps {
-  isVisible: boolean
+  isVisible: boolean;
 }
 
-const FBSpinner = ({isVisible}:FBSpinnerProps ) => {
+const FBSpinner = ({isVisible}: FBSpinnerProps) => {
   const styles = stylesCreator();
   return (
     <Modal visible={isVisible} transparent={true}>
@@ -14,10 +14,10 @@ const FBSpinner = ({isVisible}:FBSpinnerProps ) => {
         <View
           style={styles.indicatorWrapper}>
           <View style={styles.indicator}>
-            <ActivityIndicator 
+            <ActivityIndicator
               animating={isVisible}
-              size="large" 
-              color="#10D53A" 
+              size="large"
+              color="#10D53A"
               hidesWhenStopped={true}
             />
           </View>
@@ -25,7 +25,7 @@ const FBSpinner = ({isVisible}:FBSpinnerProps ) => {
       </SafeAreaView>
     </Modal>
   );
-}
+};
 
 export default FBSpinner;
 
@@ -39,11 +39,11 @@ const stylesCreator = () => StyleSheet.create({
   },
   indicatorWrapper: {
     height: '100%',
-    justifyContent: 'center', 
-    alignItems: 'center'
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   indicator: {
-    flex: 1, 
+    flex: 1,
     alignSelf: 'center',
-  }
+  },
 });

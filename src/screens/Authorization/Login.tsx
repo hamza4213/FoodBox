@@ -41,6 +41,7 @@ import BGFlag from '../../../assets/flags/bg.svg';
 import ENFLag from '../../../assets/flags/us.svg';
 // @ts-ignore
 import ROFLag from '../../../assets/flags/ro.svg';
+import {useFbLoading} from '../../providers/FBLoaderProvider';
 
 
 interface LoginProps {
@@ -56,7 +57,7 @@ interface LoginFormData {
 const Login = ({navigation}: LoginProps) => {
   const {signIn} = useAuth();
   const [showForgetPasswordDialog, setShowForgetPasswordDialog] = useState(false);
-  const [visibleLoading, setVisibleLoading] = useState(false);
+  const {showLoading, hideLoading} = useFbLoading();
   const userLocale = useSelector((state: FBRootState) => state.user.locale);
   const intl = useIntl();
   const dispatch = useDispatch();
@@ -86,8 +87,8 @@ const Login = ({navigation}: LoginProps) => {
 
     email = email.trim();
     password = password.trim();
-
-    setVisibleLoading(true);
+    
+    showLoading('login');
 
     try {
       const userRepo = new NotAuthenticatedUserRepository();
@@ -101,11 +102,11 @@ const Login = ({navigation}: LoginProps) => {
       }
     }
 
-    setVisibleLoading(false);
+    hideLoading('login');
   };
 
   const googleLogin = async () => {
-    setVisibleLoading(true);
+    showLoading('login');
     await analyticsSocialLogin({type: 'google', step: 'initiated'});
     try {
       const result = await GoogleSignin.signIn();
@@ -136,12 +137,12 @@ const Login = ({navigation}: LoginProps) => {
 
       showToastError(translateText(intl, 'backenderror.user_login_social_error'));
     }
-    setVisibleLoading(false);
+    hideLoading('login');
   };
 
   const onFacebookLogin = async () => {
     console.log('onFacebookLogin 1');
-    setVisibleLoading(true);
+    showLoading('login');
     await analyticsSocialLogin({type: 'fb', step: 'initiated'});
     console.log('onFacebookLogin 2');
     try {
@@ -187,11 +188,11 @@ const Login = ({navigation}: LoginProps) => {
       showToastError(translateText(intl, 'backenderror.user_login_social_error'));
     }
 
-    setVisibleLoading(false);
+    hideLoading('login');
   };
 
   const onAppleLogin = async () => {
-    setVisibleLoading(true);
+    showLoading('login');
 
     await analyticsSocialLogin({type: 'apple', step: 'initiated'});
     try {
@@ -229,7 +230,7 @@ const Login = ({navigation}: LoginProps) => {
       await analyticsSocialLogin({type: 'apple', step: 'failed'});
       showToastError(translateText(intl, 'backenderror.user_login_social_error'));
     }
-    setVisibleLoading(false);
+    hideLoading('login');
   };
 
   const doForgotPassword = async (email: string) => {
@@ -237,7 +238,7 @@ const Login = ({navigation}: LoginProps) => {
       return;
     }
 
-    setVisibleLoading(true);
+    showLoading('login');
 
     try {
       const userRepo = new NotAuthenticatedUserRepository();
@@ -252,7 +253,7 @@ const Login = ({navigation}: LoginProps) => {
       showToastError(translateText(intl, 'backenderror.user_reset_pass_error'));
     }
 
-    setVisibleLoading(false);
+    hideLoading('login');
   };
 
   useEffect(() => {
@@ -413,8 +414,7 @@ const Login = ({navigation}: LoginProps) => {
           setIsShown={setShowForgetPasswordDialog}
           onConfirm={email => doForgotPassword(email)}
         />
-
-        <FBSpinner isVisible={visibleLoading}/>
+        
       </ImageBackground>
     </SafeAreaView>
   );

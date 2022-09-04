@@ -16,6 +16,7 @@ import Toast from 'react-native-toast-message';
 import {useAppState} from '@react-native-community/hooks';
 import {check as checkPermission, PERMISSIONS, request as requestPermission} from 'react-native-permissions';
 import {Settings as FBSettings} from 'react-native-fbsdk-next';
+import {FBLoadingProvider} from './src/providers/FBLoaderProvider';
 
 const messages = {
   [FBLocale.BG]: MessagesInBulgarian,
@@ -63,16 +64,17 @@ let FBApp = () => {
     <>
       <IntlProvider messages={messages[selectedLocale]} locale={selectedLocale} defaultLocale={FBLocale.BG}>
         <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-          <StatusBar
-            barStyle={'dark-content'}
-            animated={true}
-            backgroundColor={'#fff'}
-          />
-
-          <FBAuthProvider>
-            <FBRouter/>
-          </FBAuthProvider>
-
+          <FBLoadingProvider>
+            <StatusBar
+              barStyle={'dark-content'}
+              animated={true}
+              backgroundColor={'#fff'}
+            />
+  
+            <FBAuthProvider>
+              <FBRouter/>
+            </FBAuthProvider>
+          </FBLoadingProvider>
         </SafeAreaProvider>
       </IntlProvider>
       <Toast/>

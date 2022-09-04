@@ -1,14 +1,16 @@
 import React, {createContext, useContext, useEffect, useRef, useState} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
-import {FBUser} from "../models/User";
-import {AuthData} from "../models/AuthData";
-import {useDispatch} from "react-redux";
-import {userSetUserAction, userUnsetUserAction} from "../redux/user/actions";
+import {FBUser} from '../models/User';
+import {AuthData} from '../models/AuthData';
+import {useDispatch} from 'react-redux';
+import {userSetUserAction, userUnsetUserAction} from '../redux/user/actions';
 
 interface AuthContextData {
   authData?: AuthData;
   loading: boolean;
-  signIn(params: {user: FBUser, authData: AuthData}) : Promise<void> ;
+
+  signIn(params: { user: FBUser, authData: AuthData }): Promise<void>;
+
   signOut(): void;
 }
 
@@ -24,7 +26,7 @@ const useAuth = (): AuthContextData => {
   }
 
   return context;
-}
+};
 
 const FBAuthProvider: React.FC = ({children}: any) => {
   const [authData, setAuthData] = useState<AuthData>();
@@ -45,14 +47,14 @@ const FBAuthProvider: React.FC = ({children}: any) => {
         setAuthData(_authData);
       }
     } catch (error) {
-      
+
     } finally {
       setLoading(false);
     }
   }
 
-  const signIn = async (params: {user: FBUser, authData: AuthData}) => {
-    dispatch(userSetUserAction({user:params.user}));
+  const signIn = async (params: { user: FBUser, authData: AuthData }) => {
+    dispatch(userSetUserAction({user: params.user}));
     await AsyncStorage.setItem(AUTH_DATA_KEY, JSON.stringify(params.authData));
     setAuthData(params.authData);
   };
@@ -60,7 +62,7 @@ const FBAuthProvider: React.FC = ({children}: any) => {
   const signOut = async () => {
     setAuthData(undefined);
     await AsyncStorage.removeItem(AUTH_DATA_KEY);
-    dispatch(userUnsetUserAction())
+    dispatch(userUnsetUserAction());
   };
 
   return (
@@ -72,5 +74,5 @@ const FBAuthProvider: React.FC = ({children}: any) => {
 
 export {
   useAuth,
-  FBAuthProvider
+  FBAuthProvider,
 };

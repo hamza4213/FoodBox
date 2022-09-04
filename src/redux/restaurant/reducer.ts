@@ -1,19 +1,15 @@
 import {
-  RESTAURANT_DISTANCE_UPDATE,
-  RESTAURANT_FETCH,
-  RESTAURANT_SORT,
-  RESTAURANT_UPDATE_FILTERS,
-  RESTAURANT_UPDATE_QUANTITY,
   RestaurantAction,
+  RestaurantActionType,
   RestaurantDistanceUpdateAction,
   RestaurantFetchAction,
-  RestaurantSortAction,
   RestaurantUpdateFiltersAction,
   RestaurantUpdateQuantityAction,
+  UpdateRestaurantSortOrderAction,
 } from './actions';
 import {RestaurantHomeListItem} from '../../models/Restaurant';
 import {DietType, FoodType} from '../../models/FoodBox';
-import {orderBy, set} from 'lodash';
+import {set} from 'lodash';
 import getDistanceToLocation from '../../utils/getDistanceToLocation';
 
 export interface FBRestaurantFilters {
@@ -53,51 +49,32 @@ export interface FBRestaurantFilters {
   };
 }
 
-export interface RestaurantFilters {
-  active: {
-    activeOffers: boolean;
-  },
-  primary: {
-    1: boolean;
-    2: boolean;
-    3: boolean;
-    4: boolean;
-  },
-  secondary: {
-    5: boolean;
-    6: boolean;
-  },
-  time: {
-    timeInterval: number[]
-  }
+export enum RESTAURANT_SORT_OPTION {
+  LOWEST_PRICE_FIRST = 'lowest_price_first',
+  CLOSEST_DISTANCE_FIRST = 'closest_distance_first',
+  STARTING_SOONEST_FIRST = 'starting_soonest_first',
+  CLOSING_SOONEST_FIRST = 'closing_soonest_first'
 }
+
+export interface RestaurantSortFunction {
+  (r1: RestaurantHomeListItem, r2: RestaurantHomeListItem): number
+}
+
+export const RESTAURANT_SORT_OPTION_TO_SORT_FUNCTION: {[key in RESTAURANT_SORT_OPTION]: RestaurantSortFunction} = {
+  [RESTAURANT_SORT_OPTION.LOWEST_PRICE_FIRST]: (r1, r2) => r1.priceAfaterDiscount - r2.priceAfaterDiscount,
+  [RESTAURANT_SORT_OPTION.CLOSEST_DISTANCE_FIRST]: (r1, r2) => r1.distance - r2.distance,
+  [RESTAURANT_SORT_OPTION.STARTING_SOONEST_FIRST]: (r1, r2) => r1.openTime - r2.openTime,
+  [RESTAURANT_SORT_OPTION.CLOSING_SOONEST_FIRST]: (r1, r2) => r1.closeTime - r2.closeTime,
+};
 
 export interface RestaurantState {
   restaurant: RestaurantHomeListItem[],
-  filters: RestaurantFilters,
-  newFilters: FBRestaurantFilters
+  newFilters: FBRestaurantFilters,
+  sortOrder: RESTAURANT_SORT_OPTION
 }
 
 export const restaurantInitialState: RestaurantState = {
   restaurant: [],
-  filters: {
-    active: {
-      activeOffers: true,
-    },
-    primary: {
-      2: false,
-      3: false,
-      1: false,
-      4: false,
-    },
-    secondary: {
-      6: false,
-      5: false,
-    },
-    time: {
-      timeInterval: [0.0, 24.0],
-    },
-  },
   newFilters: {
     isRestaurantOpen: {
       isEnabled: true,
@@ -134,9 +111,14 @@ export const restaurantInitialState: RestaurantState = {
       userInput: '',
     },
   },
+  sortOrder: RESTAURANT_SORT_OPTION.CLOSEST_DISTANCE_FIRST,
 };
 
-const handleRestaurantUpdateQuantityAction = (state: RestaurantState, data: RestaurantUpdateQuantityAction['data']): RestaurantState => {
+interface RestaurantActionHandler {
+  (state: RestaurantState, data: any): RestaurantState;
+}
+
+const handleRestaurantUpdateQuantityAction: RestaurantActionHandler = (state: RestaurantState, data: RestaurantUpdateQuantityAction['data']): RestaurantState => {
   let updatedBox;
   for (let restaurant of state.restaurant) {
     if (updatedBox) {
@@ -167,17 +149,16 @@ const handleRestaurantUpdateQuantityAction = (state: RestaurantState, data: Rest
   };
 };
 
-const handleRestaurantDistanceUpdateAction = (state: RestaurantState, data: RestaurantDistanceUpdateAction['data']): RestaurantState => {
-  
-  const restaurants = state.restaurant.map(restaurant => {
-    return {
-      ...restaurant,
-      distance: getDistanceToLocation({
-        userLocation: data.userLocation,
-        location: {latitude: restaurant.latitude, longitude: restaurant.longitude},
-      }),
-    };
-  });
+const handleUpdateRestaurantDistanceToUserAction: RestaurantActionHandler = (state: RestaurantState, data: RestaurantDistanceUpdateAction['data']): RestaurantState => {
+
+  const restaurants = [];
+  for (const restaurant of state.restaurant) {
+    restaurant.distance = getDistanceToLocation({
+      userLocation: data.userLocation,
+      location: {latitude: restaurant.latitude, longitude: restaurant.longitude},
+    });
+    restaurants.push(restaurant);
+  }
 
   return {
     ...state,
@@ -185,54 +166,44 @@ const handleRestaurantDistanceUpdateAction = (state: RestaurantState, data: Rest
   };
 };
 
-const handleRestaurantFetchAction = (state: RestaurantState, data: RestaurantFetchAction['data']): RestaurantState => {
+const handleRestaurantFetchAction: RestaurantActionHandler = (state: RestaurantState, data: RestaurantFetchAction['data']): RestaurantState => {
   return {
     ...state,
     restaurant: data.restaurants,
   };
 };
 
-const handleRestaurantUpdateFiltersAction = (state: RestaurantState, data: RestaurantUpdateFiltersAction['data']): RestaurantState => {
+const handleRestaurantUpdateFiltersAction: RestaurantActionHandler = (state: RestaurantState, data: RestaurantUpdateFiltersAction['data']): RestaurantState => {
   set(state, `newFilters.${data.filterCategory}.${data.filterCategoryProperty}`, data.newValue);
   return {
     ...state,
   };
 };
 
-const handleRestaurantSortAction = (state: RestaurantState, data: RestaurantSortAction['data']): RestaurantState => {
-  let restaurants = [...state.restaurant];
-  restaurants = orderBy(restaurants, data.sortOption.id, 'asc');
-
+const handleUpdateRestaurantSortOrderAction: RestaurantActionHandler = (state: RestaurantState, data: UpdateRestaurantSortOrderAction['data']): RestaurantState => {
   return {
     ...state,
-    restaurant: restaurants,
+    sortOrder: data.sortOrder,
   };
 };
 
+const RESTAURANT_ACTION_TO_ACTION_HANDLER_MAP: { [p in RestaurantActionType]: RestaurantActionHandler } = {
+  [RestaurantActionType.RESTAURANT_UPDATE_QUANTITY]: handleRestaurantUpdateQuantityAction,
+  [RestaurantActionType.UPDATE_RESTAURANT_DISTANCE_TO_USER]: handleUpdateRestaurantDistanceToUserAction,
+  [RestaurantActionType.RESTAURANT_FETCH]: handleRestaurantFetchAction,
+  [RestaurantActionType.RESTAURANT_UPDATE_FILTERS]: handleRestaurantUpdateFiltersAction,
+  [RestaurantActionType.UPDATE_RESTAURANT_SORT_ORDER]: handleUpdateRestaurantSortOrderAction,
+};
 
 const restaurantReducer = (
   state: RestaurantState = restaurantInitialState,
   action: RestaurantAction,
 ): RestaurantState => {
-  switch (action.type) {
-    case RESTAURANT_UPDATE_QUANTITY: {
-      return handleRestaurantUpdateQuantityAction(state, action.data);
-    }
-    case RESTAURANT_DISTANCE_UPDATE: {
-      return handleRestaurantDistanceUpdateAction(state, action.data);
-    }
-    case RESTAURANT_FETCH: {
-      return handleRestaurantFetchAction(state, action.data);
-    }
-    case RESTAURANT_SORT: {
-      return handleRestaurantSortAction(state, action.data);
-    }
-    case RESTAURANT_UPDATE_FILTERS:
-      return handleRestaurantUpdateFiltersAction(state, action.data);
-    default: {
-      return state;
-    }
+  if (RESTAURANT_ACTION_TO_ACTION_HANDLER_MAP[action.type]) {
+    return RESTAURANT_ACTION_TO_ACTION_HANDLER_MAP[action.type](state, action.data);
   }
+
+  return state;
 };
 
 export default restaurantReducer;

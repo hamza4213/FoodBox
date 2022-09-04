@@ -1,15 +1,19 @@
 import {RestaurantHomeListItem} from '../../models/Restaurant';
-import {RestaurantListSortOption} from '../../components/Home/restaurantListSortOptions';
 import {FBGeoLocation} from '../../models/FBGeoLocation';
+import {RESTAURANT_SORT_OPTION} from './reducer';
 
-export type RestaurantActionType = string;
+export enum RestaurantActionType {
+  RESTAURANT_UPDATE_FILTERS,
+  RESTAURANT_FETCH,
+  RESTAURANT_UPDATE_QUANTITY,
+  UPDATE_RESTAURANT_DISTANCE_TO_USER,
+  UPDATE_RESTAURANT_SORT_ORDER
+}
 
 export interface RestaurantAction {
   type: RestaurantActionType;
   data: any;
 }
-
-export const RESTAURANT_UPDATE_FILTERS: RestaurantActionType = 'UPDATE_FILTERS';
 
 export interface RestaurantUpdateFiltersAction extends RestaurantAction {
   data: { filterCategory: string; filterCategoryProperty: string; newValue: any; };
@@ -17,26 +21,10 @@ export interface RestaurantUpdateFiltersAction extends RestaurantAction {
 
 export const restaurantUpdateFiltersAction = (params: RestaurantUpdateFiltersAction['data']): RestaurantUpdateFiltersAction => {
   return {
-    type: RESTAURANT_UPDATE_FILTERS,
+    type: RestaurantActionType.RESTAURANT_UPDATE_FILTERS,
     data: params,
   };
 };
-
-export const RESTAURANT_SORT: RestaurantActionType = 'RESTAURANT_SORT';
-
-export interface RestaurantSortAction extends RestaurantAction {
-  data: { sortOption: RestaurantListSortOption };
-}
-
-export const restaurantSortAction = (params: RestaurantSortAction['data']): RestaurantSortAction => {
-  return {
-    type: RESTAURANT_SORT,
-    data: params,
-  };
-};
-
-
-export const RESTAURANT_FETCH: RestaurantActionType = 'RESTAURANT_FETCHED';
 
 export interface RestaurantFetchAction extends RestaurantAction {
   data: { restaurants: RestaurantHomeListItem[] };
@@ -44,13 +32,10 @@ export interface RestaurantFetchAction extends RestaurantAction {
 
 export const restaurantsFetchedAction = (params: RestaurantFetchAction['data']): RestaurantFetchAction => {
   return {
-    type: RESTAURANT_FETCH,
+    type: RestaurantActionType.RESTAURANT_FETCH,
     data: params,
   };
 };
-
-
-export const RESTAURANT_UPDATE_QUANTITY: RestaurantActionType = 'RESTAURANT_UPDATE_QUANTITY';
 
 export interface RestaurantUpdateQuantityAction extends RestaurantAction {
   data: { restaurantId: number; boxId: number; quantityUpdate: number };
@@ -58,12 +43,10 @@ export interface RestaurantUpdateQuantityAction extends RestaurantAction {
 
 export const restaurantUpdateQuantityAction = (params: RestaurantUpdateQuantityAction['data']): RestaurantUpdateQuantityAction => {
   return {
-    type: RESTAURANT_UPDATE_QUANTITY,
+    type: RestaurantActionType.RESTAURANT_UPDATE_QUANTITY,
     data: params,
   };
 };
-
-export const RESTAURANT_DISTANCE_UPDATE: RestaurantActionType = 'RESTAURANT_DISTANCE_UPDATE';
 
 export interface RestaurantDistanceUpdateAction extends RestaurantAction {
   data: { userLocation: FBGeoLocation };
@@ -71,9 +54,18 @@ export interface RestaurantDistanceUpdateAction extends RestaurantAction {
 
 export const restaurantDistanceUpdateAction = (params: RestaurantDistanceUpdateAction['data']): RestaurantDistanceUpdateAction => {
   return {
-    type: RESTAURANT_DISTANCE_UPDATE,
+    type: RestaurantActionType.UPDATE_RESTAURANT_DISTANCE_TO_USER,
     data: params,
   };
 };
 
+export interface UpdateRestaurantSortOrderAction extends RestaurantAction {
+  data: { sortOrder: RESTAURANT_SORT_OPTION };
+}
 
+export const updateRestaurantSortOrderAction = (params: UpdateRestaurantSortOrderAction['data']): UpdateRestaurantSortOrderAction => {
+  return {
+    type: RestaurantActionType.UPDATE_RESTAURANT_SORT_ORDER,
+    data: params,
+  };
+};
