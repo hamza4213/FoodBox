@@ -12,23 +12,25 @@ export const toShowRestaurant = (restaurant: RestaurantHomeListItem, filters: FB
       switch (filterCategoryName) {
         case 'isRestaurantOpen': {
           passesFilters = filterCategoryConfig.isOpen ? passesFilters && RestaurantService.isOpen(box) : passesFilters;
-          // console.log(`isRestaurantOpen ${box.isOpen}`);
+          // console.log('isRestaurantOpen', RestaurantService.isOpen(box));
           break;
         }
 
         case 'hasRestaurantAvailableBoxes': {
           passesFilters = filterCategoryConfig.hasAvailableBoxes ? passesFilters && RestaurantService.hasAvailability(box) : passesFilters;
-          // console.log(`hasRestaurantAvailableBoxes ${box.quantity > 0}`);
+          // console.log('hasRestaurantAvailableBoxes', RestaurantService.hasAvailability(box));
           break;
         }
 
         case 'isNotFinished': {
           passesFilters = filterCategoryConfig.isNotFinished ? passesFilters && !RestaurantService.isFinished(box) : passesFilters;
+          // console.log('isNotFinished', !RestaurantService.isFinished(box));
           break;
         }
 
         case 'canCheckout': {
           passesFilters = filterCategoryConfig.canCheckout ? passesFilters && RestaurantService.canCheckout(box) : passesFilters;
+          // console.log('canCheckout', !RestaurantService.canCheckout(box));
           break;
         }
 
@@ -54,7 +56,6 @@ export const toShowRestaurant = (restaurant: RestaurantHomeListItem, filters: FB
           if (box.foodType && filterCategoryConfig.types.length) {
             // console.log(`foodtype ${box.foodType} in ${filterCategoryConfig.types}`);
             passesFilters = passesFilters && filterCategoryConfig.types.includes(box.foodType);
-
           }
           break;
         }
@@ -69,6 +70,7 @@ export const toShowRestaurant = (restaurant: RestaurantHomeListItem, filters: FB
 
         case 'search': {
           if (filterCategoryConfig.searchTerm) {
+            // console.log('search', filterCategoryConfig.searchTerm);
             passesFilters = passesFilters && restaurant.name.search(new RegExp(filterCategoryConfig.searchTerm, 'i')) >= 0;
           }
           break;

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {FlatList, ListRenderItemInfo, RefreshControl, Text, TouchableOpacity, View} from 'react-native';
 import RestaurantListItem from './restaurantListItem';
 import {RestaurantHomeListItem} from '../../models/Restaurant';
@@ -22,21 +22,10 @@ const RestaurantList = ({
                         }: RestaurantListProps) => {
   
   const intl = useIntl();
-  const {showLoading, hideLoading} = useFbLoading();
   const dispatch = useDispatch();
-  const [rerenderRestaurantsList, setRerenderRestaurantsList] = useState(false);
   const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
   const sortOrder = useSelector((state: FBRootState) => state.restaurantState.sortOrder);
   const restaurants = useSelector((state: FBRootState) => state.restaurantState.filteredRestaurants);
-
-  useEffect(() => {
-    if (restaurants.length) {
-      showLoading('sortingRestaurants');
-      restaurants.sort(RESTAURANT_SORT_OPTION_TO_SORT_FUNCTION[sortOrder]);
-      setRerenderRestaurantsList(r => !r);
-      hideLoading('sortingRestaurants');
-    }
-  }, [sortOrder, restaurants, showLoading, hideLoading]);
 
   const renderRestaurantItem = (item: ListRenderItemInfo<RestaurantHomeListItem>) => {
     return <RestaurantListItem
@@ -67,7 +56,6 @@ const RestaurantList = ({
           backgroundColor: isSelected ? '#0bd53a' : '#fff',
         }}
         onPress={() => {
-          console.log('sortOPtion clicked', sortOption);
           dispatch(updateRestaurantSortOrderAction({sortOrder: sortOption}));
         }}
       >
@@ -175,7 +163,6 @@ const RestaurantList = ({
 
         <FlatList
           data={restaurants}
-          extraData={rerenderRestaurantsList}
           renderItem={renderRestaurantItem}
           keyExtractor={(item) => item.listIndex.toString()}
           refreshControl={

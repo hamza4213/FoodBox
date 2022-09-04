@@ -10,7 +10,7 @@ const logEvent = async (name: string, data: any) => {
   try {
     data.env = ENVIRONMENT;
 
-    console.log(name, data);
+    // console.log(name, data);
     
     if (data.data) {
       Object.assign(data, data.data);
@@ -56,7 +56,7 @@ const logEvent = async (name: string, data: any) => {
       }
     });
 
-    console.log(name, data);
+    // console.log(name, data);
 
 
     if (name === 'BasketUpdated') {
