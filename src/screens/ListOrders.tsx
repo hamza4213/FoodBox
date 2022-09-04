@@ -309,6 +309,34 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
   if (orders.length) {
     return (
       <SafeAreaView style={styles.mainWrapper}>
+        
+        <TouchableOpacity
+          style={{
+            marginHorizontal: 2,
+            marginVertical: 10,
+            shadowColor: 'rgba(0,0,0, .4)', // IOS
+            shadowOffset: {height: 1, width: 1}, // IOS
+            shadowOpacity: 1, // IOS
+            shadowRadius: 1, //IOS
+            elevation: 2, // Android
+            padding: 10,
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'row',
+            borderRadius: 20,
+            backgroundColor: COLORS.secondary,
+          }}
+          onPress={() => fetchOrders()}
+        >
+          <Text style={{
+            color: 'white',
+            fontSize: 12,
+          }}
+          >
+            {translateText(intl, 'home.refresh')}
+          </Text>
+        </TouchableOpacity>
+        
         <FlatList
           data={orders}
           renderItem={renderItem}
@@ -321,6 +349,7 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
             />
           }
         />
+        
 
         <CancelOrderDialog
           isShown={showCancelDialog}

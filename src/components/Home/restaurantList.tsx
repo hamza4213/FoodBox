@@ -3,7 +3,6 @@ import {FlatList, ListRenderItemInfo, RefreshControl, Text, TouchableOpacity, Vi
 import RestaurantListItem from './restaurantListItem';
 import {RestaurantHomeListItem} from '../../models/Restaurant';
 import {FBRootState} from '../../redux/store';
-import RestaurantListItemEmpty from './restaurantListItemEmpty';
 import {useDispatch, useSelector} from 'react-redux';
 import {translateText} from '../../lang/translate';
 import {useIntl} from 'react-intl';
@@ -86,9 +85,45 @@ const RestaurantList = ({
     onRefreshTriggered();
   };
 
+  // check if empty
   if (restaurants.length === 0) {
     return (
-      <RestaurantListItemEmpty/>
+      <View style={{flex: 1}}>
+        <TouchableOpacity
+          style={{
+            marginHorizontal: 2,
+            marginVertical: 10,
+            shadowColor: 'rgba(0,0,0, .4)', // IOS
+            shadowOffset: {height: 1, width: 1}, // IOS
+            shadowOpacity: 1, // IOS
+            shadowRadius: 1, //IOS
+            elevation: 2, // Android
+            padding: 10,
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'row',
+            borderRadius: 20,
+            backgroundColor: COLORS.secondary,
+          }}
+          onPress={() => onRestaurantListRefresh()}
+        >
+          <Text style={{
+            color: 'white',
+            fontSize: 12,
+          }}
+          >
+            {translateText(intl, 'home.refresh')}
+          </Text>
+        </TouchableOpacity>
+        
+        <Text style={{
+          fontSize: 12,
+          color: 'grey',
+          fontWeight: '700'
+        }}>
+          {translateText(intl,'restaurantslist.empty')}
+        </Text>
+      </View>
     );
   } else {
     return (
@@ -115,9 +150,7 @@ const RestaurantList = ({
               borderRadius: 20,
               backgroundColor: COLORS.red,
             }}
-            onPress={() => {
-              console.log('refresh list');
-            }}
+            onPress={() => onRestaurantListRefresh()}
           >
             <Text style={{
               color: 'white',
