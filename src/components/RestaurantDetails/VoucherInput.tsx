@@ -8,6 +8,7 @@ import {COLORS} from '../../constants';
 import {useAuth} from '../../providers/AuthProvider';
 import {useIntl} from 'react-intl';
 import {translateText} from '../../lang/translate';
+import {isFBAppError, isFBBackendError, isFBGenericError} from '../../network/axiosClient';
 
 
 export interface VoucherCodeInputProps {
@@ -30,14 +31,16 @@ const VoucherInput = (props: VoucherCodeInputProps) => {
     onAddVoucher,
     isOnFocus,
   } = props;
-
+  
+  const intl = useIntl();
   const styles = stylesCreator({});
   const [hasAlreadyAddedVoucher, setHasAlreadyAddedVoucher] = useState(false);
   const [isVoucherValid, setIsVoucherValid] = useState(true);
+  const [voucherInvalidMessage, setVoucherInvalidMessage] = useState(translateText(intl, 'offer.invalid_promo_code'));
   const [voucher, setVoucher] = useState<FBUserVoucher | null>();
   const [canAddVoucher, setCanAddVoucher] = useState(numberOfBoxesInBasket > 0 && !hasAlreadyAddedVoucher);
   const {authData} = useAuth();
-  const intl = useIntl();
+  
 
   const voucherChangeHandler = (v: FBUserVoucher) => {
     v = v.trim();
@@ -56,25 +59,31 @@ const VoucherInput = (props: VoucherCodeInputProps) => {
     const promoCodeRepository = new UserVoucherRepository({authData: authData!});
 
     try {
-      const isPromoCodeValidResult = await promoCodeRepository.verify({
+      const isPromoCodeValidResult = await promoCodeRepository.apply({
         voucher: voucher,
         numberOfBoxesInBasket: numberOfBoxesInBasket,
         boxId: foodBoxId,
       });
 
       setIsVoucherValid(isPromoCodeValidResult.isValid);
-
-      if (!isVoucherValid) {
-        showToastError(translateText(intl, 'offer.invalid_promo_code'));
+      
+      setHasAlreadyAddedVoucher(true);
+      await onAddVoucher(voucher, isPromoCodeValidResult.discountedPrice / numberOfBoxesInBasket);
+    } catch (error) {
+      if (isFBAppError(error) || isFBGenericError(error)) {
+        setVoucherInvalidMessage(translateText(intl, error.key));
+        showToastError(translateText(intl, error.key));
+      } else if (isFBBackendError(error)) {
+        setVoucherInvalidMessage(error.message);
+        showToastError(error.message);
       } else {
-        setHasAlreadyAddedVoucher(true);
-        await onAddVoucher(voucher, isPromoCodeValidResult.discountedPrice / numberOfBoxesInBasket);
+        showToastError(translateText(intl, 'genericerror'));
+        setVoucherInvalidMessage(translateText(intl, 'offer.invalid_promo_code'));
       }
-    } catch (e) {
+
       setIsVoucherValid(false);
       setVoucher('');
       setCanAddVoucher(false);
-      showToastError(translateText(intl, 'backenderror.validate_promocode_error'));
     }
 
     setIsLoading(false);
@@ -141,7 +150,7 @@ const VoucherInput = (props: VoucherCodeInputProps) => {
       {!isVoucherValid &&
         <View style={styles.errorTextWrapper}>
           <Text style={styles.errorText}>
-            {translateText(intl, 'offer.invalid_promo_code')}
+            {voucherInvalidMessage}
           </Text>
         </View>
       }

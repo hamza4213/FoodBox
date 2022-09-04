@@ -32,6 +32,7 @@ import {orderBy} from 'lodash';
 import {formatPrice} from '../utils/formatPrice';
 import {RestaurantService} from '../services/RestaurantService';
 import {showOnMap} from '../utils/showOnMap';
+import {isFBAppError, isFBBackendError, isFBGenericError} from '../network/axiosClient';
 
 interface ListOrdersProps {
   navigation: any;
@@ -80,8 +81,14 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
       let fetchedOrders = await orderRepository.getAll({});
       fetchedOrders = orderBy(fetchedOrders, ['createdAt'], 'desc');
       dispatch(ordersFetchedAction({orders: fetchedOrders}));
-    } catch (e) {
-      showToastError(translateText(intl, 'backenderror.get_order_error'));
+    } catch (error) {
+      if (isFBAppError(error) || isFBGenericError(error)) {
+        showToastError(translateText(intl, error.key));
+      } else if (isFBBackendError(error)) {
+        showToastError(error.message);
+      } else {
+        showToastError(translateText(intl, 'genericerror'));
+      }
     }
 
     setVisibleLoading(false);
@@ -95,16 +102,18 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
     try {
       const orderRepository: OrderRepository = new OrderRepository({authData: authData!, user: user});
 
-      const wasCancelled = await orderRepository.cancelOrder({orderId});
-
-      if (wasCancelled) {
-        dispatch(orderCancelledAction({orderId}));
-        await analyticsOrderStatusChange({userId: user.id, email: user.email, orderId: orderId, status: 'cancelled'});
+      await orderRepository.cancelOrder({orderId});
+      
+      dispatch(orderCancelledAction({orderId}));
+      await analyticsOrderStatusChange({userId: user.id, email: user.email, orderId: orderId, status: 'cancelled'});
+    } catch (error) {
+      if (isFBAppError(error) || isFBGenericError(error)) {
+        showToastError(translateText(intl, error.key));
+      } else if (isFBBackendError(error)) {
+        showToastError(error.message);
       } else {
-        showToastError(translateText(intl, 'backenderror.cancel_order_error'));
+        showToastError(translateText(intl, 'genericerror'));
       }
-    } catch (e) {
-      showToastError(translateText(intl, 'backenderror.cancel_order_error'));
     }
 
     setVisibleLoading(false);
@@ -120,16 +129,18 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
     try {
       const orderRepository: OrderRepository = new OrderRepository({authData: authData!, user: user});
 
-      const isConfirmed = await orderRepository.confirmOrder({orderId: order.id});
-
-      if (isConfirmed) {
-        dispatch(orderConfirmedAction({orderId: order.id}));
-        await analyticsOrderStatusChange({userId: user.id, email: user.email, orderId: order.id, status: 'confirmed'});
+      await orderRepository.confirmOrder({orderId: order.id});
+      
+      dispatch(orderConfirmedAction({orderId: order.id}));
+      await analyticsOrderStatusChange({userId: user.id, email: user.email, orderId: order.id, status: 'confirmed'});
+    } catch (error) {
+      if (isFBAppError(error) || isFBGenericError(error)) {
+        showToastError(translateText(intl, error.key));
+      } else if (isFBBackendError(error)) {
+        showToastError(error.message);
       } else {
-        showToastError(translateText(intl, 'backenderror.confirm_order_error'));
+        showToastError(translateText(intl, 'genericerror'));
       }
-    } catch (e) {
-      showToastError(translateText(intl, 'backenderror.confirm_order_error'));
     }
 
     setVisibleLoading(false);

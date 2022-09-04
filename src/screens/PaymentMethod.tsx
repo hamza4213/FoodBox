@@ -16,6 +16,7 @@ import {FBRootState} from '../redux/store';
 import {FBUser} from '../models/User';
 import {useIntl} from 'react-intl';
 import {translateText} from '../lang/translate';
+import {isFBAppError, isFBBackendError, isFBGenericError} from '../network/axiosClient';
 
 export interface PaymentMethodProps {
   route: any;
@@ -55,17 +56,21 @@ const PaymentMethod = ({route, navigation}: PaymentMethodProps) => {
         userVoucher: userVoucher,
       });
 
-      if (createResult.isCreated) {
-        navigation.navigate('OrderFinalized', {
-          orderPin: createResult.pin,
-          foodBox: foodBox,
-          promoCode: userVoucher,
-        });
-      } else {
-        navigation.navigate('OrderError');
-      }
+      navigation.navigate('OrderFinalized', {
+        orderPin: createResult.pin,
+        foodBox: foodBox,
+        promoCode: userVoucher,
+      });
     } catch (error) {
-      showToastError(translateText(intl, 'backenderror.order_error'));
+      if (isFBAppError(error) || isFBGenericError(error)) {
+        showToastError(translateText(intl, error.key));
+      } else if (isFBBackendError(error)) {
+        showToastError(error.message);
+      } else {
+        showToastError(translateText(intl, 'genericerror'));
+      }
+      
+      navigation.navigate('OrderError');
     }
 
     setVisibleLoading(false);

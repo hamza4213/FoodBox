@@ -148,7 +148,7 @@ const OrderFinalized = ({route, navigation}: OrderFinalizedProps) => {
           <TouchableOpacity
             style={styles.back}
             onPress={() => {
-              navigation.navigate('HomeTabs');
+              navigation.navigate('HomeTabs', {refreshRestaurants: true});
             }}>
             <Text style={{color: '#fff', fontWeight: '500'}}>
               {translateText(intl,'back')}

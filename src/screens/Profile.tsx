@@ -26,6 +26,7 @@ import {useIntl} from 'react-intl';
 import {translateText} from '../lang/translate';
 import {useForm} from 'react-hook-form';
 import FBFormInput from '../components/common/FBFormInput';
+import {isFBAppError, isFBBackendError, isFBGenericError} from '../network/axiosClient';
 
 interface ModalProps {
   toShow: boolean;
@@ -58,14 +59,17 @@ const Profile = () => {
 
     try {
       const userRepository = new UserRepository({authData: authData!});
-      const isUpdated = await userRepository.updatePassword({newPassword});
-      if (isUpdated) {
-        dispatch(userUpdateProfileAction({user}));
+      await userRepository.updatePassword({newPassword});
+      
+      dispatch(userUpdateProfileAction({user}));
+    } catch (error) {
+      if (isFBAppError(error) || isFBGenericError(error)) {
+        showToastError(translateText(intl, error.key));
+      } else if (isFBBackendError(error)) {
+        showToastError(error.message);
       } else {
-        showToastError(translateText(intl, 'profile.user_update_error'));
+        showToastError(translateText(intl, 'genericerror'));
       }
-    } catch (e) {
-      showToastError(translateText(intl, 'profile.user_update_error'));
     }
 
     setVisibleLoading(false);
@@ -82,14 +86,17 @@ const Profile = () => {
 
     try {
       const userRepository = new UserRepository({authData: authData!});
-      const isUpdated = await userRepository.updateUser(user);
-      if (isUpdated) {
-        dispatch(userUpdateProfileAction({user}));
+      await userRepository.updateUser(user);
+      
+      dispatch(userUpdateProfileAction({user}));
+    } catch (error) {
+      if (isFBAppError(error) || isFBGenericError(error)) {
+        showToastError(translateText(intl, error.key));
+      } else if (isFBBackendError(error)) {
+        showToastError(error.message);
       } else {
-        showToastError(translateText(intl, 'profile.user_update_error'));
+        showToastError(translateText(intl, 'genericerror'));
       }
-    } catch (e) {
-      showToastError(translateText(intl, 'profile.user_update_error'));
     }
 
     setVisibleLoading(false);

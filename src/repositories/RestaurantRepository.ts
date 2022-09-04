@@ -26,18 +26,14 @@ class RestaurantRepository implements BaseRestaurantRepository {
 
   public async getAllWithProduct(): Promise<Restaurant[]> {
     const url = '/user/restaurants?getProducts=true';
-    try {
-      const response: getRestaurantsWithProductResponse = await axiosClient.get(url, {
-        headers: {
-          'x-access-token': this.authData.userToken,
-        },
-      });
+    
+    const response: getRestaurantsWithProductResponse = await axiosClient.get(url, {
+      headers: {
+        'x-access-token': this.authData.userToken,
+      },
+    });
 
-      return response.restaurants.map((r: any) => RestaurantMapper.fromApi(r));
-    } catch (e) {
-      console.log(e);
-      throw new RestaurantRepositoryError();
-    }
+    return response.restaurants.map((r: any) => RestaurantMapper.fromApi(r));
   }
 }
 

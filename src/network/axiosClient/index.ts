@@ -22,8 +22,10 @@ axiosClient.interceptors.response.use(
     return response;
   },
   error => {
+    
     if (error && error.response) {
       if (error.response.status >= 400 && error.response.status <= 600) {
+        console.log('error', error.response.data);
         throw new FBBackendError(
           error.response.status,
           error.response.data.message,

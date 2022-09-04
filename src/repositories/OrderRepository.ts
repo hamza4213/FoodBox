@@ -43,60 +43,52 @@ class OrderRepository implements BaseOrderRepository {
 
   async confirmOrder(params: { orderId: number }): Promise<boolean> {
     const url = '/user/confirm-order-completed/';
-    try {
-      const result: { success: boolean } = await axiosClient.patch(
-        url,
-        QueryString.stringify({
-          orderId: params.orderId,
-        }),
-        {
-          headers: {
-            'x-access-token': this.authData.userToken,
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
+    
+    const result: { success: boolean } = await axiosClient.patch(
+      url,
+      QueryString.stringify({
+        orderId: params.orderId,
+      }),
+      {
+        headers: {
+          'x-access-token': this.authData.userToken,
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-      );
+      },
+    );
 
-      return result.success;
-    } catch (e) {
-      throw new OrderRepositoryError();
-    }
+    return result.success;
   }
 
   async cancelOrder(params: { orderId: number }): Promise<boolean> {
     const url = '/user/orders/' + params.orderId;
-    try {
-      const result: { success: boolean } = await axiosClient.delete(
-        url,
-        {
-          headers: {
-            'x-access-token': this.authData.userToken,
-          },
+    
+    const result: { success: boolean } = await axiosClient.delete(
+      url,
+      {
+        headers: {
+          'x-access-token': this.authData.userToken,
         },
-      );
+      },
+    );
 
-      return result.success;
-    } catch (e) {
-      throw new OrderRepositoryError();
-    }
+    return result.success;
   }
 
   async getAll(params: {}): Promise<FBOrder[]> {
     const url = '/user/orders';
-    try {
-      const result: { orders: any[] } = await axiosClient.get(
-        url,
-        {
-          headers: {
-            'x-access-token': this.authData.userToken,
-          },
+    
+    const result: { orders: any[] } = await axiosClient.get(
+      url,
+      {
+        headers: {
+          'x-access-token': this.authData.userToken,
         },
-      );
+      },
+    );
 
-      return result.orders.map(o => FBOrderMapper.fromApi(o));
-    } catch (e) {
-      throw new OrderRepositoryError();
-    }
+    return result.orders.map(o => FBOrderMapper.fromApi(o));
+  
   }
 
   async createOrder(params: CreateOrderParams): Promise<{ isCreated: boolean, pin: string }> {
@@ -132,9 +124,6 @@ class OrderRepository implements BaseOrderRepository {
         pin: responseData.pin,
       };
     } catch (e: any) {
-      
-      console.log(e);
-
       await analyticsCheckoutStepChange({
         userId: this.user.id,
         email: this.user.email,
@@ -144,13 +133,8 @@ class OrderRepository implements BaseOrderRepository {
         step: 'failed',
         error: e.response?.data.message,
       });
-
-      if (axios.isAxiosError(e)) {
-        throw new UserRepositoryError(e.response?.data.message);
-      } else {
-        throw new UserRepositoryError();
-      }
-
+      
+      throw e;
     }
   }
 

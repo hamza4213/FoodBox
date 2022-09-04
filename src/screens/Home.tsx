@@ -6,7 +6,6 @@ import {showToastError} from '../common/FBToast';
 import {restaurantResetAction, restaurantsFetchedAction} from '../redux/restaurant/actions';
 import {RestaurantService} from '../services/RestaurantService';
 import {RestaurantRepository} from '../repositories/RestaurantRepository';
-import FBSpinner from '../components/common/spinner';
 import RestaurantList from '../components/Home/restaurantList';
 import ExpandListButton from '../components/Home/expandListButton';
 import {FBRootState} from '../redux/store';
@@ -22,6 +21,7 @@ import {useIntl} from 'react-intl';
 import {translateText} from '../lang/translate';
 import {UserRepository} from '../repositories/UserRepository';
 import {useFbLoading} from '../providers/FBLoaderProvider';
+import {isFBAppError, isFBBackendError, isFBGenericError} from '../network/axiosClient';
 
 export interface HomeProps {
   route: any;
@@ -30,11 +30,10 @@ export interface HomeProps {
 
 // TODO: rename ot availableBoxes
 const Home = ({navigation}: HomeProps) => {
-  const {signOut} = useAuth();
+  const {signOut, authData} = useAuth();
 
   const [isFullScreen, setIsFullScreen] = useState(false);
   const styles = stylesCreator({isFullScreen});
-  const {authData} = useAuth();
 
   const [termsAndConditionsModal, setTermsAndConditionsModalVisible] = useState(false);
 
@@ -58,9 +57,14 @@ const Home = ({navigation}: HomeProps) => {
       const restaurantService = new RestaurantService({restaurantRepository});
       const restaurantsListItems = await restaurantService.getRestaurantsForHome({userLocation});
       dispatch(restaurantsFetchedAction({restaurants: restaurantsListItems}));
-    } catch (e) {
-      console.log(e);
-      showToastError(translateText(intl, 'backenderror.get_restaurant_error'));
+    } catch (error) {
+      if (isFBAppError(error) || isFBGenericError(error)) {
+        showToastError(translateText(intl, error.key));
+      } else if (isFBBackendError(error)) {
+        showToastError(error.message);
+      } else {
+        showToastError(translateText(intl, 'genericerror'));
+      }
       dispatch(restaurantResetAction());
     }
     
@@ -84,13 +88,24 @@ const Home = ({navigation}: HomeProps) => {
   const confirmTermsAndConditions = async () => {
     setTermsAndConditionsModalVisible(false);
 
-    // update TC
+    
     const userRepository = new UserRepository({authData: authData!});
-    await userRepository.acceptTC({userId: user.id, email: user.email});
+    try {
+      // update TC
+      await userRepository.acceptTC({userId: user.id, email: user.email});
 
-    // fetch user again
-    const newUser = await userRepository.checkMe({});
-    dispatch(userSetUserAction({user: newUser}));
+      // fetch user again
+      const newUser = await userRepository.checkMe({});
+      dispatch(userSetUserAction({user: newUser}));
+    } catch (error) {
+      if (isFBAppError(error) || isFBGenericError(error)) {
+        showToastError(translateText(intl, error.key));
+      } else if (isFBBackendError(error)) {
+        showToastError(error.message);
+      } else {
+        showToastError(translateText(intl, 'genericerror'));
+      }
+    }
   };
 
   const declineTermsAndConditions = async () => {
@@ -142,13 +157,6 @@ const Home = ({navigation}: HomeProps) => {
           }}
         />
       </FbModal>
-      {/*<FbModal */}
-      {/*  confirm={() => confirmLocation()} */}
-      {/*  modalVisible={locationPromptModal}*/}
-      {/*>*/}
-      {/*  <Text>{translateText(intl,'prompts.location')}</Text>*/}
-      {/*</FbModal>*/}
-      {/*<FBSpinner isVisible={isLoading}/>*/}
     </SafeAreaView>
   );
 };

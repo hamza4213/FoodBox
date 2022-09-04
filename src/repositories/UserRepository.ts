@@ -300,130 +300,112 @@ class UserRepository extends NotAuthenticatedUserRepository implements BaseAuthe
 
   async checkMe(params: {}): Promise<FBUser> {
     const url = '/user/me';
-
-    try {
-      const result: { success: boolean, data: any } = await axiosClient.get(
-        url,
-        {
-          headers: {
-            'x-access-token': this.authData.userToken,
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
+    
+    const result: { success: boolean, data: any } = await axiosClient.get(
+      url,
+      {
+        headers: {
+          'x-access-token': this.authData.userToken,
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-      );
-      return new FBUserMapper().fromApi(result.data);
-    } catch (e) {
-      throw new UserRepositoryError();
-    }
+      },
+    );
+    
+    return new FBUserMapper().fromApi(result.data);
   }
 
   async updateLocale(params: { locale: FBLocale }): Promise<boolean> {
     const url = '/user/language';
-    try {
-      const result: { success: boolean } = await axiosClient.put(
-        url,
-        QueryString.stringify({
-          locale: params.locale,
-        }),
-        {
-          headers: {
-            'x-access-token': this.authData.userToken,
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
+    
+    const result: { success: boolean } = await axiosClient.put(
+      url,
+      QueryString.stringify({
+        locale: params.locale,
+      }),
+      {
+        headers: {
+          'x-access-token': this.authData.userToken,
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-      );
+      },
+    );
 
-      return result.success;
-    } catch (e) {
-      throw new UserRepositoryError();
-    }
+    return result.success;
   }
 
   async updateUser(params: Partial<FBUser>): Promise<boolean> {
     const url = '/user/me';
-    try {
-      const result: { success: boolean } = await axiosClient.put(
-        url,
-        QueryString.stringify({
-          firstName: params.firstName,
-          lastName: params.lastName,
-          phoneNumber: params.phoneNumber,
-        }),
-        {
-          headers: {
-            'x-access-token': this.authData.userToken,
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
+    
+    const result: { success: boolean } = await axiosClient.put(
+      url,
+      QueryString.stringify({
+        firstName: params.firstName,
+        lastName: params.lastName,
+        phoneNumber: params.phoneNumber,
+      }),
+      {
+        headers: {
+          'x-access-token': this.authData.userToken,
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-      );
+      },
+    );
 
-      return result.success;
-    } catch (e) {
-      throw new UserRepositoryError();
-    }
+    return result.success;
   }
 
   async acceptTC(params: { userId: number; email: string; }): Promise<boolean> {
     const url = '/user/accept-tc';
-    try {
-      const result: { success: boolean } = await axiosClient.patch(
-        url,
-        undefined,
-        {
-          headers: {
-            'x-access-token': this.authData.userToken,
-          },
+    
+    const result: { success: boolean } = await axiosClient.patch(
+      url,
+      undefined,
+      {
+        headers: {
+          'x-access-token': this.authData.userToken,
         },
-      );
+      },
+    );
 
-      await analyticsSetTC({...params, action: 'accept'});
+    await analyticsSetTC({...params, action: 'accept'});
 
-      return result.success;
-    } catch (e) {
-      throw new UserRepositoryError();
-    }
+    return result.success;
   }
 
   async setCommunicationId(params: { communicationId: string }): Promise<boolean> {
     const url = '/user/device-id';
-    try {
-      const result: { success: boolean } = await axiosClient.post(
-        url,
-        QueryString.stringify({
-          deviceId: params.communicationId,
-        }),
-        {
-          headers: {
-            'x-access-token': this.authData.userToken,
-          },
+    
+    const result: { success: boolean } = await axiosClient.post(
+      url,
+      QueryString.stringify({
+        deviceId: params.communicationId,
+      }),
+      {
+        headers: {
+          'x-access-token': this.authData.userToken,
         },
-      );
+      },
+    );
 
-      return result.success;
-    } catch (e) {
-      throw new UserRepositoryError();
-    }
+    return result.success;
   }
 
   async updatePassword(params: { newPassword: string }): Promise<boolean> {
     const url = '/user/update-password-logged';
-    try {
-      const result: { success: boolean } = await axiosClient.put(
-        url,
-        QueryString.stringify({
-          newPass: params.newPassword,
-        }),
-        {
-          headers: {
-            'x-access-token': this.authData.userToken,
-          },
+    
+    const result: { success: boolean } = await axiosClient.put(
+      url,
+      QueryString.stringify({
+        newPass: params.newPassword,
+      }),
+      {
+        headers: {
+          'x-access-token': this.authData.userToken,
         },
-      );
+      },
+    );
 
-      return result.success;
-    } catch (e) {
-      throw new UserRepositoryError();
-    }
+    return result.success;
   }
 }
 
