@@ -1,7 +1,7 @@
-import React, {ReactNode} from "react";
-import {Modal, StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle} from "react-native";
-import {useIntl} from "react-intl";
-import {translateText} from "../../lang/translate";
+import React, {ReactNode} from 'react';
+import {Modal, StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle} from 'react-native';
+import {useIntl} from 'react-intl';
+import {translateText} from '../../lang/translate';
 
 type FbModalProps = {
   modalVisible: boolean;
@@ -14,63 +14,63 @@ type FbModalProps = {
 const FbModal = ({modalVisible, children, confirm, contentContainerStyles, decline}: FbModalProps) => {
   const intl = useIntl();
   return (
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-      >
-        <View style={styles.centeredView}>
-          <View style={[styles.modalView, contentContainerStyles]}>
-            {children}
-            <View style={styles.buttonContainer}>
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+    >
+      <View style={styles.centeredView}>
+        <View style={[styles.modalView, contentContainerStyles]}>
+          {children}
+          <View style={styles.buttonContainer}>
 
-              { !!decline &&
-                <TouchableOpacity
-                  style={[styles.buttonDecline, styles.button]}
-                  onPress={decline}>
-                  <View>
-                    <Text style={{color: '#fff'}}>
-                      {translateText(intl,'decline')}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              }
-              
+            {!!decline &&
               <TouchableOpacity
-                style={[styles.buttonAccept, styles.button]}
-                onPress={confirm}>
+                style={[styles.buttonDecline, styles.button]}
+                onPress={decline}>
                 <View>
                   <Text style={{color: '#fff'}}>
-                    {translateText(intl,'accept')}
+                    {translateText(intl, 'decline')}
                   </Text>
                 </View>
               </TouchableOpacity>
+            }
 
-            </View>
+            <TouchableOpacity
+              style={[styles.buttonAccept, styles.button]}
+              onPress={confirm}>
+              <View>
+                <Text style={{color: '#fff'}}>
+                  {translateText(intl, 'accept')}
+                </Text>
+              </View>
+            </TouchableOpacity>
+
           </View>
         </View>
-      </Modal>
+      </View>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
   modalView: {
-    maxWidth: "80%",
-    maxHeight: "70%",
+    maxWidth: '80%',
+    maxHeight: '70%',
     borderRadius: 20,
     padding: 16,
-    alignItems: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    alignSelf: "center",
-    overflow: "hidden",
-    backgroundColor: "white",
+    alignSelf: 'center',
+    overflow: 'hidden',
+    backgroundColor: 'white',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -85,13 +85,13 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     paddingVertical: 12,
     height: 50,
-    width: "100%",
+    width: '100%',
     maxWidth: 120,
   },
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.6)',
   },
   buttonAccept: {
@@ -101,17 +101,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#ff0000',
   },
   buttonConfirm: {
-    backgroundColor: "#21f332",
+    backgroundColor: '#21f332',
   },
   textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "center"
-  }
+    textAlign: 'center',
+  },
 });
 
 export default FbModal;

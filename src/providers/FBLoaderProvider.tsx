@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ReactNode, useCallback, useContext, useReducer, useState} from 'react';
+import {ReactNode, useCallback, useContext, useReducer} from 'react';
 import FBSpinner from '../components/common/spinner';
 
 export interface FBLoadingState {
@@ -85,18 +85,24 @@ export const useFbLoading = (): FBLoadingContextData => {
   return context;
 };
 
-export const FBLoadingProvider = ({children}: {children?: ReactNode}) => {
+export const FBLoadingProvider = ({children}: { children?: ReactNode }) => {
 
   const [fbLoadingState, fbLoadingDispatch] = useReducer(fbLoadingReducer, {isLoading: false, loaders: {}});
 
   const showLoading = useCallback((loader: string) => {
+      console.log('showLoading ', loader);
       fbLoadingDispatch(fbLoadingShowLoadingAction({loader}));
     },
     [],
   );
+
   const hideLoading = useCallback((loader: string) => {
-    fbLoadingDispatch(fbLoadingHideLoadingAction({loader}));
-  }, []);
+      console.log('hideLoading ', loader);
+      fbLoadingDispatch(fbLoadingHideLoadingAction({loader}));
+    },
+    [],
+  );
+
 
   return (
     <FBLoaderContext.Provider value={{fbLoadingState, showLoading, hideLoading}}>

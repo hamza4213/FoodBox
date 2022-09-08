@@ -4,6 +4,7 @@ import {FBUser} from '../models/User';
 import {AuthData} from '../models/AuthData';
 import {useDispatch} from 'react-redux';
 import {userSetUserAction, userUnsetUserAction} from '../redux/user/actions';
+import {restaurantResetAction} from '../redux/restaurant/actions';
 
 interface AuthContextData {
   authData?: AuthData;
@@ -63,6 +64,7 @@ const FBAuthProvider = ({children}: {children?: ReactNode}) => {
     setAuthData(undefined);
     await AsyncStorage.removeItem(AUTH_DATA_KEY);
     dispatch(userUnsetUserAction());
+    dispatch(restaurantResetAction());
   };
 
   return (

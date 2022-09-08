@@ -15,11 +15,10 @@ import {COLORS, images} from '../../constants';
 import {Utils} from '../../utils';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
-import {AccessToken, LoginButton, LoginManager} from 'react-native-fbsdk-next';
+import {AccessToken, LoginManager} from 'react-native-fbsdk-next';
 import {showToast, showToastError} from '../../common/FBToast';
 import {appleAuth, AppleButton} from '@invertase/react-native-apple-authentication';
 import FBButton from '../../components/common/button';
-import FBSpinner from '../../components/common/spinner';
 import ForgotPasswordDialog from '../../components/login/ForgotPasswordDialog';
 import {NotAuthenticatedUserRepository} from '../../repositories/UserRepository';
 import {useAuth} from '../../providers/AuthProvider';
@@ -42,7 +41,7 @@ import ENFLag from '../../../assets/flags/us.svg';
 // @ts-ignore
 import ROFLag from '../../../assets/flags/ro.svg';
 import {useFbLoading} from '../../providers/FBLoaderProvider';
-import {FBAppError, FBError, isFBAppError, isFBBackendError, isFBGenericError} from '../../network/axiosClient';
+import {isFBAppError, isFBBackendError, isFBGenericError} from '../../network/axiosClient';
 
 
 interface LoginProps {
@@ -69,26 +68,14 @@ const Login = ({navigation}: LoginProps) => {
       password: 'Foodobox2k23',
     },
   });
-
-  GoogleSignin.configure({
-    scopes: [], // what API you want to access on behalf of the user, default is email and profile
-    webClientId:
-      '378104807990-kf7eh44l746m88am2mcjl3mt13ouiiuq.apps.googleusercontent.com',
-    // client ID of type WEB for your server (needed to verify user ID and offline access)
-    offlineAccess: true, // [iOS] The user's ID, or email address, to be prefilled in the authentication UI if possible. [See docs here](https://developers.google.com/identity/sign-in/ios/api/interface_g_i_d_sign_in.html#a0a68c7504c31ab0b728432565f6e33fd)
-    forceCodeForRefreshToken: true, // [Android] specifies an account name on the device that should be used
-    iosClientId:
-      '378104807990-n6n7c6m3eal3c3sd5ja1thum91kljinv.apps.googleusercontent.com', // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
-  });
-
+  
   const doLogin = async (data: LoginFormData) => {
     let {
       email, password,
     } = data;
 
     email = email.trim();
-    password = password.trim();
-    
+
     showLoading('login');
 
     try {
@@ -158,7 +145,7 @@ const Login = ({navigation}: LoginProps) => {
 
       LoginManager.logOut();
       const loginResult = await LoginManager.logInWithPermissions(['email', 'public_profile']);
-      
+
       if (loginResult.isCancelled) {
         await analyticsSocialLogin({type: 'fb', step: 'completed', data: {isAuthorized: false, isCancelled: true}});
         showToastError(translateText(intl, 'login.social_refused'));
@@ -431,7 +418,7 @@ const Login = ({navigation}: LoginProps) => {
           setIsShown={setShowForgetPasswordDialog}
           onConfirm={email => doForgotPassword(email)}
         />
-        
+
       </ImageBackground>
     </SafeAreaView>
   );
