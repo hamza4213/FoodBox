@@ -1,6 +1,8 @@
 import * as React from 'react';
 import {ReactNode, useCallback, useContext, useReducer} from 'react';
-import {ActivityIndicator, SafeAreaView, View} from 'react-native';
+import {ActivityIndicator, ImageBackground, SafeAreaView, View} from 'react-native';
+import {Utils} from '../utils';
+import {COLORS, images} from '../constants';
 
 export interface FBLoadingState {
   isLoading: boolean;
@@ -110,16 +112,14 @@ export const FBLoadingProvider = ({children}: { children?: ReactNode }) => {
   );
 };
 
-export const FBLoading = ({isVisible}: {isVisible: boolean}) => {
-  
+export const FBLoading = ({isVisible}: { isVisible: boolean }) => {
   if (!isVisible) {
     return null;
   }
-  
+
   return (
     <SafeAreaView
       style={{
-        flex: 1,
         backgroundColor: 'rgba(0,0,0,0.6)',
         justifyContent: 'center',
         alignItems: 'center',
@@ -128,25 +128,25 @@ export const FBLoading = ({isVisible}: {isVisible: boolean}) => {
         top: 0,
         bottom: 0,
         right: 0,
-        left: 0
+        left: 0,
       }}
     >
-      <View
-        style={{
-          height: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <ActivityIndicator
-          style={{}}
-          animating={isVisible}
-          size="large"
-          color="#10D53A"
-          hidesWhenStopped={true}
-        />
-      </View>
+        <View
+          style={{
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <ActivityIndicator
+            style={{}}
+            animating={isVisible}
+            size="large"
+            color="#10D53A"
+            hidesWhenStopped={true}
+          />
+        </View>
       
     </SafeAreaView>
   );
-}
+};

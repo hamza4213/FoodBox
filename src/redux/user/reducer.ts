@@ -56,12 +56,25 @@ export interface UserState {
   locale: FBLocale;
 }
 
-export const userInitialState: UserState = {
-  user: null,
-  userLocation: {
+export enum FB_CITIES {
+  BUL_SOFIA,
+  BUL_VARNA
+}
+
+export const FB_CITIES_TO_LOCATION_MAP: { [key in FB_CITIES]: FBGeoLocation } = {
+  [FB_CITIES.BUL_SOFIA]: {
     latitude: 42.697572,
     longitude: 23.321806,
   },
+  [FB_CITIES.BUL_VARNA]: {
+    latitude: 43.2048197,
+    longitude: 27.872869,
+  },
+};
+
+export const userInitialState: UserState = {
+  user: null,
+  userLocation: FB_CITIES_TO_LOCATION_MAP[FB_CITIES.BUL_SOFIA],
   locationPermission: {
     userAnswer: UserPermissionAnswer.UNSET,
     systemPermission: SystemPermissionStatus.UNKNOWN,

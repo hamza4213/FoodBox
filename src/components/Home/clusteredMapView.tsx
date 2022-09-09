@@ -176,15 +176,15 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
       Geolocation.stopObserving();
     };
   }, [dispatch, zoomToLocation]);
-
-  const handleRegionChangeComplete = () => {
-    setHasUserMapOverride(true);
-  };
   
   return (
     <>
       <MapView
-        onRegionChangeComplete={handleRegionChangeComplete}
+        onRegionChangeComplete={(_region, details) => {
+          if (details.isGesture) {
+            setHasUserMapOverride(true);
+          }
+        }}
         provider={PROVIDER_GOOGLE}
         // @ts-ignore
         ref={map}

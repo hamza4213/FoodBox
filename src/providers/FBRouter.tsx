@@ -1,6 +1,6 @@
 import React from 'react';
 import {useAuth} from './AuthProvider';
-import {ActivityIndicator, ImageBackground, View} from 'react-native';
+import {ImageBackground, Text, View} from 'react-native';
 import {Utils} from '../utils';
 import {images} from '../constants';
 
@@ -34,7 +34,7 @@ const FBRouter = () => {
         }}>
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <View style={{flex: 1, alignSelf: 'center'}}>
-            <ActivityIndicator size="large" color="#10D53A"/>
+            <Text>Loading</Text>
           </View>
         </View>
       </ImageBackground>
