@@ -171,6 +171,7 @@ const handleRestaurantFetchedAction: RestaurantActionHandler = (state: Restauran
 
 const handleRestaurantUpdateFiltersAction: RestaurantActionHandler = (state: RestaurantState, data: RestaurantUpdateFiltersAction['data']): RestaurantState => {
   // update filters
+  // @ts-ignore
   state.filters[data.filterCategory][data.filterCategoryProperty] = data.newValue;
 
   // find new filtered restaurants

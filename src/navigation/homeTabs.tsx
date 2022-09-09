@@ -60,7 +60,7 @@ const HomeTabs = () => {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarShowLabel: false
+        tabBarShowLabel: false,
       }}
       // tabBarOptions={{
       //   showLabel: false,

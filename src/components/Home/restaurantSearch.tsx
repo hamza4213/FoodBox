@@ -21,6 +21,7 @@ const RestaurantSearch = ({toHide, onSelect}: RestaurantSearchProps) => {
   const userInput = useSelector((state: FBRootState) => state.restaurantState.filters.search.userInput);
   
   const [suggestionsList, setSuggestionsList] = useState<RestaurantHomeListItem[]>([]);
+  const [userHasSelected, setUserHasSelected] = useState(false);
 
   const styles = styleCreator({});
   const intl = useIntl();
@@ -35,6 +36,8 @@ const RestaurantSearch = ({toHide, onSelect}: RestaurantSearchProps) => {
   }
 
   const searchRestaurants = (userInputQuery: string) => {
+    setUserHasSelected(false);
+    
     userInputQuery = userInputQuery.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
     
     dispatch(restaurantUpdateFiltersAction({
@@ -47,12 +50,18 @@ const RestaurantSearch = ({toHide, onSelect}: RestaurantSearchProps) => {
   return (
     <View style={styles.mainWrapper}>
       <View
-        style={styles.autocompleteWrapper}>
+        style={[
+          styles.autocompleteWrapper,
+        ]}
+      >
         <Autocomplete
           data={suggestionsList}
           value={userInput}
           onChangeText={i => searchRestaurants(i)}
           flatListProps={{
+            style: {
+              maxHeight: Utils.height * 0.2
+            },
             keyboardShouldPersistTaps: 'handled',
             keyExtractor: (r: RestaurantHomeListItem) => r.listIndex.toString(),
             renderItem: (item: ListRenderItemInfo<RestaurantHomeListItem>) => (
@@ -68,6 +77,8 @@ const RestaurantSearch = ({toHide, onSelect}: RestaurantSearchProps) => {
                   }));
                   
                   onSelect(item.item);
+                  
+                  setUserHasSelected(true);
                 }}
               >
                 <View style={{flexGrow: 1, flexDirection: 'row'}}>
@@ -97,7 +108,7 @@ const RestaurantSearch = ({toHide, onSelect}: RestaurantSearchProps) => {
               style={styles.autocompleteInput}
             />
           }
-          hideResults={!userInput}
+          hideResults={!userInput || userHasSelected}
         />
       </View>
       <TouchableOpacity

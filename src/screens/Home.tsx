@@ -121,21 +121,22 @@ const Home = ({navigation}: HomeProps) => {
         <View>
           <Text> OMG </Text>
         </View>
-        <View style={styles.mapView}>
+        <View style={{flex: 1}}>
           <ClusteredMapView
             isFullScreen={isFullScreen}
           />
         </View>
-        <View style={styles.restaurantsWrapper}>
-          <View style={styles.restaurantsWrapperInner}>
-            <ExpandListButton isFullScreen={isFullScreen} setIsFullScreen={setIsFullScreen}/>
+        <View style={{
+          flex: 1,
+          paddingTop: 10,
+          paddingHorizontal: 15
+        }}>
+          <ExpandListButton isFullScreen={isFullScreen} setIsFullScreen={setIsFullScreen}/>
 
-            <RestaurantList
-              isFullScreen={isFullScreen}
-              onRefreshTriggered={() => refreshRestaurants()}
-            />
-
-          </View>
+          <RestaurantList
+            isFullScreen={isFullScreen}
+            onRefreshTriggered={() => refreshRestaurants()}
+          />
         </View>
       </View>
       <FbModal
