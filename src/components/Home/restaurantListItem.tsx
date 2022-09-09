@@ -1,7 +1,7 @@
 import React from 'react';
 import {useNavigation} from '@react-navigation/core';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {API_ENDPOINT_RESTAURANT_PHOTOS} from '../../network/Server';
+import {API_ENDPOINT_PRODUCT_PHOTOS, API_ENDPOINT_RESTAURANT_PHOTOS} from '../../network/Server';
 import {Utils} from '../../utils';
 import {RestaurantHomeListItem} from '../../models/Restaurant';
 import {RestaurantService} from '../../services/RestaurantService';
@@ -51,7 +51,7 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
       return (
         <View>
           <Image
-            source={{uri: API_ENDPOINT_RESTAURANT_PHOTOS + box.photo}}
+            source={{uri: API_ENDPOINT_PRODUCT_PHOTOS + box.photo}}
             resizeMode={'contain'}
             style={styles.fullScreenImage}
             blurRadius={canCheckout ? 0 : 10}
@@ -89,7 +89,7 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
   };
 
   const renderRestaurantAvatar = (avatar: string) => {
-    const restaurantAvatarSource = {uri: API_ENDPOINT_RESTAURANT_PHOTOS + avatar};
+    const restaurantAvatarSource = {uri: API_ENDPOINT_PRODUCT_PHOTOS + avatar};
     return (
       <Image
         source={restaurantAvatarSource}

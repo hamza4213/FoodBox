@@ -4,7 +4,6 @@ import {Callout, Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {API_ENDPOINT_PRODUCT_PHOTOS} from '../../network/Server';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/core';
-import RestaurantSearch from './restaurantSearch';
 import {useDispatch, useSelector} from 'react-redux';
 import {FBRootState} from '../../redux/store';
 import Geolocation from '@react-native-community/geolocation';
@@ -34,11 +33,8 @@ const zoomToDelta = {
   [ZoomLevel.HIGH]: {latitudeDelta: 1, longitudeDelta: 1},
 };
 
-type ClusteredMapProps = {
-  isFullScreen: boolean
-};
 
-const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
+const ClusteredMapView = ({zoomOnRestaurant}:{zoomOnRestaurant?: RestaurantHomeListItem}) => {
   const {navigate} = useNavigation();
   const dispatch = useDispatch();
   const intl = useIntl();
@@ -51,7 +47,7 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
 
   const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
   const restaurants = useSelector((state: FBRootState) => state.restaurantState.forMap);
-
+  
   const zoomToLocation = useCallback((params: { location: FBGeoLocation, zoomLevel: ZoomLevel }) => {
     if (map.current) {
       // @ts-ignore
@@ -64,6 +60,12 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
       );
     }
   }, []);
+
+  useEffect(()=>{
+    if (zoomOnRestaurant) {
+      zoomToLocation({location: {latitude: zoomOnRestaurant.latitude, longitude: zoomOnRestaurant.longitude}, zoomLevel: ZoomLevel.CLOSE});
+    }
+  },[zoomOnRestaurant, zoomToLocation]);
 
   useEffect(() => {
     const isLocationServiceEnabled = async () => {
@@ -173,15 +175,7 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
       zoomToLocation({location: userLocation, zoomLevel: ZoomLevel.CLOSE});
     }
   }, [systemHasMapControl, userLocation, zoomToLocation]);
-
-  const handleOnSearchSelect = (restaurant: RestaurantHomeListItem) => {
-    zoomToLocation({
-      location: {latitude: restaurant.latitude, longitude: restaurant.longitude},
-      zoomLevel: ZoomLevel.CLOSE,
-    });
-    setSystemHasMapControl(false);
-  };
-
+  
   return (
     <>
       <MapView
@@ -263,7 +257,6 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
         zoomToLocation({location: userLocation, zoomLevel: ZoomLevel.CLOSE});
         setSystemHasMapControl(true);
       }}/>
-      <RestaurantSearch toHide={isFullScreen} onSelect={handleOnSearchSelect}/>
     </>
   );
 };

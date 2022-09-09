@@ -33,7 +33,7 @@ class RestaurantRepository implements BaseRestaurantRepository {
       },
     });
 
-    return response.restaurants.map((r: any) => RestaurantMapper.fromApi(r)).filter(r => [60, 62, 64].includes(r.id));
+    return response.restaurants.map((r: any) => RestaurantMapper.fromApi(r));
   }
 }
 

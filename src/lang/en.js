@@ -67,8 +67,8 @@ export default {
   'resetpassword.success': 'Please check your email.',
 
   'home.save_food': 'Save food around me',
-  'home.list_object': 'Hide map.',
-  'home.list_expand': 'Show map.',
+  'home.list_object': 'Hide map',
+  'home.list_expand': 'Show map',
   'home.refresh': 'Refresh',
   'restaurantslist.empty': 'No available boxes at the moment.',
 

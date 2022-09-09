@@ -6,32 +6,32 @@ import {RestaurantService} from '../services/RestaurantService';
 export const toShowRestaurant = (restaurant: RestaurantHomeListItem, filters: FBRestaurantFilters): boolean => {
   let passesFilters = true;
   const box = restaurant.products[0];
-  console.log('filtering ', restaurant.name);
-  
+  // console.log('filtering ', restaurant.name);
+
   for (const [filterCategoryName, filterCategoryConfig] of Object.entries(filters)) {
-    // console.log(filterCategoryName, filterCategoryConfig.isEnabled);
+    // // console.log(filterCategoryName, filterCategoryConfig.isEnabled);
     if (filterCategoryConfig.isEnabled) {
       switch (filterCategoryName) {
         case 'isRestaurantOpen': {
-          console.log('isRestaurantOpen', RestaurantService.isOpen(box), passesFilters);
+          // console.log('isRestaurantOpen', RestaurantService.isOpen(box), passesFilters);
           passesFilters = filterCategoryConfig.isOpen ? passesFilters && RestaurantService.isOpen(box) : passesFilters;
           break;
         }
 
         case 'hasRestaurantAvailableBoxes': {
-          console.log('hasRestaurantAvailableBoxes', RestaurantService.hasAvailability(box), passesFilters);
+          // console.log('hasRestaurantAvailableBoxes', RestaurantService.hasAvailability(box), passesFilters);
           passesFilters = filterCategoryConfig.hasAvailableBoxes ? passesFilters && RestaurantService.hasAvailability(box) : passesFilters;
           break;
         }
 
         case 'isNotFinished': {
-          console.log('isNotFinished', !RestaurantService.isFinished(box), passesFilters);
+          // console.log('isNotFinished', !RestaurantService.isFinished(box), passesFilters);
           passesFilters = filterCategoryConfig.isNotFinished ? passesFilters && !RestaurantService.isFinished(box) : passesFilters;
           break;
         }
 
         case 'canCheckout': {
-          console.log('canCheckout', !RestaurantService.canCheckout(box), passesFilters);
+          // console.log('canCheckout', !RestaurantService.canCheckout(box), passesFilters);
           passesFilters = filterCategoryConfig.canCheckout ? passesFilters && RestaurantService.canCheckout(box) : passesFilters;
           break;
         }
@@ -45,7 +45,7 @@ export const toShowRestaurant = (restaurant: RestaurantHomeListItem, filters: FB
           const lowerLimit = moment().set({hour: lowerLimitFilter.hour(), minute: lowerLimitFilter.minute()});
           const upperLimit = moment().set({hour: upperLimitFilter.hour(), minute: upperLimitFilter.minute()});
 
-          console.log('pickUpPeriod ', pickUpFrom, pickUpTo, lowerLimit, upperLimit, pickUpTo.isBefore(lowerLimit), pickUpFrom.isAfter(upperLimit), passesFilters);
+          // console.log('pickUpPeriod ', pickUpFrom, pickUpTo, lowerLimit, upperLimit, pickUpTo.isBefore(lowerLimit), pickUpFrom.isAfter(upperLimit), passesFilters);
           if (pickUpTo.isBefore(lowerLimit) || pickUpFrom.isAfter(upperLimit)) {
             passesFilters = passesFilters && false;
           } else {
@@ -55,7 +55,7 @@ export const toShowRestaurant = (restaurant: RestaurantHomeListItem, filters: FB
         }
 
         case 'foodType': {
-          console.log(`foodtype ${box.foodType} in ${filterCategoryConfig.types} ${passesFilters}`);
+          // console.log(`foodtype ${box.foodType} in ${filterCategoryConfig.types} ${passesFilters}`);
           if (box.foodType && filterCategoryConfig.types.length) {
             passesFilters = passesFilters && filterCategoryConfig.types.includes(box.foodType);
           }
@@ -63,7 +63,7 @@ export const toShowRestaurant = (restaurant: RestaurantHomeListItem, filters: FB
         }
 
         case 'dietType': {
-          console.log(`dietType ${box.dietType} in ${filterCategoryConfig.types} ${passesFilters}`);
+          // console.log(`dietType ${box.dietType} in ${filterCategoryConfig.types} ${passesFilters}`);
           if (box.dietType && filterCategoryConfig.types.length) {
             passesFilters = passesFilters && filterCategoryConfig.types.includes(box.dietType);
           }
@@ -71,12 +71,12 @@ export const toShowRestaurant = (restaurant: RestaurantHomeListItem, filters: FB
         }
 
         case 'search': {
-          console.log('search', filterCategoryConfig);
+          // console.log('search', filterCategoryConfig);
           if (filterCategoryConfig.userInput) {
             const regex = new RegExp(`${filterCategoryConfig.userInput}`, 'gmi');
             const doesMatch = restaurant.name.search(regex) >= 0;
             
-            // console.log('search doesMatch', restaurant.name, regex, passesFilters);
+            // // console.log('search doesMatch', restaurant.name, regex, passesFilters);
             passesFilters = passesFilters && doesMatch;
           }
           break;

@@ -68,8 +68,8 @@ export default {
   'resetpassword.success': 'Моля, проверете пощата си.',
 
   'home.save_food': 'Спаси храна около теб',
-  'home.list_object': 'Списък обекти',
-  'home.list_expand': 'Карта обекти',
+  'home.list_object': 'Уголеми списъка с обекти',
+  'home.list_expand': 'Покажи картата с обекти',
   'home.refresh': 'Обнови',
   'restaurantslist.empty': 'Няма налични продукти за спасяване в момента',
 

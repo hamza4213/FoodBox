@@ -1,5 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, Dimensions, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Dimensions,
+  Image,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import 'react-native-gesture-handler';
 import {showToastError} from '../common/FBToast';
@@ -7,7 +17,6 @@ import {restaurantResetAction, restaurantsFetchedAction} from '../redux/restaura
 import {RestaurantService} from '../services/RestaurantService';
 import {RestaurantRepository} from '../repositories/RestaurantRepository';
 import RestaurantList from '../components/Home/restaurantList';
-import ExpandListButton from '../components/Home/expandListButton';
 import {FBRootState} from '../redux/store';
 import ClusteredMapView from '../components/Home/clusteredMapView';
 import {userSetUserAction} from '../redux/user/actions';
@@ -22,6 +31,9 @@ import {translateText} from '../lang/translate';
 import {UserRepository} from '../repositories/UserRepository';
 import {useFbLoading} from '../providers/FBLoaderProvider';
 import {isFBAppError, isFBBackendError, isFBGenericError} from '../network/axiosClient';
+import RestaurantSearch from '../components/Home/restaurantSearch';
+import {icons} from '../constants';
+import RestaurantListItem from '../components/Home/restaurantListItem';
 
 export interface HomeProps {
   route: any;
@@ -32,8 +44,8 @@ export interface HomeProps {
 const Home = ({navigation}: HomeProps) => {
   const {signOut, authData} = useAuth();
 
-  const [isFullScreen, setIsFullScreen] = useState(false);
-  const styles = stylesCreator({isFullScreen});
+  const [toShowMap, setToShowMap] = useState(true);
+  const styles = stylesCreator({isFullScreen: !toShowMap});
 
   const [termsAndConditionsModal, setTermsAndConditionsModalVisible] = useState(false);
 
@@ -42,6 +54,7 @@ const Home = ({navigation}: HomeProps) => {
   const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
   const userLocale = useSelector((state: FBRootState) => state.userState.locale);
   const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
+  const [selectedRestaurant, setSelectedRestaurant] = useState<RestaurantListItem | null>(null);
 
   const dispatch = useDispatch();
 
@@ -56,6 +69,7 @@ const Home = ({navigation}: HomeProps) => {
       const restaurantRepository = new RestaurantRepository({authData: authData!});
       const restaurantService = new RestaurantService({restaurantRepository});
       const restaurantsListItems = await restaurantService.getRestaurantsForHome({userLocation});
+
       dispatch(restaurantsFetchedAction({restaurants: restaurantsListItems}));
     } catch (error) {
       if (isFBAppError(error) || isFBGenericError(error)) {
@@ -67,7 +81,7 @@ const Home = ({navigation}: HomeProps) => {
       }
       dispatch(restaurantResetAction());
     }
-    
+
     hideLoading('fetchRestaurants');
   };
 
@@ -88,7 +102,7 @@ const Home = ({navigation}: HomeProps) => {
   const confirmTermsAndConditions = async () => {
     setTermsAndConditionsModalVisible(false);
 
-    
+
     const userRepository = new UserRepository({authData: authData!});
     try {
       // update TC
@@ -118,23 +132,55 @@ const Home = ({navigation}: HomeProps) => {
   return (
     <SafeAreaView style={styles.mainWrapper}>
       <View style={styles.mainView}>
-        <View>
-          <Text> OMG </Text>
+        <View style={[
+          {
+            padding: 20,
+          },
+          toShowMap ? {
+            flex: 1,
+            left: 0,
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            zIndex: 1,
+          } : {},
+        ]}
+        >
+          <RestaurantSearch onSelect={(r) => setSelectedRestaurant(r)} toHideResults={!toShowMap}/>
         </View>
-        <View style={{flex: 1}}>
-          <ClusteredMapView
-            isFullScreen={isFullScreen}
-          />
-        </View>
+        
+        {toShowMap &&
+          <View style={{flex: 1}}>
+            <ClusteredMapView zoomOnRestaurant={selectedRestaurant}/>
+          </View>
+        }
         <View style={{
           flex: 1,
           paddingTop: 10,
-          paddingHorizontal: 15
+          paddingHorizontal: 15,
         }}>
-          <ExpandListButton isFullScreen={isFullScreen} setIsFullScreen={setIsFullScreen}/>
+
+          <TouchableOpacity
+            style={{
+              justifyContent: 'flex-end',
+              flexDirection: 'row',
+              alignItems: 'center',
+              paddingVertical: 10,
+            }}
+            onPress={() => setToShowMap(!toShowMap)}
+          >
+            <Text style={{fontSize: 12, fontWeight: '700'}}>
+              {toShowMap ? translateText(intl, 'home.list_object') : translateText(intl, 'home.list_expand')}
+            </Text>
+
+            <Image
+              source={toShowMap ? icons.arrow_up : icons.arrow_down}
+              style={{width: 10, height: 10, marginLeft: 5}}
+            />
+          </TouchableOpacity>
 
           <RestaurantList
-            isFullScreen={isFullScreen}
+            isFullScreen={!toShowMap}
             onRefreshTriggered={() => refreshRestaurants()}
           />
         </View>
