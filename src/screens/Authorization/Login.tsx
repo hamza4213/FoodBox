@@ -406,7 +406,7 @@ const Login = ({navigation}: LoginProps) => {
               style={{alignItems: 'center'}}
               onPress={() => navigation.navigate('SignUpScreen', {locale: userLocale})}
             >
-              <Text style={{color: '#0bd53a'}}>
+              <Text style={{color: COLORS.green}}>
                 {`${translateText(intl, 'login.not_have_account')} ${translateText(intl, 'login.sign_up')}`}
               </Text>
             </TouchableOpacity>
@@ -489,7 +489,7 @@ const styles = StyleSheet.create({
   },
   loginFormEmailFieldIconWrapper: {width: 20, alignItems: 'center'},
   buttonLogin: {
-    backgroundColor: '#0bd53a',
+    backgroundColor: COLORS.green,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 45,
@@ -551,7 +551,7 @@ const styles = StyleSheet.create({
     width: Utils.width - 100,
   },
   buttonNewpassword: {
-    backgroundColor: '#0bd53a',
+    backgroundColor: COLORS.green,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 45,
@@ -568,7 +568,7 @@ const styles = StyleSheet.create({
     width: '90%',
   },
   buttonAccept: {
-    backgroundColor: '#0bd53a',
+    backgroundColor: COLORS.green,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 45,

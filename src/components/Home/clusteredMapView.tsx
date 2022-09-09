@@ -19,6 +19,7 @@ import RNSettings from 'react-native-settings';
 import {check as checkPermission, PERMISSIONS, request as requestPermission} from 'react-native-permissions';
 import {FBGeoLocation} from '../../models/FBGeoLocation';
 import {RestaurantHomeListItem} from '../../models/Restaurant';
+import {COLORS} from '../../constants';
 
 
 enum ZoomLevel {
@@ -49,7 +50,7 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
   const [showUserLocation, setShowUserLocation] = useState(false);
 
   const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
-  const restaurants = useSelector((state: FBRootState) => state.restaurantState.filteredRestaurants);
+  const restaurants = useSelector((state: FBRootState) => state.restaurantState.forMap);
 
   const zoomToLocation = useCallback((params: { location: FBGeoLocation, zoomLevel: ZoomLevel }) => {
     if (map.current) {
@@ -226,7 +227,7 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
                     width: 40,
                     height: 40,
                     borderRadius: 100,
-                    borderColor: canCheckout ? '#0bd53a' : '#cc0000',
+                    borderColor: canCheckout ? COLORS.green : COLORS.red,
                     overflow: 'hidden',
                     borderWidth: 2,
                   }}
@@ -277,9 +278,8 @@ const MyLocationButton = ({onPress}: { onPress: () => void }) => {
       onPress={onPress}
       style={{
         position: 'absolute',
-        bottom: '41%',
-        alignSelf: 'flex-end',
-        right: 10,
+        bottom: 10,
+        right: 10
       }}>
       <Image
         source={require('../../../assets/icons/user_location_icon.png')}

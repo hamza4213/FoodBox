@@ -24,7 +24,7 @@ const RestaurantList = ({
   const dispatch = useDispatch();
   const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
   const sortOrder = useSelector((state: FBRootState) => state.restaurantState.sortOrder);
-  const restaurants = useSelector((state: FBRootState) => state.restaurantState.filteredRestaurants);
+  const restaurants = useSelector((state: FBRootState) => state.restaurantState.forList);
 
   const renderRestaurantItem = (item: ListRenderItemInfo<RestaurantHomeListItem>) => {
     return <RestaurantListItem
@@ -52,7 +52,7 @@ const RestaurantList = ({
           alignItems: 'center',
           flexDirection: 'row',
           borderRadius: 20,
-          backgroundColor: isSelected ? '#0bd53a' : '#fff',
+          backgroundColor: isSelected ? COLORS.green : COLORS.white,
         }}
         onPress={() => {
           dispatch(updateRestaurantSortOrderAction({sortOrder: sortOption}));
@@ -90,7 +90,7 @@ const RestaurantList = ({
             alignItems: 'center',
             flexDirection: 'row',
             borderRadius: 20,
-            backgroundColor: COLORS.secondary,
+            backgroundColor: COLORS.primary,
           }}
           onPress={() => onRestaurantListRefresh()}
         >

@@ -50,6 +50,8 @@ const Offer = ({route, navigation}: OfferProps) => {
 
   const allergensArray = JSON.parse(foodBox.allergenes);
   const now = new Date().getTime();
+  const isOpen = RestaurantService.isOpen(foodBox);
+  const canCheckout = RestaurantService.canCheckout(foodBox);
   const availableBoxes = foodBox.quantity;
   const hasAvailableBoxes = RestaurantService.hasAvailability(foodBox);
   const isFinished = RestaurantService.isFinished(foodBox);
@@ -63,11 +65,11 @@ const Offer = ({route, navigation}: OfferProps) => {
         userId: user.id,
         email: user.email,
         pageName: 'OfferDetails',
-        data: {boxId: foodBox.id, isStarted: isStarted, isFinished: isFinished},
+        data: {boxId: foodBox.id, isStarted: isStarted, isFinished: isFinished, isOpen: isOpen},
       });
     });
   }, [navigation]);
-  
+
   const isOnFocus = useIsFocused();
 
   return (
@@ -88,8 +90,9 @@ const Offer = ({route, navigation}: OfferProps) => {
       >
         <View style={styles.boxImageWrapper}>
           <Image
-            style={styles.boxImage}
+            style={[styles.boxImage]}
             resizeMode={'cover'}
+            blurRadius={canCheckout ? 0 : 10}
             source={{uri: API_ENDPOINT_PRODUCT_PHOTOS + foodBox.photo}}
           />
         </View>
@@ -101,32 +104,71 @@ const Offer = ({route, navigation}: OfferProps) => {
             <Text style={styles.boxTitleText}>{restaurant.name}</Text>
           </Text>
 
-          {!isFinished &&
+          {!isOpen &&
             <View
               style={{
                 ...styles.availableBoxesIndicatorWrapper,
-                backgroundColor: !hasAvailableBoxes ? COLORS.red : COLORS.primary,
+                backgroundColor: COLORS.red,
                 borderColor: '#000', borderWidth: 2,
-              }}>
+              }}
+            >
               <Text style={styles.availableBoxesIndicatorText}>
-                {availableBoxes}{' '}{availableBoxes == 1 ? translateText(intl, 'box') : translateText(intl, 'boxes')}
+                {translateText(intl, 'restaurant.status.closed')}
               </Text>
             </View>
           }
+
+          {isOpen && !isFinished &&
+            <View
+              style={{
+                ...styles.availableBoxesIndicatorWrapper,
+                backgroundColor: COLORS.primary,
+                borderColor: '#000', borderWidth: 2,
+              }}>
+              <Text style={styles.availableBoxesIndicatorText}>
+                {availableBoxes}{' '}{availableBoxes === 1 ? translateText(intl, 'box') : translateText(intl, 'boxes')}
+              </Text>
+            </View>
+          }
+          
         </View>
 
-        <View style={styles.pickUpTimeWrapper}>
-          <Image
-            source={require('../../assets/icons/offer_clock_icon.png')}
-            style={styles.pickUpTimeIcon}
-            resizeMode="contain"
-          />
-          <Text style={styles.pickUpTimeText}>
-            {`${translateText(intl, 'offer.pick_up_window')} ${translateText(intl, 'offer.from')} ${RestaurantService.formatPickUpWindowDate(foodBox.pickUpFrom)} ${translateText(intl, 'offer.to')} ${RestaurantService.formatPickUpWindowDate(foodBox.pickUpTo)}!`}
-          </Text>
-        </View>
+        {canCheckout &&
+          <View style={styles.pickUpTimeWrapper}>
+            <Image
+              source={require('../../assets/icons/offer_clock_icon.png')}
+              style={styles.pickUpTimeIcon}
+              resizeMode="contain"
+            />
+            <Text style={styles.pickUpTimeText}>
+              {`${translateText(intl, 'offer.pick_up_window')} ${translateText(intl, 'offer.from')} ${RestaurantService.formatPickUpWindowDate(foodBox.pickUpFrom)} ${translateText(intl, 'offer.to')} ${RestaurantService.formatPickUpWindowDate(foodBox.pickUpTo)}!`}
+            </Text>
+          </View>
+        }
 
-        {isFinished && (
+        {!isOpen &&
+          <View style={{
+            ...styles.countdownWrapper,
+            backgroundColor: COLORS.red,
+          }}>
+            <Text style={styles.countdownText}>
+              {translateText(intl, 'offer.restaurant_not_open')}
+            </Text>
+          </View>
+        }
+
+        {isOpen && !hasAvailableBoxes &&
+          <View style={{
+            ...styles.countdownWrapper,
+            backgroundColor: COLORS.primary,
+          }}>
+            <Text style={styles.countdownText}>
+              {translateText(intl, 'offer.no_availability')}
+            </Text>
+          </View>
+        }
+
+        {isOpen && isFinished &&
           <View style={{
             ...styles.countdownWrapper,
             backgroundColor: COLORS.red,
@@ -135,9 +177,9 @@ const Offer = ({route, navigation}: OfferProps) => {
               {translateText(intl, 'offer.message_end')}
             </Text>
           </View>
-        )}
+        }
 
-        {!isFinished && (
+        {canCheckout && (
           <View style={{
             ...styles.countdownWrapper,
             backgroundColor: isStarted ? COLORS.red : COLORS.primary,
@@ -208,56 +250,62 @@ const Offer = ({route, navigation}: OfferProps) => {
           <Text>{` ${foodBox.discountedPrice}${translateText(intl, 'price_unit')} (-${foodBox.discount}%)`}</Text>
         </View>
 
-        <FoodBoxCheckoutControl
-          restaurant={restaurant}
-          foodbox={foodBox}
-          isOnFocus={isOnFocus}
-        />
+        {canCheckout &&
+          <FoodBoxCheckoutControl
+            restaurant={restaurant}
+            foodbox={foodBox}
+            isOnFocus={isOnFocus}
+          />
+        }
 
-        <View style={styles.howToPickUpDetailsWrapper}>
-          <Text style={styles.howToPickUpTitle}>
-            {translateText(intl, 'offer.pick_up_info_header')}
-          </Text>
-          <Text style={styles.howToPickUpDetails}>
-            {translateText(intl, 'offer.pick_up_info_description')}
-          </Text>
-          <Text style={styles.howToPickUpTitle}>
-            {translateText(intl, 'offer.pick_up_info_windows_header')}
-          </Text>
-          <Text style={styles.howToPickUpDetails}>
-            {`${translateText(intl, 'offer.from')} `}
-            {RestaurantService.formatPickUpWindowDate(foodBox.pickUpFrom)}
-            {` ${translateText(intl, 'offer.to')} `}
-            {RestaurantService.formatPickUpWindowDate(foodBox.pickUpTo)}
-          </Text>
-          <Text style={styles.howToPickUpTitle}>
-            {translateText(intl, 'offer.adress_dailog')}
-          </Text>
-          <Text style={styles.descriptionAddressDialog}>
-            <TouchableOpacity
-              style={styles.addressWrapper}
-              onPress={() => showOnMap({location: {latitude: restaurant.latitude, longitude: restaurant.longitude}})}
-            >
-              <Image
-                style={styles.addressIcon}
-                source={icons.location}
-                resizeMode="contain"
-              />
+        {canCheckout &&
+          <View style={styles.howToPickUpDetailsWrapper}>
+            <Text style={styles.howToPickUpTitle}>
+              {translateText(intl, 'offer.pick_up_info_header')}
+            </Text>
+            <Text style={styles.howToPickUpDetails}>
+              {translateText(intl, 'offer.pick_up_info_description')}
+            </Text>
+            <Text style={styles.howToPickUpTitle}>
+              {translateText(intl, 'offer.pick_up_info_windows_header')}
+            </Text>
+            <Text style={styles.howToPickUpDetails}>
+              {`${translateText(intl, 'offer.from')} `}
+              {RestaurantService.formatPickUpWindowDate(foodBox.pickUpFrom)}
+              {` ${translateText(intl, 'offer.to')} `}
+              {RestaurantService.formatPickUpWindowDate(foodBox.pickUpTo)}
+            </Text>
+            <Text style={styles.howToPickUpTitle}>
+              {translateText(intl, 'offer.adress_dailog')}
+            </Text>
+            <Text style={styles.descriptionAddressDialog}>
+              <TouchableOpacity
+                style={styles.addressWrapper}
+                onPress={() => showOnMap({location: {latitude: restaurant.latitude, longitude: restaurant.longitude}})}
+              >
+                <Image
+                  style={styles.addressIcon}
+                  source={icons.location}
+                  resizeMode="contain"
+                />
 
-              <Text style={styles.howToPickUpDetails}>
-                {restaurant.address}
-              </Text>
+                <Text style={styles.howToPickUpDetails}>
+                  {restaurant.address}
+                </Text>
 
-              <Image
-                style={styles.addressIcon}
-                source={icons.location}
-                resizeMode="contain"
-              />
-            </TouchableOpacity>
-          </Text>
-        </View>
+                <Image
+                  style={styles.addressIcon}
+                  source={icons.location}
+                  resizeMode="contain"
+                />
+              </TouchableOpacity>
+            </Text>
+          </View>
+        }
+
+        
       </ScrollView>
-      
+
     </SafeAreaView>
   );
 };
@@ -309,6 +357,7 @@ const styles = StyleSheet.create({
   },
   availableBoxesIndicatorText: {
     color: 'white',
+    fontWeight: '700',
     fontSize: 12,
   },
   pickUpTimeWrapper: {flexDirection: 'row', marginTop: 5},
@@ -470,7 +519,7 @@ const styles = StyleSheet.create({
   },
   countdownText: {fontSize: 13, color: '#fff', fontWeight: '700'},
   buttonNewpassword: {
-    backgroundColor: '#0bd53a',
+    backgroundColor: COLORS.green,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 45,
@@ -492,7 +541,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   buttonPromoCode: {
-    backgroundColor: '#0bd53a',
+    backgroundColor: COLORS.green,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 45,

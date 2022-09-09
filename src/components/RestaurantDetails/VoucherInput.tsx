@@ -129,7 +129,7 @@ const VoucherInput = (props: VoucherCodeInputProps) => {
           disabled={!canAddVoucher || hasAlreadyAddedVoucher}
           style={{
             ...styles.addButtonWrapper,
-            backgroundColor: !canAddVoucher || hasAlreadyAddedVoucher ? COLORS.darkgray : '#0bd53a',
+            backgroundColor: !canAddVoucher || hasAlreadyAddedVoucher ? COLORS.darkgray : COLORS.green,
           }}
           onPress={() => addVoucher()}>
           <View>

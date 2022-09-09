@@ -69,7 +69,8 @@ export interface RestaurantState {
   allRestaurants: RestaurantHomeListItem[],
   filters: FBRestaurantFilters,
   sortOrder: RESTAURANT_SORT_OPTION,
-  filteredRestaurants: RestaurantHomeListItem[],
+  forList: RestaurantHomeListItem[],
+  forMap: RestaurantHomeListItem[],
   controls: {
     isFetching: boolean,
   }
@@ -116,7 +117,8 @@ export const restaurantInitialState: RestaurantState = {
     },
   },
   sortOrder: RESTAURANT_SORT_OPTION.CLOSEST_DISTANCE_FIRST,
-  filteredRestaurants: [],
+  forList: [],
+  forMap: [],
 };
 
 interface RestaurantActionHandler {
@@ -146,7 +148,8 @@ const handleUpdateRestaurantDistanceToUserAction: RestaurantActionHandler = (sta
   return {
     ...state,
     allRestaurants: allRestaurants,
-    filteredRestaurants: filteredRestaurants,
+    forList: filteredRestaurants,
+    forMap: filteredRestaurants,
   };
 };
 
@@ -165,7 +168,8 @@ const handleRestaurantFetchedAction: RestaurantActionHandler = (state: Restauran
   return {
     ...state,
     allRestaurants: data.restaurants,
-    filteredRestaurants: filteredRestaurants,
+    forList: filteredRestaurants,
+    forMap: filteredRestaurants,
   };
 };
 
@@ -187,13 +191,14 @@ const handleRestaurantUpdateFiltersAction: RestaurantActionHandler = (state: Res
 
   return {
     ...state,
-    filteredRestaurants: filteredRestaurants,
+    forList: filteredRestaurants,
+    forMap: filteredRestaurants,
   };
 };
 
 const handleUpdateRestaurantSortOrderAction: RestaurantActionHandler = (state, data: UpdateRestaurantSortOrderAction['data']): RestaurantState => {
   state.sortOrder = data.sortOrder;
-  state.filteredRestaurants.sort(RESTAURANT_SORT_OPTION_TO_SORT_FUNCTION[data.sortOrder]);
+  state.forList.sort(RESTAURANT_SORT_OPTION_TO_SORT_FUNCTION[data.sortOrder]);
 
   return {
     ...state,
@@ -202,7 +207,8 @@ const handleUpdateRestaurantSortOrderAction: RestaurantActionHandler = (state, d
 
 const handleRestaurantResetAction: RestaurantActionHandler = (state, _data: any) => {
   state.allRestaurants = [];
-  state.filteredRestaurants = [];
+  state.forList = [];
+  state.forMap = [];
 
   return {...state};
 };

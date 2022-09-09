@@ -9,6 +9,7 @@ import {useIntl} from 'react-intl';
 import {translateText} from '../../lang/translate';
 import {FBGeoLocation} from '../../models/FBGeoLocation';
 import {FoodBox} from '../../models/FoodBox';
+import {COLORS} from '../../constants';
 
 export type RestaurantListItemProps = {
   restaurant: RestaurantHomeListItem;
@@ -27,8 +28,9 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
   const box = restaurant.products[0];
 
   const canCheckout = RestaurantService.canCheckout(box);
-  const borderColor = canCheckout ? '#0bd53a' : '#cc0000';
-  const boxQuantityBackgroundColor = canCheckout ? '#0bd53a' : '#cc0000';
+  const isOpen = RestaurantService.isOpen(box);
+  const borderColor = canCheckout ? COLORS.green : COLORS.red;
+  const boxQuantityBackgroundColor = canCheckout ? COLORS.green : COLORS.red;
 
   const intl = useIntl();
 
@@ -51,6 +53,7 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
             source={{uri: API_ENDPOINT_RESTAURANT_PHOTOS + box.photo}}
             resizeMode={'contain'}
             style={styles.fullScreenImage}
+            blurRadius={canCheckout ? 0 : 10}
           />
         </View>
       );
@@ -60,6 +63,10 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
   const renderPickUpTime = (b: FoodBox) => {
     const pickUpStart = RestaurantService.formatPickUpWindowDate(b.pickUpFrom);
     const pickUpEnd = RestaurantService.formatPickUpWindowDate(b.pickUpTo);
+    
+    if (!canCheckout) {
+      return null;
+    }
 
     return (
       <Text style={styles.pickUpInfo}>
@@ -70,7 +77,6 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
 
   const renderRestaurantName = (restaurantName: string, boxName: string) => {
     return (
-
       <View style={{flexGrow: 1, flexDirection: 'row'}}>
         <Text style={{flex: 1, width: 1, color: '#29455f'}}>
           <Text style={[styles.restaurantInfoName]}>{boxName}</Text>
@@ -88,6 +94,7 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
         source={restaurantAvatarSource}
         style={styles.restaurantInfoAvatar}
         resizeMode={'contain'}
+        blurRadius={canCheckout ? 0 : 10}
       />
     );
   };
@@ -111,11 +118,18 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
     );
   };
 
-  const renderBoxInfoCount = (boxQuantity: number) => {
+  const renderStatus = (boxQuantity: number) => {
+    
+    let text = `${boxQuantity} ${boxQuantity === 1 ? translateText(intl, 'box') : translateText(intl, 'boxes')}`;
+    
+    if (!isOpen) {
+      text = translateText(intl, 'restaurant.status.closed');
+    }
+
     return (
-      <View style={styles.boxInfoCountWrapper}>
-        <Text style={styles.boxInfoCountText}>
-          {boxQuantity}{' '}{boxQuantity === 1 ? translateText(intl, 'box') : translateText(intl, 'boxes')}
+      <View style={styles.statusWrapper}>
+        <Text style={styles.statusText}>
+          {text}
         </Text>
       </View>
     );
@@ -149,10 +163,12 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
 
       <View style={styles.mainWrapper}>
         {/*AvatarImg*/}
-        {renderRestaurantAvatar(box.thumbnailPhoto)}
+        <View style={{width: 70}}>
+          {renderRestaurantAvatar(box.thumbnailPhoto)}
+        </View>
 
         {/*RestaurantInfo*/}
-        <View>
+        <View style={{flex: 1}}>
           {renderRestaurantName(restaurant.name, box.name)}
           {renderRestaurantType(restaurant.businessType)}
           {renderPickUpTime(box)}
@@ -160,8 +176,8 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
         </View>
 
         {/*BoxInfo*/}
-        <View>
-          {renderBoxInfoCount(box.quantity)}
+        <View style={{width: 70}}>
+          {renderStatus(box.quantity)}
           {renderBoxInfoPrice(box.price)}
           {renderBoxInfoDiscountedPrice(box.discount, box.price)}
         </View>
@@ -237,14 +253,15 @@ const stylesCreator = (props: {
     fontWeight: '500',
     marginTop: 5,
   },
-  boxInfoCountWrapper: {
+  statusWrapper: {
     borderRadius: 5,
     backgroundColor: props.boxQuantityBackgroundColor,
     paddingHorizontal: 10,
     paddingVertical: 5,
     justifyContent: 'center',
   },
-  boxInfoCountText: {
+  statusText: {
+    alignSelf: 'center',
     color: '#fff',
     fontSize: 12,
   },

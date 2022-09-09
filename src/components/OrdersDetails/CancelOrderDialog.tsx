@@ -3,6 +3,7 @@ import {Image, Modal, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} fr
 import {Utils} from "../../utils";
 import {useIntl} from "react-intl";
 import {translateText} from "../../lang/translate";
+import {COLORS} from '../../constants';
 
 interface CancelOrderDialogProps {
   isShown : boolean,
@@ -82,7 +83,7 @@ const styleCreator = () => StyleSheet.create({
   contentTextWrapper: {marginTop: 25},
   contentText: {fontSize: 16, color: 'grey', fontWeight: '500'},
   cancelButtonWrapper: {
-    backgroundColor: '#0bd53a',
+    backgroundColor: COLORS.green,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 45,

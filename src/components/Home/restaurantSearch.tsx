@@ -17,7 +17,7 @@ export interface RestaurantSearchProps {
 }
 
 const RestaurantSearch = ({toHide, onSelect}: RestaurantSearchProps) => {
-  const restaurants = useSelector((state: FBRootState) => state.restaurantState.filteredRestaurants);
+  const restaurants = useSelector((state: FBRootState) => state.restaurantState.forList);
   const userInput = useSelector((state: FBRootState) => state.restaurantState.filters.search.userInput);
   
   const [suggestionsList, setSuggestionsList] = useState<RestaurantHomeListItem[]>([]);

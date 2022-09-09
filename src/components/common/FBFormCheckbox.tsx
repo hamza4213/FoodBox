@@ -35,7 +35,7 @@ const FBFormCheckbox = (props: FBFormCheckboxProps) => {
                 lineWidth={1}
                 style={{width: 20, height: 20, marginRight: 10}}
                 tintColors={{false: COLORS.white}}
-                onFillColor={'#0bd53a'}
+                onFillColor={COLORS.green}
                 value={value}
                 onValueChange={onChange}
               />
@@ -50,7 +50,7 @@ const FBFormCheckbox = (props: FBFormCheckboxProps) => {
   
               <TouchableOpacity onPress={() => Linking.openURL(WEBSITE_TERMS_OF_SERVICE)}>
                 <Text
-                  style={{color: '#0bd53a', fontSize: Utils.ios ? 13 : 12}}>
+                  style={{color: COLORS.green, fontSize: Utils.ios ? 13 : 12}}>
                   {translateText(intl,'signup.conditionals')}
                 </Text>
               </TouchableOpacity>

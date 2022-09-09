@@ -5,6 +5,7 @@ import {Utils} from "../../utils";
 import {useNavigation} from "@react-navigation/core";
 import {useIntl} from "react-intl";
 import {translateText} from "../../lang/translate";
+import {COLORS} from '../../constants';
 
 interface ConfirmOrderDialogProps {
   isShown : boolean,
@@ -106,7 +107,7 @@ const stylesCreator = ({}:{}) => StyleSheet.create({
   explanationTextWrapper: {marginTop: 25},
   explanationText: {fontSize: 16, color: '#29455f', fontWeight: '500'},
   confirmButtonWrapper: {
-    backgroundColor: '#0bd53a',
+    backgroundColor: COLORS.green,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 45,

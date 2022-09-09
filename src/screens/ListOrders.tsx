@@ -439,7 +439,7 @@ const styles = StyleSheet.create({
     width: Utils.width / 2 + 6,
   },
   buttonNewpassword: {
-    backgroundColor: '#0bd53a',
+    backgroundColor: COLORS.green,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 45,

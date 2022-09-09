@@ -75,6 +75,9 @@ export default {
 
   'home.find_object': 'Намери обект',
 
+  'restaurant.status.open': 'отворен',
+  'restaurant.status.closed': 'затворен',
+
   distance_unit: 'м',
   price_unit: 'лв.',
   box: 'кутия',
@@ -87,6 +90,8 @@ export default {
   continue: 'Продължи',
   ok: 'ОК',
 
+  'offer.restaurant_not_open': 'Днес няма излишък',
+  'offer.no_availability': 'Всички кутии са спасени',
   'offer.pick_up_window': 'Прозорец на вземане днес',
   'offer.from': 'от',
   'offer.to': 'до',
@@ -124,7 +129,7 @@ export default {
   'payment.cash': 'Плати в брой',
   'payment.promo_code': 'Промо код : ',
   'payment.complete_order': 'Завърши поръчката',
-  
+
   'order.phone': 'Телефон: ',
   'order.status.request': 'Заявена',
   'order.status.cancelled': 'Анулирана',

@@ -186,7 +186,7 @@ const SignUp = ({navigation, route}: SignUpProps) => {
                   {`${translateText(intl, 'signup.help')} `}
                 </Text>
 
-                <Text style={{color: '#0bd53a'}}>
+                <Text style={{color: COLORS.green}}>
                   info@foodobox.com
                 </Text>
               </View>
@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
   formFieldIconWrapper: {width: 20, alignItems: 'center'},
   formFieldIcon: {tintColor: '#fff'},
   buttonLogin: {
-    backgroundColor: '#0bd53a',
+    backgroundColor: COLORS.green,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 45,
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   buttonNewpassword: {
-    backgroundColor: '#0bd53a',
+    backgroundColor: COLORS.green,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 45,

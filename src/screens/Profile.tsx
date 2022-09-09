@@ -27,6 +27,7 @@ import {useForm} from 'react-hook-form';
 import FBFormInput from '../components/common/FBFormInput';
 import {isFBAppError, isFBBackendError, isFBGenericError} from '../network/axiosClient';
 import {useFbLoading} from '../providers/FBLoaderProvider';
+import {COLORS} from '../constants';
 
 interface ModalProps {
   toShow: boolean;
@@ -314,7 +315,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   modalApplyButtonWrapper: {
-    backgroundColor: '#0bd53a',
+    backgroundColor: COLORS.green,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 45,
@@ -333,7 +334,7 @@ const styles = StyleSheet.create({
   },
 
   buttonNewpassword: {
-    backgroundColor: '#0bd53a',
+    backgroundColor: COLORS.green,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 45,

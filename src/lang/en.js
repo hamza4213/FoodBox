@@ -74,6 +74,9 @@ export default {
 
   'home.find_object': 'Find by name.',
 
+  'restaurant.status.open': 'open',
+  'restaurant.status.closed': 'closed',
+
   distance_unit: 'm',
   price_unit: '€',
   box: 'box',
@@ -86,6 +89,8 @@ export default {
   continue: 'Continue',
   ok: 'OK',
 
+  'offer.restaurant_not_open': 'No surplus food today',
+  'offer.no_availability': 'All boxes were saved',
   'offer.pick_up_window': 'Pick up today',
   'offer.from': 'from',
   'offer.to': 'to',

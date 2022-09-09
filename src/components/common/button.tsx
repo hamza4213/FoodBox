@@ -1,5 +1,6 @@
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import React from "react";
+import {COLORS} from '../../constants';
 
 interface FBButtonProps {
   onClick: () => void,
@@ -7,7 +8,7 @@ interface FBButtonProps {
   backgroundColor?: string
 }
 
-const FBButton = ({onClick, title, backgroundColor = '#0bd53a'}: FBButtonProps) => {
+const FBButton = ({onClick, title, backgroundColor = COLORS.green}: FBButtonProps) => {
 
   return (
     <TouchableOpacity

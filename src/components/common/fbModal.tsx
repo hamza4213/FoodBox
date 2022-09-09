@@ -2,6 +2,7 @@ import React, {ReactNode} from 'react';
 import {Modal, StyleProp, StyleSheet, Text, TouchableOpacity, View, ViewStyle} from 'react-native';
 import {useIntl} from 'react-intl';
 import {translateText} from '../../lang/translate';
+import {COLORS} from '../../constants';
 
 type FbModalProps = {
   modalVisible: boolean;
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.6)',
   },
   buttonAccept: {
-    backgroundColor: '#0bd53a',
+    backgroundColor: COLORS.green,
   },
   buttonDecline: {
     backgroundColor: '#ff0000',
