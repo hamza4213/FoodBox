@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {ReactNode, useCallback, useContext, useReducer} from 'react';
-import FBSpinner from '../components/common/spinner';
+import {ActivityIndicator, SafeAreaView, View} from 'react-native';
 
 export interface FBLoadingState {
   isLoading: boolean;
@@ -90,14 +90,12 @@ export const FBLoadingProvider = ({children}: { children?: ReactNode }) => {
   const [fbLoadingState, fbLoadingDispatch] = useReducer(fbLoadingReducer, {isLoading: false, loaders: {}});
 
   const showLoading = useCallback((loader: string) => {
-      console.log('showLoading ', loader);
       fbLoadingDispatch(fbLoadingShowLoadingAction({loader}));
     },
     [],
   );
 
   const hideLoading = useCallback((loader: string) => {
-      console.log('hideLoading ', loader);
       fbLoadingDispatch(fbLoadingHideLoadingAction({loader}));
     },
     [],
@@ -107,7 +105,48 @@ export const FBLoadingProvider = ({children}: { children?: ReactNode }) => {
   return (
     <FBLoaderContext.Provider value={{fbLoadingState, showLoading, hideLoading}}>
       {children}
-      <FBSpinner isVisible={fbLoadingState.isLoading}/>
+      <FBLoading isVisible={fbLoadingState.isLoading}/>
     </FBLoaderContext.Provider>
   );
 };
+
+export const FBLoading = ({isVisible}: {isVisible: boolean}) => {
+  
+  if (!isVisible) {
+    return null;
+  }
+  
+  return (
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        right: 0,
+        left: 0
+      }}
+    >
+      <View
+        style={{
+          height: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <ActivityIndicator
+          style={{}}
+          animating={isVisible}
+          size="large"
+          color="#10D53A"
+          hidesWhenStopped={true}
+        />
+      </View>
+      
+    </SafeAreaView>
+  );
+}

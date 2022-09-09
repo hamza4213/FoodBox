@@ -78,13 +78,13 @@ let FBApp = () => {
     <>
       <IntlProvider messages={messages[selectedLocale]} locale={selectedLocale} defaultLocale={FBLocale.BG}>
         <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+          <StatusBar
+            barStyle={'dark-content'}
+            animated={true}
+            backgroundColor={'#fff'}
+          />
+          
           <FBLoadingProvider>
-            <StatusBar
-              barStyle={'dark-content'}
-              animated={true}
-              backgroundColor={'#fff'}
-            />
-  
             <FBAuthProvider>
               <FBRouter/>
             </FBAuthProvider>

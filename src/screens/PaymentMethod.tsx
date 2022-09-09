@@ -1,13 +1,12 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Image, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import {icons} from '../constants';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {showToastError} from '../common/FBToast';
 import BackButton from '../components/common/BackButton';
 import {RestaurantHomeListItem} from '../models/Restaurant';
 import {FBUserVoucher} from '../models/FBUserVoucher';
 import {FoodBox} from '../models/FoodBox';
-import FBSpinner from '../components/common/spinner';
 import FBButton from '../components/common/button';
 import {OrderRepository} from '../repositories/OrderRepository';
 import {useAuth} from '../providers/AuthProvider';
@@ -17,6 +16,7 @@ import {FBUser} from '../models/User';
 import {useIntl} from 'react-intl';
 import {translateText} from '../lang/translate';
 import {isFBAppError, isFBBackendError, isFBGenericError} from '../network/axiosClient';
+import {useFbLoading} from '../providers/FBLoaderProvider';
 
 export interface PaymentMethodProps {
   route: any;
@@ -24,7 +24,7 @@ export interface PaymentMethodProps {
 }
 
 const PaymentMethod = ({route, navigation}: PaymentMethodProps) => {
-  const [visibleLoading, setVisibleLoading] = useState(false);
+  
 
   const restaurant: RestaurantHomeListItem = route.params.restaurant;
   const foodBox: FoodBox = route.params.product;
@@ -32,11 +32,11 @@ const PaymentMethod = ({route, navigation}: PaymentMethodProps) => {
   const userVoucher: FBUserVoucher = route.params.userVoucher;
   const {authData} = useAuth();
   const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
-  
+  const {showLoading, hideLoading} = useFbLoading();
   const intl = useIntl();
 
   const createOrder = async () => {
-    setVisibleLoading(true);
+    showLoading('create_order');
     try {
       const orderRepository: OrderRepository = new OrderRepository({authData: authData!, user: user});
 
@@ -73,7 +73,7 @@ const PaymentMethod = ({route, navigation}: PaymentMethodProps) => {
       navigation.navigate('OrderError');
     }
 
-    setVisibleLoading(false);
+    hideLoading('create_order');
   };
 
   return (
@@ -133,8 +133,6 @@ const PaymentMethod = ({route, navigation}: PaymentMethodProps) => {
         title={translateText(intl, 'payment.complete_order')}
         onClick={() => createOrder()}
       />
-
-      <FBSpinner isVisible={visibleLoading}/>
     </SafeAreaView>
   );
 };

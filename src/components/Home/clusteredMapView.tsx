@@ -51,19 +51,24 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
   const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
   const restaurants = useSelector((state: FBRootState) => state.restaurantState.filteredRestaurants);
 
-  const zoomToLocation = useCallback((params: { location: FBGeoLocation, zoomLevel: ZoomLevel }) => {
-    setHasUserMapOverride(true);
-    if (map.current) {
-      // @ts-ignore
-      map.current.animateCamera(
-        {
-          center: params.location,
-          zoom: params.zoomLevel,
-        },
-        {duration: 1000},
-      );
+  const zoomToLocation = useCallback((params: { location: FBGeoLocation, zoomLevel: ZoomLevel, resetUserOverride: boolean}) => {
+    if (params.resetUserOverride) {
+      setHasUserMapOverride(false);
     }
-  }, []);
+    
+    if (!hasUserMapOverride) {
+      if (map.current) {
+        // @ts-ignore
+        map.current.animateCamera(
+          {
+            center: params.location,
+            zoom: params.zoomLevel,
+          },
+          {duration: 1000},
+        );
+      }
+    }
+  }, [hasUserMapOverride]);
 
   useEffect(() => {
     const isLocationServiceEnabled = async () => {
@@ -161,9 +166,8 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
       setShowUserLocation(true);
 
       // zoom to current location
-      if (!hasUserMapOverride) {
-        zoomToLocation({location: currentUserLocation, zoomLevel: ZoomLevel.CLOSE});
-      }
+      zoomToLocation({location: currentUserLocation, zoomLevel: ZoomLevel.CLOSE, resetUserOverride: false});
+      
     };
 
     getUserLocation();
@@ -171,12 +175,11 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
     return () => {
       Geolocation.stopObserving();
     };
-  }, [dispatch, hasUserMapOverride, zoomToLocation]);
+  }, [dispatch, zoomToLocation]);
 
   const handleRegionChangeComplete = () => {
     setHasUserMapOverride(true);
   };
-
   
   return (
     <>
@@ -249,7 +252,7 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
             );
           })}
       </MapView>
-      <MyLocationButton onPress={() => zoomToLocation({location: userLocation, zoomLevel: ZoomLevel.CLOSE})}/>
+      <MyLocationButton onPress={() => zoomToLocation({location: userLocation, zoomLevel: ZoomLevel.CLOSE, resetUserOverride: true})}/>
       <RestaurantSearch toHide={isFullScreen}/>
     </>
   );

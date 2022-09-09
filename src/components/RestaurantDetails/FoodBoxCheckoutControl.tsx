@@ -17,7 +17,6 @@ import {translateText} from '../../lang/translate';
 import {formatPrice} from '../../utils/formatPrice';
 
 export interface FoodBoxCheckoutControlProps {
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
   restaurant: RestaurantHomeListItem,
   foodbox: FoodBox,
   isOnFocus: boolean
@@ -27,7 +26,6 @@ const FoodBoxCheckoutControl = (params: FoodBoxCheckoutControlProps) => {
   // TODO: reduce availableBoxes when user adds to checkout
 
   const {
-    setIsLoading,
     restaurant,
     foodbox,
     isOnFocus,
@@ -175,7 +173,6 @@ const FoodBoxCheckoutControl = (params: FoodBoxCheckoutControlProps) => {
 
       <VoucherInput
         numberOfBoxesInBasket={numberOfBoxesToCheckout}
-        setIsLoading={setIsLoading}
         foodBoxId={foodbox.id}
         isOnFocus={isOnFocus}
         onAddVoucher={async (promoCode, discountedPricePerBox) => {

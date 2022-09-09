@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Image,
   Keyboard,
@@ -17,7 +17,6 @@ import {showToastError} from '../common/FBToast';
 import {UserRepository} from '../repositories/UserRepository';
 import {useDispatch, useSelector} from 'react-redux';
 import {userUpdateProfileAction} from '../redux/user/actions';
-import FBSpinner from '../components/common/spinner';
 import {FBRootState} from '../redux/store';
 import {FBUser, FBUserEditableFields} from '../models/User';
 import {useAuth} from '../providers/AuthProvider';
@@ -27,6 +26,7 @@ import {translateText} from '../lang/translate';
 import {useForm} from 'react-hook-form';
 import FBFormInput from '../components/common/FBFormInput';
 import {isFBAppError, isFBBackendError, isFBGenericError} from '../network/axiosClient';
+import {useFbLoading} from '../providers/FBLoaderProvider';
 
 interface ModalProps {
   toShow: boolean;
@@ -40,10 +40,10 @@ interface ModalProps {
 const Profile = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [visibleLoading, setVisibleLoading] = useState(false);
   const [avatar, setAvatar] = useState('');
   const {authData} = useAuth();
   const intl = useIntl();
+  const {showLoading, hideLoading} = useFbLoading();
 
   const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
 
@@ -55,7 +55,7 @@ const Profile = () => {
   const dispatch = useDispatch();
 
   const updatePassword = async (newPassword: string) => {
-    setVisibleLoading(true);
+    showLoading('update_password');
 
     try {
       const userRepository = new UserRepository({authData: authData!});
@@ -72,7 +72,7 @@ const Profile = () => {
       }
     }
 
-    setVisibleLoading(false);
+    hideLoading('update_password');
   };
 
   const updateUser = async (userProperty: FBUserEditableFields, userPropertyValue: string) => {
@@ -82,7 +82,7 @@ const Profile = () => {
 
     user[userProperty] = userPropertyValue;
 
-    setVisibleLoading(true);
+    showLoading('update_user');
 
     try {
       const userRepository = new UserRepository({authData: authData!});
@@ -99,7 +99,7 @@ const Profile = () => {
       }
     }
 
-    setVisibleLoading(false);
+    hideLoading('update_user');
   };
 
   const renderProfileSetting = (props: {
@@ -269,7 +269,6 @@ const Profile = () => {
       </View>
 
       {renderModal()}
-      <FBSpinner isVisible={visibleLoading}/>
     </SafeAreaView>
   );
 };

@@ -9,11 +9,11 @@ import {useAuth} from '../../providers/AuthProvider';
 import {useIntl} from 'react-intl';
 import {translateText} from '../../lang/translate';
 import {isFBAppError, isFBBackendError, isFBGenericError} from '../../network/axiosClient';
+import {useFbLoading} from '../../providers/FBLoaderProvider';
 
 
 export interface VoucherCodeInputProps {
   numberOfBoxesInBasket: number;
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   foodBoxId: number;
   onAddVoucher: (voucher: FBUserVoucher, discountedPricePerBox: number) => Promise<void>,
   isOnFocus: boolean
@@ -26,7 +26,6 @@ const VoucherInput = (props: VoucherCodeInputProps) => {
 
   const {
     numberOfBoxesInBasket,
-    setIsLoading,
     foodBoxId,
     onAddVoucher,
     isOnFocus,
@@ -40,6 +39,8 @@ const VoucherInput = (props: VoucherCodeInputProps) => {
   const [voucher, setVoucher] = useState<FBUserVoucher | null>();
   const [canAddVoucher, setCanAddVoucher] = useState(numberOfBoxesInBasket > 0 && !hasAlreadyAddedVoucher);
   const {authData} = useAuth();
+  const {showLoading, hideLoading} = useFbLoading();
+  
   
 
   const voucherChangeHandler = (v: FBUserVoucher) => {
@@ -49,12 +50,12 @@ const VoucherInput = (props: VoucherCodeInputProps) => {
     setCanAddVoucher(!!v && numberOfBoxesInBasket > 0);
   };
 
-  const addPromoCode = async () => {
+  const addVoucher = async () => {
     if (!canAddVoucher || !voucher) {
       return;
     }
 
-    setIsLoading(true);
+    showLoading('add_voucher');
 
     const promoCodeRepository = new UserVoucherRepository({authData: authData!});
 
@@ -86,7 +87,7 @@ const VoucherInput = (props: VoucherCodeInputProps) => {
       setCanAddVoucher(false);
     }
 
-    setIsLoading(false);
+    hideLoading('add_voucher');
   };
 
   const getTextInputStyles = () => {
@@ -102,7 +103,7 @@ const VoucherInput = (props: VoucherCodeInputProps) => {
 
   useEffect(() => {
     setCanAddVoucher(!!voucher && numberOfBoxesInBasket > 0);
-    addPromoCode();
+    addVoucher();
   }, [numberOfBoxesInBasket]);
 
   useEffect(() => {
@@ -130,7 +131,7 @@ const VoucherInput = (props: VoucherCodeInputProps) => {
             ...styles.addButtonWrapper,
             backgroundColor: !canAddVoucher || hasAlreadyAddedVoucher ? COLORS.darkgray : '#0bd53a',
           }}
-          onPress={() => addPromoCode()}>
+          onPress={() => addVoucher()}>
           <View>
             <Text style={styles.addButtonText}>
               {translateText(intl, 'offer.add_promo_code')}

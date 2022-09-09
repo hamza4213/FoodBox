@@ -2,7 +2,8 @@ import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import {
   FlatList,
-  Image, Linking,
+  Image,
+  Linking,
   ListRenderItemInfo,
   RefreshControl,
   SafeAreaView,
@@ -17,7 +18,6 @@ import {showToastError} from '../common/FBToast';
 import {useDispatch, useSelector} from 'react-redux';
 import {API_ENDPOINT_ENV} from '../network/Server';
 import {COLORS} from './../constants';
-import FBSpinner from '../components/common/spinner';
 import CancelOrderDialog from '../components/OrdersDetails/CancelOrderDialog';
 import {OrderRepository} from '../repositories/OrderRepository';
 import {orderCancelledAction, orderConfirmedAction, ordersFetchedAction} from '../redux/order/actions';

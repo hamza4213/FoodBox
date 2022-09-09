@@ -5,7 +5,6 @@ import {Utils} from '../../utils';
 import {showToastError} from '../../common/FBToast';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {WEBSITE_CONTACT_US} from '../../network/Server';
-import FBSpinner from '../../components/common/spinner';
 import FBButton from '../../components/common/button';
 import {NotAuthenticatedUserRepository} from '../../repositories/UserRepository';
 import RegistrationCompletedDialog from '../../components/login/RegistrationCompletedDialog';
@@ -16,6 +15,7 @@ import FBFormCheckbox from '../../components/common/FBFormCheckbox';
 import {useIntl} from 'react-intl';
 import {translateText} from '../../lang/translate';
 import {isFBAppError, isFBBackendError, isFBGenericError} from '../../network/axiosClient';
+import {useFbLoading} from '../../providers/FBLoaderProvider';
 
 interface SignUpProps {
   navigation: any;
@@ -34,11 +34,11 @@ interface SignUpFormData {
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
 const SignUp = ({navigation, route}: SignUpProps) => {
-
-  const [isLoading, setIsLoading] = useState(false);
+  
   const [isRegistrationCompleteDialogVisible, setIsRegistrationCompleteDialogVisible] = useState(false);
 
   const intl = useIntl();
+  const {showLoading, hideLoading} = useFbLoading();
 
   const userLocale = route.params.locale;
 
@@ -50,7 +50,7 @@ const SignUp = ({navigation, route}: SignUpProps) => {
   const password = watch('password');
 
   const doSignUp = async (data: SignUpFormData) => {
-    setIsLoading(true);
+    showLoading('sign_up');
 
     try {
       const userRepo = new NotAuthenticatedUserRepository();
@@ -61,8 +61,7 @@ const SignUp = ({navigation, route}: SignUpProps) => {
         password: data.password,
         locale: userLocale,
       });
-
-      setIsLoading(false);
+      
       setIsRegistrationCompleteDialogVisible(true);
     } catch (error: any) {
       if (isFBAppError(error) || isFBGenericError(error)) {
@@ -74,7 +73,7 @@ const SignUp = ({navigation, route}: SignUpProps) => {
       }
     }
 
-    setIsLoading(false);
+    hideLoading('sign_up');
   };
 
   useEffect(() => {
@@ -207,8 +206,7 @@ const SignUp = ({navigation, route}: SignUpProps) => {
           setIsShown={setIsRegistrationCompleteDialogVisible}
           onConfirm={() => navigation.navigate('SignInScreen')}
         />
-
-        <FBSpinner isVisible={isLoading}/>
+        
       </ImageBackground>
     </SafeAreaView>
   );

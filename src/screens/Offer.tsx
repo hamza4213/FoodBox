@@ -1,10 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {COLORS, icons, SIZES} from './../constants';
 import {Utils} from '../utils';
 import {API_ENDPOINT_PRODUCT_PHOTOS} from '../network/Server';
 import CountDown from 'react-native-countdown-component';
-import FBSpinner from '../components/common/spinner';
 import {FoodBox} from '../models/FoodBox';
 import {RestaurantHomeListItem} from '../models/Restaurant';
 import BackButton from '../components/common/BackButton';
@@ -56,7 +55,6 @@ const Offer = ({route, navigation}: OfferProps) => {
   const isFinished = RestaurantService.isFinished(foodBox);
   const isStarted = RestaurantService.isStarted(foodBox);
   const intl = useIntl();
-
   const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
 
   useEffect(() => {
@@ -69,8 +67,7 @@ const Offer = ({route, navigation}: OfferProps) => {
       });
     });
   }, [navigation]);
-
-  const [visibleLoading, setVisibleLoading] = useState(false);
+  
   const isOnFocus = useIsFocused();
 
   return (
@@ -212,7 +209,6 @@ const Offer = ({route, navigation}: OfferProps) => {
         </View>
 
         <FoodBoxCheckoutControl
-          setIsLoading={setVisibleLoading}
           restaurant={restaurant}
           foodbox={foodBox}
           isOnFocus={isOnFocus}
@@ -261,8 +257,7 @@ const Offer = ({route, navigation}: OfferProps) => {
           </Text>
         </View>
       </ScrollView>
-
-      <FBSpinner isVisible={visibleLoading}/>
+      
     </SafeAreaView>
   );
 };
