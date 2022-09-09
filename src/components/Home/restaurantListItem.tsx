@@ -28,6 +28,7 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
   const box = restaurant.products[0];
 
   const canCheckout = RestaurantService.canCheckout(box);
+  const isFinished = RestaurantService.isFinished(box);
   const isOpen = RestaurantService.isOpen(box);
   const borderColor = canCheckout ? COLORS.green : COLORS.red;
   const boxQuantityBackgroundColor = canCheckout ? COLORS.green : COLORS.red;
@@ -124,6 +125,10 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
     
     if (!isOpen) {
       text = translateText(intl, 'restaurant.status.closed');
+    }
+    
+    if (isFinished) {
+      text = translateText(intl, 'offer.expired');
     }
 
     return (

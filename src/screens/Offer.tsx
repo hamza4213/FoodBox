@@ -130,6 +130,19 @@ const Offer = ({route, navigation}: OfferProps) => {
               </Text>
             </View>
           }
+
+          {isOpen && isFinished &&
+            <View
+              style={{
+                ...styles.availableBoxesIndicatorWrapper,
+                backgroundColor: COLORS.red,
+                borderColor: '#000', borderWidth: 2,
+              }}>
+              <Text style={styles.availableBoxesIndicatorText}>
+                {translateText(intl, 'offer.expired')}
+              </Text>
+            </View>
+          }
           
         </View>
 
@@ -222,7 +235,6 @@ const Offer = ({route, navigation}: OfferProps) => {
             {restaurant.address}
           </Text>
         </TouchableOpacity>
-
 
         <Text style={styles.description}>
           {`${translateText(intl, 'offer.description_start')} ${foodBox.summary} ${translateText(intl, 'offer.description_end')}`}

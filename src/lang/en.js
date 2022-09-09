@@ -91,6 +91,7 @@ export default {
 
   'offer.restaurant_not_open': 'No surplus food today',
   'offer.no_availability': 'All boxes were saved',
+  'offer.expired': 'Expired',
   'offer.pick_up_window': 'Pick up today',
   'offer.from': 'from',
   'offer.to': 'to',

@@ -92,6 +92,7 @@ export default {
 
   'offer.restaurant_not_open': 'Днес няма излишък',
   'offer.no_availability': 'Всички кутии са спасени',
+  'offer.expired': 'Изтекла',
   'offer.pick_up_window': 'Прозорец на вземане днес',
   'offer.from': 'от',
   'offer.to': 'до',
