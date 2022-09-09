@@ -1,5 +1,5 @@
 import MapView from 'react-native-map-clustering';
-import {Image, Platform, StyleSheet, Text, View} from 'react-native';
+import {Image, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Callout, Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {API_ENDPOINT_PRODUCT_PHOTOS} from '../../network/Server';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
@@ -18,7 +18,6 @@ import {useIntl} from 'react-intl';
 import RNSettings from 'react-native-settings';
 import {check as checkPermission, PERMISSIONS, request as requestPermission} from 'react-native-permissions';
 import {FBGeoLocation} from '../../models/FBGeoLocation';
-import MyLocationButton from './myLocationButton';
 
 
 enum ZoomLevel {
@@ -198,7 +197,8 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
         style={{
           ...StyleSheet.absoluteFillObject,
           width: '100%',
-        }}>
+        }}
+      >
         {
           restaurants.map(restaurant => {
             const box: FoodBox = restaurant.products[0];
@@ -259,3 +259,24 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
 };
 
 export default ClusteredMapView;
+
+
+const MyLocationButton = ({onPress}: {onPress: () => void}) => {
+
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      style={{
+        position: 'absolute',
+        bottom: '41%',
+        alignSelf: 'flex-end',
+        right: 10,
+      }}>
+      <Image
+        source={require('../../../assets/icons/user_location_icon.png')}
+        style={{width: 30, height: 30}}
+        resizeMode={'contain'}
+      />
+    </TouchableOpacity>
+  );
+};

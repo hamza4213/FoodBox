@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, Keyboard, ListRenderItemInfo, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import {Utils} from '../../utils';
 import Autocomplete from 'react-native-autocomplete-input';
@@ -9,50 +9,33 @@ import {useIntl} from 'react-intl';
 import {translateText} from '../../lang/translate';
 import {restaurantUpdateFiltersAction} from '../../redux/restaurant/actions';
 import {filter} from 'lodash';
+import {COLORS} from '../../constants';
 
 export interface RestaurantSearchProps {
   toHide: boolean;
 }
 
 const RestaurantSearch = ({toHide}: RestaurantSearchProps) => {
-  const userSearch = useSelector((state: FBRootState) => state.restaurantState.filters.search);
-  const [userInput, setUserInput] = useState<string>(userSearch.userInput);
-
+  const restaurants = useSelector((state: FBRootState) => state.restaurantState.filteredRestaurants);
+  const userInput = useSelector((state: FBRootState) => state.restaurantState.filters.search.userInput);
+  
   const [suggestionsList, setSuggestionsList] = useState<RestaurantHomeListItem[]>([]);
 
   const styles = styleCreator({});
   const intl = useIntl();
   const dispatch = useDispatch();
 
-  // TODO: zoom to location after user clicks
-  // TODO: zoom out on cancel search
-  
-  const restaurants = useSelector((state: FBRootState) => state.restaurantState.filteredRestaurants);
+  useEffect(()=> {
+    setSuggestionsList(restaurants);
+  }, [restaurants]);
 
   if (toHide) {
     return null;
   }
 
-  const filterRestaurant = (userInputQuery: string) => {
+  const searchRestaurants = (userInputQuery: string) => {
     userInputQuery = userInputQuery.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
-    setUserInput(userInputQuery);
-
-    let searchQueryRegex: null | string = null;
-    if (!userInputQuery) {
-      setSuggestionsList([]);
-    } else {
-      searchQueryRegex = `${userInputQuery}`;
-      console.log('searchQueryRegex', searchQueryRegex, restaurants.length);
-      const suggestions = filter(restaurants, r => r.name.search(new RegExp(searchQueryRegex!, 'i')) >= 0);
-
-      setSuggestionsList(suggestions);
-    }
-
-    dispatch(restaurantUpdateFiltersAction({
-      filterCategory: 'search',
-      filterCategoryProperty: 'searchTerm',
-      newValue: searchQueryRegex,
-    }));
+    
     dispatch(restaurantUpdateFiltersAction({
       filterCategory: 'search',
       filterCategoryProperty: 'userInput',
@@ -67,28 +50,38 @@ const RestaurantSearch = ({toHide}: RestaurantSearchProps) => {
         <Autocomplete
           data={suggestionsList}
           value={userInput}
-          onChangeText={i => filterRestaurant(i)}
+          onChangeText={i => searchRestaurants(i)}
           flatListProps={{
             keyboardShouldPersistTaps: 'handled',
             keyExtractor: (r: RestaurantHomeListItem) => r.listIndex.toString(),
             renderItem: (item: ListRenderItemInfo<RestaurantHomeListItem>) => (
               <TouchableOpacity
+                style={styles.autocompleteOptionText}
                 onPress={() => {
                   Keyboard.dismiss();
-                  setUserInput(item.item.name);
-
-                  dispatch(restaurantUpdateFiltersAction({
-                    filterCategory: 'search',
-                    filterCategoryProperty: 'searchTerm',
-                    newValue: item.item.name,
-                  }));
+                  
                   dispatch(restaurantUpdateFiltersAction({
                     filterCategory: 'search',
                     filterCategoryProperty: 'userInput',
                     newValue: item.item.name,
                   }));
-                }}>
-                <Text style={styles.autocompleteOptionText}>{item.item.name}</Text>
+                }}
+              >
+                <View style={{flexGrow: 1, flexDirection: 'row'}}>
+                  <Text style={{flex: 1, width: 1, color: '#29455f'}}>
+                    <Text style={{
+                      fontSize: 13,
+                      fontWeight: '700',
+                      color: '#29455f',
+                    }}>{item.item.boxes[0].name}</Text>
+                    <Text>{` ${translateText(intl, 'order.from')} `}</Text>
+                    <Text style={{
+                      fontSize: 13,
+                      fontWeight: '700',
+                      color: '#29455f',
+                    }}>{item.item.name}</Text>
+                  </Text>
+                </View>
               </TouchableOpacity>
             ),
           }}
@@ -101,14 +94,14 @@ const RestaurantSearch = ({toHide}: RestaurantSearchProps) => {
               style={styles.autocompleteInput}
             />
           }
-          // hideResults={toHideResults}
+          hideResults={!userInput}
         />
       </View>
       <TouchableOpacity
-        style={styles.autocompleteCloseButton}
+        style={[styles.autocompleteCloseButton]}
         onPress={() => {
           Keyboard.dismiss();
-          filterRestaurant('');
+          searchRestaurants('');
         }}>
         <Image source={require('../../../assets/images/app_close_icon.png')}/>
       </TouchableOpacity>
@@ -150,7 +143,8 @@ const styleCreator = ({}: {}) => StyleSheet.create({
   autocompleteCloseButton: {
     position: 'absolute',
     right: 20,
-    top: 30,
+    top: 20,
     elevation: 0,
+    padding: 7
   },
 });

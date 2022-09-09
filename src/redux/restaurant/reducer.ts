@@ -43,7 +43,6 @@ export interface FBRestaurantFilters {
   };
   search: {
     isEnabled: boolean;
-    searchTerm: string | null;
     userInput: string;
   };
 }
@@ -113,7 +112,6 @@ export const restaurantInitialState: RestaurantState = {
     },
     search: {
       isEnabled: true,
-      searchTerm: null,
       userInput: '',
     },
   },
