@@ -74,7 +74,7 @@ export const FB_CITIES_TO_LOCATION_MAP: { [key in FB_CITIES]: FBGeoLocation } = 
 
 export const userInitialState: UserState = {
   user: null,
-  userLocation: FB_CITIES_TO_LOCATION_MAP[FB_CITIES.BUL_SOFIA],
+  userLocation: FB_CITIES_TO_LOCATION_MAP[FB_CITIES.BUL_VARNA],
   locationPermission: {
     userAnswer: UserPermissionAnswer.UNSET,
     systemPermission: SystemPermissionStatus.UNKNOWN,

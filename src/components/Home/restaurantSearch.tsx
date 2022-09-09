@@ -13,9 +13,10 @@ import {COLORS} from '../../constants';
 
 export interface RestaurantSearchProps {
   toHide: boolean;
+  onSelect: (restaurant: RestaurantHomeListItem) => void
 }
 
-const RestaurantSearch = ({toHide}: RestaurantSearchProps) => {
+const RestaurantSearch = ({toHide, onSelect}: RestaurantSearchProps) => {
   const restaurants = useSelector((state: FBRootState) => state.restaurantState.filteredRestaurants);
   const userInput = useSelector((state: FBRootState) => state.restaurantState.filters.search.userInput);
   
@@ -65,6 +66,8 @@ const RestaurantSearch = ({toHide}: RestaurantSearchProps) => {
                     filterCategoryProperty: 'userInput',
                     newValue: item.item.name,
                   }));
+                  
+                  onSelect(item.item);
                 }}
               >
                 <View style={{flexGrow: 1, flexDirection: 'row'}}>

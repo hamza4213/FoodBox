@@ -18,6 +18,7 @@ import {useIntl} from 'react-intl';
 import RNSettings from 'react-native-settings';
 import {check as checkPermission, PERMISSIONS, request as requestPermission} from 'react-native-permissions';
 import {FBGeoLocation} from '../../models/FBGeoLocation';
+import {RestaurantHomeListItem} from '../../models/Restaurant';
 
 
 enum ZoomLevel {
@@ -44,30 +45,24 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
   const map = useRef<MapView>();
 
   // used to determine if the user has interacted with the map
-  const [hasUserMapOverride, setHasUserMapOverride] = useState(false);
+  const [systemHasMapControl, setSystemHasMapControl] = useState(true);
   const [showUserLocation, setShowUserLocation] = useState(false);
 
   const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
   const restaurants = useSelector((state: FBRootState) => state.restaurantState.filteredRestaurants);
 
-  const zoomToLocation = useCallback((params: { location: FBGeoLocation, zoomLevel: ZoomLevel, resetUserOverride: boolean}) => {
-    if (params.resetUserOverride) {
-      setHasUserMapOverride(false);
+  const zoomToLocation = useCallback((params: { location: FBGeoLocation, zoomLevel: ZoomLevel }) => {
+    if (map.current) {
+      // @ts-ignore
+      map.current.animateCamera(
+        {
+          center: params.location,
+          zoom: params.zoomLevel,
+        },
+        {duration: 1000},
+      );
     }
-    
-    if (!hasUserMapOverride) {
-      if (map.current) {
-        // @ts-ignore
-        map.current.animateCamera(
-          {
-            center: params.location,
-            zoom: params.zoomLevel,
-          },
-          {duration: 1000},
-        );
-      }
-    }
-  }, [hasUserMapOverride]);
+  }, []);
 
   useEffect(() => {
     const isLocationServiceEnabled = async () => {
@@ -163,10 +158,6 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
 
       // since we have access to the location show it on the map
       setShowUserLocation(true);
-
-      // zoom to current location
-      zoomToLocation({location: currentUserLocation, zoomLevel: ZoomLevel.CLOSE, resetUserOverride: false});
-      
     };
 
     getUserLocation();
@@ -176,14 +167,29 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
     };
   }, [dispatch, zoomToLocation]);
   
+  useEffect(()=>{
+    if (systemHasMapControl) {
+      zoomToLocation({location: userLocation, zoomLevel: ZoomLevel.CLOSE});
+    }
+  }, [systemHasMapControl, userLocation, zoomToLocation]);
+
+  const handleOnSearchSelect = (restaurant: RestaurantHomeListItem) => {
+    zoomToLocation({
+      location: {latitude: restaurant.latitude, longitude: restaurant.longitude},
+      zoomLevel: ZoomLevel.CLOSE,
+    });
+    setSystemHasMapControl(false);
+  };
+
   return (
     <>
       <MapView
         onRegionChangeComplete={(_region, details) => {
           if (details.isGesture) {
-            setHasUserMapOverride(true);
+            setSystemHasMapControl(false);
           }
         }}
+        
         provider={PROVIDER_GOOGLE}
         // @ts-ignore
         ref={map}
@@ -252,8 +258,11 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
             );
           })}
       </MapView>
-      <MyLocationButton onPress={() => zoomToLocation({location: userLocation, zoomLevel: ZoomLevel.CLOSE, resetUserOverride: true})}/>
-      <RestaurantSearch toHide={isFullScreen}/>
+      <MyLocationButton onPress={() => {
+        zoomToLocation({location: userLocation, zoomLevel: ZoomLevel.CLOSE});
+        setSystemHasMapControl(true);
+      }}/>
+      <RestaurantSearch toHide={isFullScreen} onSelect={handleOnSearchSelect}/>
     </>
   );
 };
@@ -261,7 +270,7 @@ const ClusteredMapView = ({isFullScreen}: ClusteredMapProps) => {
 export default ClusteredMapView;
 
 
-const MyLocationButton = ({onPress}: {onPress: () => void}) => {
+const MyLocationButton = ({onPress}: { onPress: () => void }) => {
 
   return (
     <TouchableOpacity
