@@ -89,6 +89,9 @@ export default {
   continue: 'Continue',
   ok: 'OK',
 
+  'warning.problematic_ordering':
+    'Warning: offers are not ordered by proximity to you.',
+
   'toast.heading.info': 'Info',
   'toast.heading.error': 'Error',
 

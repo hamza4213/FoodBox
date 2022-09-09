@@ -90,6 +90,9 @@ export default {
   continue: 'Продължи',
   ok: 'ОК',
 
+  'warning.problematic_ordering':
+    'Внимание: обектите не са подредени по близост до вас.',
+
   'toast.heading.info': 'Инфо',
   'toast.heading.error': 'Грешка',
 

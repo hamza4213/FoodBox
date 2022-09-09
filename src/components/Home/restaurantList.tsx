@@ -120,7 +120,6 @@ const RestaurantList = ({
           flexDirection: 'row',
           alignItems: 'center',
         }}>
-
           <TouchableOpacity
             style={{
               marginHorizontal: 2,
@@ -156,10 +155,12 @@ const RestaurantList = ({
               renderItem={renderSortOptionListItem}
             />
           </View>
-
-
         </View>
 
+        {sortOrder !== RESTAURANT_SORT_OPTION.CLOSEST_DISTANCE_FIRST &&
+          <Text style={{color: COLORS.red, fontWeight: '700'}} >{translateText(intl, 'warning.problematic_ordering')}</Text>
+        }
+        
         <FlatList
           data={restaurants}
           renderItem={renderRestaurantItem}
