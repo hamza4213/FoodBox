@@ -20,6 +20,7 @@ import {AUTH_DATA_KEY} from './src/providers/AuthProvider';
 import {UserRepository} from './src/repositories/UserRepository';
 import {createStore} from 'redux';
 import {name as appName} from './app.json';
+import FlashMessage from 'react-native-flash-message';
 
 
 const migrations = {
@@ -108,6 +109,7 @@ const ReduxApp = () => (
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <App/>
+      <FlashMessage position="bottom" />
     </PersistGate>
   </Provider>
 );

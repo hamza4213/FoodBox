@@ -12,7 +12,6 @@ import MessagesInEnglish from './src/lang/en';
 import MessagesInBulgarian from './src/lang/bg';
 import {FBLocale} from './src/redux/user/reducer';
 import {FBRootState} from './src/redux/store';
-import Toast from 'react-native-toast-message';
 import {useAppState} from '@react-native-community/hooks';
 import {check as checkPermission, PERMISSIONS, request as requestPermission} from 'react-native-permissions';
 import {Settings as FBSettings} from 'react-native-fbsdk-next';
@@ -91,7 +90,6 @@ let FBApp = () => {
           </FBLoadingProvider>
         </SafeAreaProvider>
       </IntlProvider>
-      <Toast/>
     </>
   );
 };

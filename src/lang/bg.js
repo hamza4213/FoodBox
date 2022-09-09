@@ -90,6 +90,9 @@ export default {
   continue: 'Продължи',
   ok: 'ОК',
 
+  'toast.heading.info': 'Инфо',
+  'toast.heading.error': 'Грешка',
+
   'offer.restaurant_not_open': 'Днес няма излишък',
   'offer.no_availability': 'Всички кутии са спасени',
   'offer.expired': 'Изтекла',

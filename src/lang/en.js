@@ -89,6 +89,9 @@ export default {
   continue: 'Continue',
   ok: 'OK',
 
+  'toast.heading.info': 'Info',
+  'toast.heading.error': 'Error',
+
   'offer.restaurant_not_open': 'No surplus food today',
   'offer.no_availability': 'All boxes were saved',
   'offer.expired': 'Expired',
