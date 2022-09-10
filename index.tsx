@@ -6,11 +6,10 @@ import {AppRegistry, LogBox} from 'react-native';
 import App from './App';
 import {Provider} from 'react-redux';
 import React from 'react';
-import allReducer from './src/redux/store';
+import allReducer, {FBRootState} from './src/redux/store';
 import {persistReducer, persistStore} from 'redux-persist';
 import {PersistGate} from 'redux-persist/integration/react';
 import AsyncStorage from '@react-native-community/async-storage';
-import {set} from 'lodash';
 import {restaurantInitialState} from './src/redux/restaurant/reducer';
 import {ordersInitialState} from './src/redux/order/reducer';
 import {userInitialState} from './src/redux/user/reducer';
@@ -22,45 +21,44 @@ import {createStore} from 'redux';
 import {name as appName} from './app.json';
 import FlashMessage from 'react-native-flash-message';
 
+interface StateV0 {
+  auth: any;
+  user: any;
+  restaurant: any;
+}
 
 const migrations = {
-  0: async (state: any) => {
-    console.log('state migration start', state);
+  1: async (_oldState: StateV0): Promise<FBRootState> => {
 
-    set(state, 'restaurant', restaurantInitialState);
-    set(state, 'orders', ordersInitialState);
-    set(state, 'user', userInitialState);
-
-    if (state.auth) {
-      delete state.auth;
-    }
+    const state: FBRootState = {
+      restaurantState: restaurantInitialState,
+      ordersState: ordersInitialState,
+      userState: userInitialState,
+    };
 
     try {
       const userToken = await AsyncStorage.getItem('userToken');
-      console.log('state migration userToken ', userToken);
+
       if (userToken) {
         const authData: AuthData = {userToken: userToken};
         const userRepo = new UserRepository({authData});
         const user = await userRepo.checkMe({});
 
-        set(state, 'user.user', user);
+        state.userState.user = user;
 
         await AsyncStorage.removeItem('userToken');
         await AsyncStorage.setItem(AUTH_DATA_KEY, JSON.stringify(authData));
       }
     } catch (e) {
-      console.log('state migration error', e);
       // problem reading token -> sign out user
       await AsyncStorage.removeItem('userToken');
     }
-    
-    return {
-      ...state,
-    };
+
+    return state;
   },
 };
 
-const currentStoreVersion = 0;
+const currentStoreVersion = 1;
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
@@ -104,14 +102,14 @@ let persistor = persistStore(store);
 // ignore stupid warning from Geolocation library
 LogBox.ignoreLogs([
   'Warning: Called stopObserving with existing subscriptions',
-  '`new NativeEventEmitter()` was called with a non-null argument without'
+  '`new NativeEventEmitter()` was called with a non-null argument without',
 ]);
 
 const ReduxApp = () => (
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <App/>
-      <FlashMessage position="bottom" />
+      <FlashMessage position="bottom"/>
     </PersistGate>
   </Provider>
 );

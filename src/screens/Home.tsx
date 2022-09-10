@@ -68,7 +68,6 @@ const Home = ({navigation}: HomeProps) => {
     try {
       const restaurantRepository = new RestaurantRepository({authData: authData!});
       const restaurantService = new RestaurantService({restaurantRepository});
-      console.log('Home getRestaurantsForHome');
       const restaurantsListItems = await restaurantService.getRestaurantsForHome({userLocation});
 
       dispatch(restaurantsFetchedAction({restaurants: restaurantsListItems}));
@@ -93,7 +92,6 @@ const Home = ({navigation}: HomeProps) => {
   }, [navigation, user.email, user.id]);
 
   useEffect(() => {
-    console.log('user.acceptedTC ', user.acceptedTC);
     if (!user.acceptedTC) {
       setTermsAndConditionsModalVisible(true);
     }

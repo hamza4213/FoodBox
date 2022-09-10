@@ -42,7 +42,6 @@ import ENFLag from '../../../assets/flags/us.svg';
 import ROFLag from '../../../assets/flags/ro.svg';
 import {useFbLoading} from '../../providers/FBLoaderProvider';
 import {isFBAppError, isFBBackendError, isFBGenericError} from '../../network/axiosClient';
-import { showMessage, hideMessage } from "react-native-flash-message";
 
 
 interface LoginProps {
@@ -62,6 +61,8 @@ const Login = ({navigation}: LoginProps) => {
   const userLocale = useSelector((state: FBRootState) => state.userState.locale);
   const intl = useIntl();
   const dispatch = useDispatch();
+  const stateLog = useSelector((state: any) => state.loging);
+  console.log('stateLog ', stateLog);
 
   const {control, handleSubmit} = useForm<LoginFormData>({
     defaultValues: {
@@ -279,7 +280,13 @@ const Login = ({navigation}: LoginProps) => {
         style={styles.backgroundImage}
       >
         <ScrollView style={{flex: 1}}>
-          {/* unneded view*/}
+          
+          <View>
+            <Text> State migration log {!!stateLog} </Text>
+            <Text> {stateLog && stateLog.oldUserToken} </Text>
+            <Text> {stateLog && stateLog.error} </Text>
+          </View>
+          
           <View style={{paddingHorizontal: 36, flex: 1, marginBottom: 30}}>
             <View style={styles.titleWrapper}>
               <Text style={styles.titleText}>
