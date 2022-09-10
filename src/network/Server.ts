@@ -4,7 +4,7 @@ import {FBLocale} from '../redux/user/reducer';
 
 export const API_ENDPOINT_ENV = 'https://foodobox-stage.com/'; // _Release
 //const API_ENDPOINT_ENV = "https://f16298b819c3.ngrok.io/";  //
-export const ENVIRONMENT = 'dev'; // 'stage', 'live', 'dev'
+export const ENVIRONMENT = 'stage'; // 'stage', 'live', 'dev'
 
 export const API_ENDPOINT = `${API_ENDPOINT_ENV}user/`;
 export const API_ENDPOINT_RESTAURANT_PHOTOS = `${API_ENDPOINT_ENV}restaurants/`;
