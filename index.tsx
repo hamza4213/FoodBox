@@ -24,7 +24,7 @@ import FlashMessage from 'react-native-flash-message';
 
 
 const migrations = {
-  1: async (state: any) => {
+  0: async (state: any) => {
     console.log('state migration start', state);
 
     set(state, 'restaurant', restaurantInitialState);
