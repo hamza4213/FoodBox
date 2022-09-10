@@ -76,7 +76,7 @@ export const userUpdateLocationAction = (params: UserUpdateLocationAction['data'
 export const USER_UPDATE_LOC_PERMISSION: UserActionType = 'UPDATE_LOC_PERMISSION';
 
 export interface UserUpdateLocPermissionAction extends UserAction {
-  data: { userAnswer?: UserPermissionAnswer, systemPermission?: SystemPermissionStatus };
+  data: { userAnswer: UserPermissionAnswer };
 }
 
 export const userUpdateLocPermissionAction = (params: UserUpdateLocPermissionAction['data']) => {

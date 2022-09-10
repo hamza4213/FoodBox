@@ -6,11 +6,11 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/core';
 import {useDispatch, useSelector} from 'react-redux';
 import {FBRootState} from '../../redux/store';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation, {GeolocationError} from '@react-native-community/geolocation';
 import {RestaurantService} from '../../services/RestaurantService';
 import {restaurantDistanceUpdateAction} from '../../redux/restaurant/actions';
 import {FoodBox} from '../../models/FoodBox';
-import {userUpdateLocationAction} from '../../redux/user/actions';
+import {userUpdateLocationAction, userUpdateLocPermissionAction} from '../../redux/user/actions';
 import {translateText} from '../../lang/translate';
 import {useIntl} from 'react-intl';
 // @ts-ignore
@@ -19,6 +19,7 @@ import {check as checkPermission, PERMISSIONS, request as requestPermission} fro
 import {FBGeoLocation} from '../../models/FBGeoLocation';
 import {RestaurantHomeListItem} from '../../models/Restaurant';
 import {COLORS} from '../../constants';
+import {UserPermissionAnswer} from '../../redux/user/reducer';
 
 
 enum ZoomLevel {
@@ -71,13 +72,15 @@ const ClusteredMapView = ({zoomOnRestaurant}:{zoomOnRestaurant?: RestaurantHomeL
     const isLocationServiceEnabled = async () => {
       const locationSettingStatus = await RNSettings.getSetting(RNSettings.LOCATION_SETTING);
       const locationPermissionRequestStatus = await checkPermission(
-        Platform.OS === 'ios' ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+        Platform.select({ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE, android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION})!
       );
       return locationSettingStatus === 'ENABLED' && locationPermissionRequestStatus !== 'unavailable';
     };
 
     const getUserLocation = async () => {
       const isLocationEnabled = await isLocationServiceEnabled();
+      
+      dispatch(userUpdateLocPermissionAction({userAnswer: UserPermissionAnswer.NO}));
 
       if (isLocationEnabled) {
         if (Platform.OS === 'ios') {
@@ -115,8 +118,8 @@ const ClusteredMapView = ({zoomOnRestaurant}:{zoomOnRestaurant?: RestaurantHomeL
           (position) => {
             handleUserLocationUpdate({currentUserLocation: position.coords});
           },
-          () => {
-            handleUserLocationError();
+          (error) => {
+            handleUserLocationError(error);
           },
           {
             enableHighAccuracy: false,
@@ -135,8 +138,8 @@ const ClusteredMapView = ({zoomOnRestaurant}:{zoomOnRestaurant?: RestaurantHomeL
         (position) => {
           handleUserLocationUpdate({currentUserLocation: position.coords});
         },
-        () => {
-          handleUserLocationError();
+        (error) => {
+          handleUserLocationError(error);
         },
         {
           enableHighAccuracy: false,
@@ -147,8 +150,11 @@ const ClusteredMapView = ({zoomOnRestaurant}:{zoomOnRestaurant?: RestaurantHomeL
       );
     };
 
-    const handleUserLocationError = () => {
+    const handleUserLocationError = (error: GeolocationError) => {
       setShowUserLocation(false);
+      if (error.code === error.PERMISSION_DENIED) {
+        dispatch(userUpdateLocPermissionAction({userAnswer: UserPermissionAnswer.NO}));
+      }
     };
 
     const handleUserLocationUpdate = (params: { currentUserLocation: FBGeoLocation }) => {
@@ -161,6 +167,9 @@ const ClusteredMapView = ({zoomOnRestaurant}:{zoomOnRestaurant?: RestaurantHomeL
 
       // since we have access to the location show it on the map
       setShowUserLocation(true);
+      
+      // we have access
+      dispatch(userUpdateLocPermissionAction({userAnswer: UserPermissionAnswer.YES}));
     };
 
     getUserLocation();

@@ -9,6 +9,7 @@ import {useIntl} from 'react-intl';
 import {COLORS} from '../../constants';
 import {RESTAURANT_SORT_OPTION} from '../../redux/restaurant/reducer';
 import {updateRestaurantSortOrderAction} from '../../redux/restaurant/actions';
+import {UserPermissionAnswer} from '../../redux/user/reducer';
 
 export interface RestaurantListProps {
   isFullScreen: boolean,
@@ -25,6 +26,7 @@ const RestaurantList = ({
   const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
   const sortOrder = useSelector((state: FBRootState) => state.restaurantState.sortOrder);
   const restaurants = useSelector((state: FBRootState) => state.restaurantState.forList);
+  const userLocationPermissions = useSelector((state: FBRootState) => state.userState.locationPermission);
 
   const renderRestaurantItem = (item: ListRenderItemInfo<RestaurantHomeListItem>) => {
     return <RestaurantListItem
@@ -159,6 +161,10 @@ const RestaurantList = ({
 
         {sortOrder !== RESTAURANT_SORT_OPTION.CLOSEST_DISTANCE_FIRST &&
           <Text style={{color: COLORS.red, fontWeight: '700'}} >{translateText(intl, 'warning.problematic_ordering')}</Text>
+        }
+
+        {userLocationPermissions.userAnswer === UserPermissionAnswer.NO &&
+          <Text style={{color: COLORS.red, fontWeight: '700'}} >{translateText(intl, 'warning.no_location_permissions')}</Text>
         }
         
         <FlatList

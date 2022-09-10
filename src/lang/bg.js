@@ -91,7 +91,9 @@ export default {
   ok: 'ОК',
 
   'warning.problematic_ordering':
-    'Внимание: обектите не са подредени по близост до вас.',
+    'Внимание: обектите не са подредени по близост.',
+  'warning.no_location_permissions':
+    'Внимание: позволи достъп до локацията ти, за да виждаш най-близките до теб оферти.',
 
   'toast.heading.info': 'Инфо',
   'toast.heading.error': 'Грешка',

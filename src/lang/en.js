@@ -92,6 +92,9 @@ export default {
   'warning.problematic_ordering':
     'Warning: offers are not ordered by proximity to you.',
 
+  'warning.no_location_permissions':
+    'Warning: allow location access to see offers closest to you',
+
   'toast.heading.info': 'Info',
   'toast.heading.error': 'Error',
 

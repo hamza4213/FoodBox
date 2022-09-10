@@ -91,7 +91,7 @@ const Offer = ({route, navigation}: OfferProps) => {
         <View style={styles.boxImageWrapper}>
           <Image
             style={[styles.boxImage]}
-            resizeMode={'cover'}
+            resizeMode={'stretch'}
             blurRadius={canCheckout ? 0 : 10}
             source={{uri: API_ENDPOINT_PRODUCT_PHOTOS + foodBox.photo}}
           />
@@ -324,8 +324,8 @@ const Offer = ({route, navigation}: OfferProps) => {
 
 const styles = StyleSheet.create({
   mainContentWrapper: {
-    paddingLeft: Utils.android ? 0 : 20,
-    paddingRight: Utils.android ? 0 : 20,
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   mainWrapper: {
     paddingHorizontal: 20,

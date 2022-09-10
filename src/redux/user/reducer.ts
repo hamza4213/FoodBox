@@ -26,16 +26,12 @@ export enum FBLocale {
 
 export enum UserPermissionAnswer {
   NO,
-  YES,
-  UNSET
+  YES
 }
 
-export enum SystemPermissionStatus {
-  DENIED,
-  GRANTED,
-  UNKNOWN,
-  UNAVAILABLE,
-  STOPPED
+export enum FB_CITIES {
+  BUL_SOFIA,
+  BUL_VARNA
 }
 
 export interface UserState {
@@ -43,22 +39,11 @@ export interface UserState {
   userLocation: FBGeoLocation;
   locationPermission: {
     userAnswer: UserPermissionAnswer;
-    systemPermission: SystemPermissionStatus;
   };
   notificationPermission: {
     userAnswer: UserPermissionAnswer;
-    systemPermission: SystemPermissionStatus;
   };
-  defaultCity: {
-    latitude: number;
-    longitude: number;
-  },
   locale: FBLocale;
-}
-
-export enum FB_CITIES {
-  BUL_SOFIA,
-  BUL_VARNA
 }
 
 export const FB_CITIES_TO_LOCATION_MAP: { [key in FB_CITIES]: FBGeoLocation } = {
@@ -76,16 +61,10 @@ export const userInitialState: UserState = {
   user: null,
   userLocation: FB_CITIES_TO_LOCATION_MAP[FB_CITIES.BUL_VARNA],
   locationPermission: {
-    userAnswer: UserPermissionAnswer.UNSET,
-    systemPermission: SystemPermissionStatus.UNKNOWN,
+    userAnswer: UserPermissionAnswer.NO,
   },
   notificationPermission: {
-    userAnswer: UserPermissionAnswer.UNSET,
-    systemPermission: SystemPermissionStatus.UNKNOWN,
-  },
-  defaultCity: {
-    latitude: 0,
-    longitude: 0,
+    userAnswer: UserPermissionAnswer.NO,
   },
   locale: FBLocale.BG,
 };

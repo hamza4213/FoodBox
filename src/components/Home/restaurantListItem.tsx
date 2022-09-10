@@ -52,7 +52,7 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
         <View>
           <Image
             source={{uri: API_ENDPOINT_PRODUCT_PHOTOS + box.photo}}
-            resizeMode={'contain'}
+            resizeMode={'cover'}
             style={styles.fullScreenImage}
             blurRadius={canCheckout ? 0 : 10}
           />
