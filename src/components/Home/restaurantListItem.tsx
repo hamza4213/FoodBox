@@ -24,6 +24,7 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
     userLocation,
   } = componentProps;
 
+  const intl = useIntl();
   const navigation = useNavigation();
   const box = restaurant.products[0];
 
@@ -32,159 +33,157 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
   const isOpen = RestaurantService.isOpen(box);
   const borderColor = canCheckout ? COLORS.green : COLORS.red;
   const boxQuantityBackgroundColor = canCheckout ? COLORS.green : COLORS.red;
-
-  const intl = useIntl();
+  const discountedPrice = box.price - (box.price * (box.discount / 100));
+  let statusText = `${box.quantity} ${box.quantity === 1 ? translateText(intl, 'box') : translateText(intl, 'boxes')}`;
+  if (!isOpen) {
+    statusText = translateText(intl, 'restaurant.status.closed');
+  }
+  if (isOpen && isFinished) {
+    statusText = translateText(intl, 'offer.expired');
+  }
+  
 
   const onClickHandler = () => {
     navigation.navigate('Offer', {restaurant: restaurant, userLocation: userLocation, box: box});
   };
-
-  const styles = stylesCreator({
-    borderColor: borderColor,
-    isFullscreen: isFullscreen,
-    boxQuantityBackgroundColor: boxQuantityBackgroundColor,
-    width: Utils.width,
-  });
-
-  const renderFullScreenImage = (isFullScreen: boolean) => {
-    if (isFullScreen) {
-      return (
+  
+  return (
+    <TouchableOpacity
+      style={{
+        shadowColor: 'rgba(0,0,0, .3)', // IOS
+        shadowOffset: {height: 5, width: 5}, // IOS
+        shadowOpacity: 1, // IOS
+        shadowRadius: 1, //IOS
+        backgroundColor: '#fff',
+        elevation: 2, // Android
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 5,
+        borderColor: borderColor,
+        borderWidth: 1,
+        marginVertical: 10,
+        padding: 10,
+        paddingTop: isFullscreen ? 0 : 10,
+      }}
+      key={restaurant.id}
+      onPress={onClickHandler}
+    >
+      {isFullscreen &&
         <View>
           <Image
             source={{uri: API_ENDPOINT_PRODUCT_PHOTOS + box.photo}}
             resizeMode={'cover'}
-            style={styles.fullScreenImage}
+            style={{
+              width: '100%',
+              aspectRatio: 2,
+            }}
             blurRadius={canCheckout ? 0 : 10}
           />
         </View>
-      );
-    }
-  };
+      }
 
-  const renderPickUpTime = (b: FoodBox) => {
-    const pickUpStart = RestaurantService.formatPickUpWindowDate(b.pickUpFrom);
-    const pickUpEnd = RestaurantService.formatPickUpWindowDate(b.pickUpTo);
-    
-    if (!canCheckout) {
-      return null;
-    }
-
-    return (
-      <Text style={styles.pickUpInfo}>
-        {translateText(intl, 'offer.today')}:{' '}{pickUpStart}{' '}-{''}{pickUpEnd}!
-      </Text>
-    );
-  };
-
-  const renderRestaurantName = (restaurantName: string, boxName: string) => {
-    return (
-      <View style={{flexGrow: 1, flexDirection: 'row'}}>
-        <Text style={{flex: 1, width: 1, color: '#29455f'}}>
-          <Text style={[styles.restaurantInfoName]}>{boxName}</Text>
-          <Text>{` ${translateText(intl, 'order.from')} `}</Text>
-          <Text style={[styles.restaurantInfoName]}>{restaurantName}</Text>
-        </Text>
-      </View>
-    );
-  };
-
-  const renderRestaurantAvatar = (avatar: string) => {
-    const restaurantAvatarSource = {uri: API_ENDPOINT_PRODUCT_PHOTOS + avatar};
-    return (
-      <Image
-        source={restaurantAvatarSource}
-        style={styles.restaurantInfoAvatar}
-        resizeMode={'contain'}
-        blurRadius={canCheckout ? 0 : 10}
-      />
-    );
-  };
-
-  const renderRestaurantType = (businessType: string) => {
-    return (
-      <Text style={styles.restaurantInfoBusinessType}>
-        {businessType}
-      </Text>
-    );
-  };
-
-  const renderDistance = (distance: number) => {
-    return (
-      <Text
-        style={styles.restaurantInfoDistance}
-      >
-        {distance}
-        {translateText(intl, 'distance_unit')}
-      </Text>
-    );
-  };
-
-  const renderStatus = (boxQuantity: number) => {
-    
-    let text = `${boxQuantity} ${boxQuantity === 1 ? translateText(intl, 'box') : translateText(intl, 'boxes')}`;
-    
-    if (!isOpen) {
-      text = translateText(intl, 'restaurant.status.closed');
-    }
-    
-    if (isFinished) {
-      text = translateText(intl, 'offer.expired');
-    }
-
-    return (
-      <View style={styles.statusWrapper}>
-        <Text style={styles.statusText}>
-          {text}
-        </Text>
-      </View>
-    );
-  };
-
-  const renderBoxInfoPrice = (boxPrice: number) => {
-    return (
-      <Text style={styles.boxInfoPrice}>
-        {boxPrice.toFixed(2)}{translateText(intl, 'price_unit')}
-      </Text>
-    );
-  };
-
-  const renderBoxInfoDiscountedPrice = (boxDiscount: number, boxPrice: number) => {
-    const discountAmount = boxPrice * (boxDiscount / 100);
-    const discountedPrice = boxPrice - discountAmount;
-    return (
-      <Text style={styles.boxInfoDiscountedPrice}>
-        {discountedPrice.toFixed(2)}{translateText(intl, 'price_unit')}
-      </Text>
-    );
-  };
-
-  return (
-    <TouchableOpacity
-      style={styles.tile}
-      key={restaurant.id}
-      onPress={onClickHandler}
-    >
-      {renderFullScreenImage(isFullscreen)}
-
-      <View style={styles.mainWrapper}>
+      <View style={{
+        marginTop: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      }}>
         {/*AvatarImg*/}
         <View style={{width: 70}}>
-          {renderRestaurantAvatar(box.thumbnailPhoto)}
+          <Image
+            source={{uri: API_ENDPOINT_PRODUCT_PHOTOS + box.thumbnailPhoto}}
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 200,
+              marginRight: 10,
+            }}
+            resizeMode={'contain'}
+            blurRadius={canCheckout ? 0 : 10}
+          />
         </View>
 
         {/*RestaurantInfo*/}
         <View style={{flex: 1}}>
-          {renderRestaurantName(restaurant.name, box.name)}
-          {renderRestaurantType(restaurant.businessType)}
-          {renderPickUpTime(box)}
-          {renderDistance(restaurant.distance)}
+          
+          
+          <View style={{flexGrow: 1, flexDirection: 'row'}}>
+            <Text style={{flex: 1, width: 1, color: '#29455f'}}>
+              <Text style={{ fontSize: 13, fontWeight: '700', color: '#29455f'}}>{box.name}</Text>
+              <Text>{` ${translateText(intl, 'order.from')} `}</Text>
+              <Text style={{ fontSize: 13, fontWeight: '700', color: '#29455f'}}>{restaurant.name}</Text>
+            </Text>
+          </View>
+          
+          <Text style={{
+            fontSize: 12,
+            color: '#c5ced3',
+            fontWeight: '500',
+            width: Utils.width / 2,
+            marginRight: 5,
+            marginTop: 10,
+          }}>
+            {restaurant.businessType}
+          </Text>
+          
+          {canCheckout &&
+            <Text style={{
+              fontSize: 12,
+              color: '#c5ced3',
+              fontWeight: '500',
+              marginTop: 5,
+            }}>
+              {translateText(intl, 'offer.today')}:{' '}{RestaurantService.formatPickUpWindowDate(box.pickUpFrom)}{' '}-{''}{RestaurantService.formatPickUpWindowDate(box.pickUpTo)}!
+            </Text>
+          }
+          
+          <Text style={{
+            fontSize: 10,
+            color: '#c5ced3',
+            fontWeight: '500',
+            marginTop: 5,
+          }}>
+            {restaurant.distance}
+            {translateText(intl, 'distance_unit')}
+          </Text>
         </View>
 
         {/*BoxInfo*/}
         <View style={{width: 70}}>
-          {renderStatus(box.quantity)}
-          {renderBoxInfoPrice(box.price)}
-          {renderBoxInfoDiscountedPrice(box.discount, box.price)}
+          <View style={{
+            borderRadius: 5,
+            backgroundColor: boxQuantityBackgroundColor,
+            paddingHorizontal: 10,
+            paddingVertical: 5,
+            justifyContent: 'center',
+          }}>
+            <Text style={{
+              alignSelf: 'center',
+              color: '#fff',
+              fontSize: 12,
+            }}>
+              {statusText}
+            </Text>
+          </View>
+          
+          <Text style={{
+            fontSize: 10,
+            color: '#afbbc4',
+            fontWeight: '700',
+            textDecorationLine: 'line-through',
+            marginTop: 5,
+            alignSelf: 'flex-end',
+          }}>
+            {box.price.toFixed(2)}{translateText(intl, `currency.${box.currency}`)}
+          </Text>
+          <Text style={{
+            fontSize: 13,
+            color: 'red',
+            fontWeight: '700',
+            marginTop: 5,
+            alignSelf: 'flex-end',
+          }}>
+            {discountedPrice.toFixed(2)}{translateText(intl, `currency.${box.currency}`)}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -192,97 +191,3 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
 };
 
 export default RestaurantListItem;
-
-const stylesCreator = (props: {
-  borderColor: string,
-  isFullscreen: boolean,
-  boxQuantityBackgroundColor: string,
-  width: number
-}) => StyleSheet.create({
-  tile: {
-    shadowColor: 'rgba(0,0,0, .3)', // IOS
-    shadowOffset: {height: 5, width: 5}, // IOS
-    shadowOpacity: 1, // IOS
-    shadowRadius: 1, //IOS
-    backgroundColor: '#fff',
-    elevation: 2, // Android
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5,
-    borderColor: props.borderColor,
-    borderWidth: 1,
-    marginVertical: 10,
-    padding: 10,
-    paddingTop: props.isFullscreen ? 0 : 10,
-  },
-  fullScreenImage: {
-    width: '100%',
-    aspectRatio: 2,
-  },
-  mainWrapper: {
-    marginTop: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  restaurantInfoWrapper: {
-    flexDirection: 'row',
-  },
-  restaurantInfoAvatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 200,
-    marginRight: 10,
-  },
-  restaurantInfoName: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#29455f',
-  },
-  restaurantInfoBusinessType: {
-    fontSize: 12,
-    color: '#c5ced3',
-    fontWeight: '500',
-    width: props.width / 2,
-    marginRight: 5,
-    marginTop: 10,
-  },
-  pickUpInfo: {
-    fontSize: 12,
-    color: '#c5ced3',
-    fontWeight: '500',
-    marginTop: 5,
-  },
-  restaurantInfoDistance: {
-    fontSize: 10,
-    color: '#c5ced3',
-    fontWeight: '500',
-    marginTop: 5,
-  },
-  statusWrapper: {
-    borderRadius: 5,
-    backgroundColor: props.boxQuantityBackgroundColor,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    justifyContent: 'center',
-  },
-  statusText: {
-    alignSelf: 'center',
-    color: '#fff',
-    fontSize: 12,
-  },
-  boxInfoPrice: {
-    fontSize: 10,
-    color: '#afbbc4',
-    fontWeight: '700',
-    textDecorationLine: 'line-through',
-    marginTop: 5,
-    alignSelf: 'flex-end',
-  },
-  boxInfoDiscountedPrice: {
-    fontSize: 13,
-    color: 'red',
-    fontWeight: '700',
-    marginTop: 5,
-    alignSelf: 'flex-end',
-  },
-});

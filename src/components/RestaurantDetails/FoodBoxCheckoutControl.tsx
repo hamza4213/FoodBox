@@ -15,6 +15,7 @@ import {FBUser} from '../../models/User';
 import {useIntl} from 'react-intl';
 import {translateText} from '../../lang/translate';
 import {formatPrice} from '../../utils/formatPrice';
+import {RestaurantService} from '../../services/RestaurantService';
 
 export interface FoodBoxCheckoutControlProps {
   restaurant: RestaurantHomeListItem,
@@ -35,8 +36,8 @@ const FoodBoxCheckoutControl = (params: FoodBoxCheckoutControlProps) => {
   const styles = stylesCreator({});
   const navigation = useNavigation();
   const intl = useIntl();
-
-  const hasEnded = moment().isAfter(moment(foodbox.pickUpTo));
+  
+  const isFinished = RestaurantService.isFinished(foodbox);
   const availableBoxes = foodbox.quantity;
   const originalPrice = foodbox.discountedPrice;
 
@@ -85,18 +86,19 @@ const FoodBoxCheckoutControl = (params: FoodBoxCheckoutControlProps) => {
   };
 
   useEffect(() => {
-    setCanAddToCheckout(numberOfBoxesToCheckout < availableBoxes && !hasEnded);
-    setCanRemoveFromCheckout(numberOfBoxesToCheckout > 0 && !hasEnded);
-    setCanCheckout(!hasEnded && numberOfBoxesToCheckout > 0);
+    setCanAddToCheckout(numberOfBoxesToCheckout < availableBoxes && !isFinished);
+    setCanRemoveFromCheckout(numberOfBoxesToCheckout > 0 && !isFinished);
+    setCanCheckout(!isFinished && numberOfBoxesToCheckout > 0);
   }, [numberOfBoxesToCheckout]);
 
   useEffect(() => {
     setIsDiscounted(priceAfterPromo != null);
   }, [priceAfterPromo]);
 
-  if (hasEnded || availableBoxes === 0) {
+  if (isFinished || availableBoxes === 0) {
 
     let msg = translateText(intl, 'offer.message_end');
+    
     if (availableBoxes === 0) {
       msg = translateText(intl, 'offer.increase_error');
     }
@@ -126,7 +128,7 @@ const FoodBoxCheckoutControl = (params: FoodBoxCheckoutControlProps) => {
               productId: foodbox.id,
               quantity: newNumberOfBoxesToCheckout,
               voucher: userVoucher,
-              value: foodbox.discountedPrice * newNumberOfBoxesToCheckout
+              value: foodbox.discountedPrice * newNumberOfBoxesToCheckout,
             });
           }}
         >
@@ -146,7 +148,7 @@ const FoodBoxCheckoutControl = (params: FoodBoxCheckoutControlProps) => {
               {` (${formatPrice(originalPrice)}) `}
             </Text>
           }
-          <Text>{translateText(intl, 'price_unit')}</Text>
+          <Text>{translateText(intl, `currency.${foodbox.currency}`)}</Text>
         </View>
         <TouchableOpacity
           disabled={!canAddToCheckout}
@@ -159,7 +161,7 @@ const FoodBoxCheckoutControl = (params: FoodBoxCheckoutControlProps) => {
               productId: foodbox.id,
               quantity: newNumberOfBoxesToCheckout,
               voucher: userVoucher,
-              value: foodbox.discountedPrice * newNumberOfBoxesToCheckout
+              value: foodbox.discountedPrice * newNumberOfBoxesToCheckout,
             });
           }}
         >
@@ -186,7 +188,7 @@ const FoodBoxCheckoutControl = (params: FoodBoxCheckoutControlProps) => {
             productId: foodbox.id,
             quantity: numberOfBoxesToCheckout,
             voucher: promoCode,
-            value: discountedPricePerBox * numberOfBoxesToCheckout
+            value: discountedPricePerBox * numberOfBoxesToCheckout,
           });
         }}
       />

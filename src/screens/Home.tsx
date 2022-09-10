@@ -68,6 +68,7 @@ const Home = ({navigation}: HomeProps) => {
     try {
       const restaurantRepository = new RestaurantRepository({authData: authData!});
       const restaurantService = new RestaurantService({restaurantRepository});
+      console.log('Home getRestaurantsForHome');
       const restaurantsListItems = await restaurantService.getRestaurantsForHome({userLocation});
 
       dispatch(restaurantsFetchedAction({restaurants: restaurantsListItems}));

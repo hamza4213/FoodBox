@@ -252,14 +252,14 @@ const Offer = ({route, navigation}: OfferProps) => {
           <Text style={styles.h3}>
             {translateText(intl, 'offer.price_in_store')}
           </Text>
-          <Text>{` ${foodBox.price}${translateText(intl, 'price_unit')}`}</Text>
+          <Text>{` ${foodBox.price}${translateText(intl, `currency.${foodBox.currency}`)}`}</Text>
         </View>
 
         <View style={{flexDirection: 'row'}}>
           <Text style={styles.h3}>
             {translateText(intl, 'offer.price_in_foodobox')}
           </Text>
-          <Text>{` ${foodBox.discountedPrice}${translateText(intl, 'price_unit')} (-${foodBox.discount}%)`}</Text>
+          <Text>{` ${foodBox.discountedPrice}${translateText(intl, `currency.${foodBox.currency}`)} (-${foodBox.discount}%)`}</Text>
         </View>
 
         {canCheckout &&
@@ -325,11 +325,9 @@ const Offer = ({route, navigation}: OfferProps) => {
 const styles = StyleSheet.create({
   mainContentWrapper: {
     paddingLeft: 20,
-    paddingRight: 20,
+    paddingRight: 20
   },
-  mainWrapper: {
-    paddingHorizontal: 20,
-  },
+  mainWrapper: {},
   navigationWrapper: {
     flexDirection: 'row',
     position: 'relative',

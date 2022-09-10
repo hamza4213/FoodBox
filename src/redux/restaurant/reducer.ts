@@ -7,9 +7,9 @@ import {
   UpdateRestaurantSortOrderAction,
 } from './actions';
 import {RestaurantHomeListItem} from '../../models/Restaurant';
-import {DietType, FoodType} from '../../models/FoodBox';
 import getDistanceToLocation from '../../utils/getDistanceToLocation';
 import {toShowRestaurant} from '../../utils/toShowRestaurant';
+import {DIET_TYPE, FOOD_TYPE} from '../../models';
 
 export interface FBRestaurantFilters {
   isRestaurantOpen: {
@@ -35,11 +35,11 @@ export interface FBRestaurantFilters {
   };
   foodType: {
     isEnabled: boolean;
-    types: FoodType[];
+    types: FOOD_TYPE[];
   };
   dietType: {
     isEnabled: boolean;
-    types: DietType[];
+    types: DIET_TYPE[];
   };
   search: {
     isEnabled: boolean;
@@ -105,7 +105,7 @@ export const restaurantInitialState: RestaurantState = {
     },
     foodType: {
       isEnabled: true,
-      types: [FoodType.GROCERIES, FoodType.OTHERS, FoodType.MEALS, FoodType.PASTRIES],
+      types: [FOOD_TYPE.GROCERIES, FOOD_TYPE.OTHERS, FOOD_TYPE.MEALS, FOOD_TYPE.PASTRIES],
     },
     dietType: {
       isEnabled: true,

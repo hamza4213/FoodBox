@@ -245,11 +245,11 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
                 {`${translateText(intl, 'order.boxes')} ${order.numberOfCheckoutBoxes} ${order.numberOfCheckoutBoxes > 1 ? translateText(intl, 'boxes') : translateText(intl, 'box')}`}
               </Text>
               <Text style={{color: '#29455f', fontWeight: '700'}}>
-                {`${translateText(intl, 'order.total')} ${order.totalAmount}${translateText(intl, 'price_unit')}`}
+                {`${translateText(intl, 'order.total')} ${order.totalAmount}${translateText(intl, `currency.${order.currency}`)}`}
               </Text>
               {order.boxSavedAmount !== 0 &&
                 <Text style={{color: '#29455f', fontWeight: '700'}}>
-                  {`${translateText(intl, 'order.saved')} ${formatPrice(order.boxSavedAmount)}${translateText(intl, 'price_unit')}`}
+                  {`${translateText(intl, 'order.saved')} ${formatPrice(order.boxSavedAmount)}${translateText(intl, `currency.${order.currency}`)}`}
                 </Text>
               }
             </View>

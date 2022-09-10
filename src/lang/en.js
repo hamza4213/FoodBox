@@ -77,8 +77,11 @@ export default {
   'restaurant.status.open': 'open',
   'restaurant.status.closed': 'closed',
 
+  'currency.bgn': 'lv',
+  'currency.eur': '€',
+  'currency.ron': 'lei',
+
   distance_unit: 'm',
-  price_unit: '€',
   box: 'box',
   boxes: 'boxes',
   back: 'Back',
@@ -124,7 +127,7 @@ export default {
   'offer.promo_code_hint': 'Enter voucher.',
   'offer.add_promo_code': 'Add voucher.',
   'offer.user_promo_add_hint':
-    'Please add 1 box to checkout and the add voucher.',
+    'Please add 1 box to checkout and then add voucher.',
   'offer.promo_code_added': 'Voucher successfully added.',
   'offer.promo_code': 'Voucher: ',
   'offer_confirm.text':

@@ -6,13 +6,13 @@ import {useDispatch, useSelector} from 'react-redux';
 import {RestaurantUpdateFiltersAction, restaurantUpdateFiltersAction} from '../redux/restaurant/actions';
 import {FBRootState} from '../redux/store';
 import DatePicker from 'react-native-date-picker';
-import {DietType, FoodType} from '../models/FoodBox';
 import FilterButton from '../components/Filters/filterButton';
 import {icons} from '../constants';
 import {analyticsFilterChange, analyticsPageOpen} from '../analytics';
 import {FBUser} from '../models/User';
 import {useIntl} from 'react-intl';
 import {translateText} from '../lang/translate';
+import {DIET_TYPE, FOOD_TYPE} from '../models';
 
 const Filter = ({navigation}: { navigation: any }) => {
 
@@ -244,12 +244,12 @@ const Filter = ({navigation}: { navigation: any }) => {
               flexDirection: 'row',
               flexWrap: 'wrap',
             }}>
-              {Object.keys(FoodType).map((key) => {
+              {Object.keys(FOOD_TYPE).map((key) => {
                 if (isNaN(Number(key))) {
                   // the key is a FoodType not an index
                   const filterName = key.toString().toLocaleLowerCase();
                   // @ts-ignore
-                  const value = FoodType[key];
+                  const value = FOOD_TYPE[key];
                   const isActive = foodTypes.includes(value);
                   return (
                     <FilterButton
@@ -291,12 +291,12 @@ const Filter = ({navigation}: { navigation: any }) => {
               flexDirection: 'row',
               flexWrap: 'wrap',
             }}>
-              {Object.keys(DietType).map((key) => {
+              {Object.keys(DIET_TYPE).map((key) => {
                 if (isNaN(Number(key))) {
                   // the key is a FoodType not an index
                   const filterName = key.toString().toLocaleLowerCase();
                   // @ts-ignore
-                  const value = DietType[key];
+                  const value = DIET_TYPE[key];
                   const isActive = dietTypes.includes(value);
                   return (
                     <FilterButton

@@ -32,8 +32,13 @@ class RestaurantRepository implements BaseRestaurantRepository {
         'x-access-token': this.authData.userToken,
       },
     });
-
-    return response.restaurants.map((r: any) => RestaurantMapper.fromApi(r));
+    try {
+      return response.restaurants.map((r: any) => RestaurantMapper.fromApi(r));
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
+    
   }
 }
 

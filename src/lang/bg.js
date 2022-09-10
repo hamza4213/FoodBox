@@ -78,8 +78,11 @@ export default {
   'restaurant.status.open': 'отворен',
   'restaurant.status.closed': 'затворен',
 
+  'currency.bgn': 'лв',
+  'currency.eur': '€',
+  'currency.ron': 'lei',
+
   distance_unit: 'м',
-  price_unit: 'лв.',
   box: 'кутия',
   boxes: 'кутии',
   back: 'Назад',
@@ -124,7 +127,7 @@ export default {
   'offer.invalid_promo_code': 'Невалиден ваучер.',
   'offer.promo_code_hint': 'Въведете ваучер',
   'offer.add_promo_code': 'Добави ваучер',
-  'offer.user_promo_add_hint': 'Добавете поне 1 кутия и тогава въведете ваучер',
+  'offer.user_promo_add_hint': 'Добавете поне 1 кутия и тогава добавете ваучер',
   'offer.promo_code_added': 'Успешно добавихте ваучер.',
   'offer.promo_code': 'Ваучер: ',
   'offer_confirm.text':

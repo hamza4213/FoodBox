@@ -2,6 +2,7 @@ import {FBUserVoucher} from './FBUserVoucher';
 import {scheduleFloatToDate} from '../utils/scheduleFloatToDate';
 import moment from 'moment';
 import roundToDecimal from '../utils/roundToDecimal';
+import {CURRENCY} from './index';
 
 export interface FBOrder {
   id: number;
@@ -23,6 +24,7 @@ export interface FBOrder {
   numberOfCheckoutBoxes: number;
   pin: string;
   totalAmount: number;
+  currency: CURRENCY;
   promoCode: FBUserVoucher | null;
   promoAmount: number | null;
   promoDetails: string | null;
@@ -47,6 +49,7 @@ export const FBOrderMapper = {
       status: fborder.status,
       pin: fborder.pin,
       totalAmount: roundToDecimal(fborder.totalPrice),
+      currency: CURRENCY.BGN,
       createdAt: moment(fborder.createdAt).toDate().getTime(),
       restaurantName: fborder.restaurantName,
       restaurantId: fborder.restaurantId,

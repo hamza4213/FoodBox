@@ -91,13 +91,10 @@ const VoucherInput = (props: VoucherCodeInputProps) => {
   };
 
   const getTextInputStyles = () => {
-    let borderColor = isVoucherValid ? '#10D53A' : '#cc0000';
-    let backgroundColor = hasAlreadyAddedVoucher ? COLORS.darkgray : COLORS.white;
-
     return {
       ...styles.promoCodeInput,
-      borderColor: borderColor,
-      backgroundColor: backgroundColor,
+      borderColor: isVoucherValid ? COLORS.green : COLORS.red,
+      backgroundColor: hasAlreadyAddedVoucher ? COLORS.darkgray : COLORS.white,
     };
   };
 
@@ -120,8 +117,12 @@ const VoucherInput = (props: VoucherCodeInputProps) => {
       <View style={styles.promoCodeControlsWrapper}>
         <TextInput
           editable={!hasAlreadyAddedVoucher}
-          style={getTextInputStyles()}
+          style={[ styles.promoCodeInput, {
+            borderColor: isVoucherValid ? COLORS.green : COLORS.red,
+            backgroundColor: hasAlreadyAddedVoucher ? COLORS.darkgray : COLORS.white,
+          }]}
           placeholder={translateText(intl, 'offer.promo_code_hint')}
+          placeholderTextColor={"grey"}
           onChangeText={(text) => voucherChangeHandler(text)}
           value={voucher || undefined}
         />
