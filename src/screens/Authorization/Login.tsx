@@ -61,8 +61,6 @@ const Login = ({navigation}: LoginProps) => {
   const userLocale = useSelector((state: FBRootState) => state.userState.locale);
   const intl = useIntl();
   const dispatch = useDispatch();
-  const stateLog = useSelector((state: any) => state.loging);
-  console.log('stateLog ', stateLog);
 
   const {control, handleSubmit} = useForm<LoginFormData>({
     defaultValues: {
@@ -280,12 +278,6 @@ const Login = ({navigation}: LoginProps) => {
         style={styles.backgroundImage}
       >
         <ScrollView style={{flex: 1}}>
-          
-          <View>
-            <Text> State migration log {!!stateLog} </Text>
-            <Text> {stateLog && stateLog.oldUserToken} </Text>
-            <Text> {stateLog && stateLog.error} </Text>
-          </View>
           
           <View style={{paddingHorizontal: 36, flex: 1, marginBottom: 30}}>
             <View style={styles.titleWrapper}>
