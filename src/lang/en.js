@@ -94,9 +94,9 @@ export default {
 
   'warning.problematic_ordering':
     'Warning: offers are not ordered by proximity to you.',
-
   'warning.no_location_permissions':
-    'Warning: allow location access to see offers closest to you',
+    'Warning: location access not allowed. Please, allow location access to see offers in your proximity.',
+  'warning.check_address': 'Warning: verify address before ordering.',
 
   'toast.heading.info': 'Info',
   'toast.heading.error': 'Error',

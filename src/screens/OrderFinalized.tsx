@@ -14,6 +14,11 @@ import {SystemPermissionStatus, UserPermissionAnswer} from "../redux/user/reduce
 import {useDispatch, useSelector} from "react-redux";
 import {FBRootState} from "../redux/store";
 import {userUpdateNotificationPermissionAction} from "../redux/user/actions";
+import {RestaurantRepository} from '../repositories/RestaurantRepository';
+import {restaurantResetAction, restaurantsFetchedAction} from '../redux/restaurant/actions';
+import {isFBAppError, isFBBackendError, isFBGenericError} from '../network/axiosClient';
+import {showToastError} from '../common/FBToast';
+import {useFbLoading} from '../providers/FBLoaderProvider';
 
 interface OrderFinalizedProps {
   route: any;
@@ -26,9 +31,11 @@ const OrderFinalized = ({route, navigation}: OrderFinalizedProps) => {
   const userVoucher: FBUserVoucher = route.params.userVoucher;
   const {authData} = useAuth();
   const userNotificationPermission = useSelector((state: FBRootState) => state.userState.notificationPermission);
+  const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
   const [toShowNotificationPermissionModal, setToShowNotificationPermissionModal] = useState(false);
   const intl = useIntl();
   const dispatch = useDispatch();
+  const {showLoading, hideLoading} = useFbLoading();
   
   const askForNotificationPermission = async () => {
     console.log('askForNotificationPermission ')
@@ -97,7 +104,30 @@ const OrderFinalized = ({route, navigation}: OrderFinalizedProps) => {
   }
   
   useEffect(()=>{
-    // askForNotificationPermission();
+    const fetchRestaurantList = async () => {
+      showLoading('fetchRestaurants');
+
+      try {
+        const restaurantRepository = new RestaurantRepository({authData: authData!});
+        const restaurantService = new RestaurantService({restaurantRepository});
+        const restaurantsListItems = await restaurantService.getRestaurantsForHome({userLocation});
+
+        dispatch(restaurantsFetchedAction({restaurants: restaurantsListItems}));
+      } catch (error) {
+        if (isFBAppError(error) || isFBGenericError(error)) {
+          showToastError(translateText(intl, error.key));
+        } else if (isFBBackendError(error)) {
+          showToastError(error.message);
+        } else {
+          showToastError(translateText(intl, 'genericerror'));
+        }
+        dispatch(restaurantResetAction());
+      }
+
+      hideLoading('fetchRestaurants');
+    };
+
+    fetchRestaurantList();
   }, []);
   
   return (

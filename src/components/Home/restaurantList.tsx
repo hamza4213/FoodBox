@@ -167,6 +167,8 @@ const RestaurantList = ({
           <Text style={{color: COLORS.red, fontWeight: '700'}} >{translateText(intl, 'warning.no_location_permissions')}</Text>
         }
         
+        <Text style={{color: COLORS.red, fontWeight: '700'}} >{translateText(intl, 'warning.check_address')}</Text>
+        
         <FlatList
           data={restaurants}
           renderItem={renderRestaurantItem}
