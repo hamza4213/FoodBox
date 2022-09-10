@@ -66,20 +66,14 @@ export const RESTAURANT_SORT_OPTION_TO_SORT_FUNCTION: { [key in RESTAURANT_SORT_
 };
 
 export interface RestaurantState {
-  allRestaurants: RestaurantHomeListItem[],
   filters: FBRestaurantFilters,
   sortOrder: RESTAURANT_SORT_OPTION,
+  allRestaurants: RestaurantHomeListItem[],
   forList: RestaurantHomeListItem[],
-  forMap: RestaurantHomeListItem[],
-  controls: {
-    isFetching: boolean,
-  }
+  forMap: RestaurantHomeListItem[]
 }
 
 export const restaurantInitialState: RestaurantState = {
-  controls: {
-    isFetching: false,
-  },
   allRestaurants: [],
   filters: {
     isRestaurantOpen: {

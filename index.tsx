@@ -24,9 +24,10 @@ import FlashMessage from 'react-native-flash-message';
 
 
 const migrations = {
-  0: async (state: any) => {
+  1: async (state: any) => {
+    console.log('state migration start', state);
 
-    set(state, 'restaurant.newFilters', restaurantInitialState.filters);
+    set(state, 'restaurant', restaurantInitialState);
     set(state, 'orders', ordersInitialState);
     set(state, 'user', userInitialState);
 
@@ -36,6 +37,7 @@ const migrations = {
 
     try {
       const userToken = await AsyncStorage.getItem('userToken');
+      console.log('state migration userToken ', userToken);
       if (userToken) {
         const authData: AuthData = {userToken: userToken};
         const userRepo = new UserRepository({authData});
@@ -47,11 +49,11 @@ const migrations = {
         await AsyncStorage.setItem(AUTH_DATA_KEY, JSON.stringify(authData));
       }
     } catch (e) {
+      console.log('state migration error', e);
       // problem reading token -> sign out user
       await AsyncStorage.removeItem('userToken');
     }
-
-
+    
     return {
       ...state,
     };
