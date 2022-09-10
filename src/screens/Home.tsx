@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   Dimensions,
   Image,
-  Platform,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -33,7 +32,7 @@ import {useFbLoading} from '../providers/FBLoaderProvider';
 import {isFBAppError, isFBBackendError, isFBGenericError} from '../network/axiosClient';
 import RestaurantSearch from '../components/Home/restaurantSearch';
 import {icons} from '../constants';
-import RestaurantListItem from '../components/Home/restaurantListItem';
+import {RestaurantHomeListItem} from '../models/Restaurant';
 
 export interface HomeProps {
   route: any;
@@ -54,7 +53,7 @@ const Home = ({navigation}: HomeProps) => {
   const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
   const userLocale = useSelector((state: FBRootState) => state.userState.locale);
   const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
-  const [selectedRestaurant, setSelectedRestaurant] = useState<RestaurantListItem | null>(null);
+  const [selectedRestaurant, setSelectedRestaurant] = useState<RestaurantHomeListItem | null>(null);
 
   const dispatch = useDispatch();
 

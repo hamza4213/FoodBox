@@ -9,6 +9,7 @@ import {useIntl} from 'react-intl';
 import {translateText} from '../../lang/translate';
 import {restaurantUpdateFiltersAction} from '../../redux/restaurant/actions';
 import {COLORS} from '../../constants';
+import {useFbLoading} from '../../providers/FBLoaderProvider';
 
 export interface RestaurantSearchProps {
   onSelect: (restaurant: RestaurantHomeListItem) => void;
@@ -21,6 +22,7 @@ const RestaurantSearch = ({onSelect, toHideResults}: RestaurantSearchProps) => {
 
   const [suggestionsList, setSuggestionsList] = useState<RestaurantHomeListItem[]>([]);
   const [userHasSelected, setUserHasSelected] = useState(false);
+  const {showLoading, hideLoading} = useFbLoading();
 
   const styles = styleCreator({});
   const intl = useIntl();
@@ -31,6 +33,8 @@ const RestaurantSearch = ({onSelect, toHideResults}: RestaurantSearchProps) => {
   }, [restaurants]);
 
   const searchRestaurants = (userInputQuery: string) => {
+    showLoading('searching');
+    
     setUserHasSelected(false);
 
     userInputQuery = userInputQuery.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
@@ -40,6 +44,10 @@ const RestaurantSearch = ({onSelect, toHideResults}: RestaurantSearchProps) => {
       filterCategoryProperty: 'userInput',
       newValue: userInputQuery,
     }));
+
+    setTimeout(() => {
+      hideLoading('searching');
+    }, 200);
   };
 
   return (

@@ -50,8 +50,8 @@ export interface FBRestaurantFilters {
 export enum RESTAURANT_SORT_OPTION {
   LOWEST_PRICE_FIRST = 'lowest_price_first',
   CLOSEST_DISTANCE_FIRST = 'closest_distance_first',
-  STARTING_SOONEST_FIRST = 'starting_soonest_first',
-  CLOSING_SOONEST_FIRST = 'closing_soonest_first'
+  // STARTING_SOONEST_FIRST = 'starting_soonest_first',
+  // CLOSING_SOONEST_FIRST = 'closing_soonest_first'
 }
 
 export interface RestaurantSortFunction {
@@ -61,8 +61,8 @@ export interface RestaurantSortFunction {
 export const RESTAURANT_SORT_OPTION_TO_SORT_FUNCTION: { [key in RESTAURANT_SORT_OPTION]: RestaurantSortFunction } = {
   [RESTAURANT_SORT_OPTION.LOWEST_PRICE_FIRST]: (r1, r2) => r1.priceAfaterDiscount - r2.priceAfaterDiscount,
   [RESTAURANT_SORT_OPTION.CLOSEST_DISTANCE_FIRST]: (r1, r2) => r1.distance - r2.distance,
-  [RESTAURANT_SORT_OPTION.STARTING_SOONEST_FIRST]: (r1, r2) => r1.openTime - r2.openTime, // TODO: this should take into account current hour
-  [RESTAURANT_SORT_OPTION.CLOSING_SOONEST_FIRST]: (r1, r2) => r1.closeTime - r2.closeTime,// TODO: this should take into account current hour
+  // [RESTAURANT_SORT_OPTION.STARTING_SOONEST_FIRST]: (r1, r2) => r1.openTime - r2.openTime, // TODO: this should take into account current hour
+  // [RESTAURANT_SORT_OPTION.CLOSING_SOONEST_FIRST]: (r1, r2) => r1.closeTime - r2.closeTime,// TODO: this should take into account current hour
 };
 
 export interface RestaurantState {
