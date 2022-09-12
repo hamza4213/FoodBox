@@ -305,7 +305,11 @@ const Login = ({navigation}: LoginProps) => {
                   }
                 }}
                 value={userLocale}
-                onValueChange={(locale: FBLocale) => dispatch(userUpdateLocaleAction({locale: locale}))}
+                onValueChange={(locale: FBLocale | null) => {
+                  if (locale) {
+                    dispatch(userUpdateLocaleAction({locale: locale}));
+                  }
+                }}
                 items={[
                   {label: 'English', value: FBLocale.EN},
                   {label: 'Български', value: FBLocale.BG},
