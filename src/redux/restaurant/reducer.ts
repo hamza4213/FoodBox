@@ -78,11 +78,11 @@ export const restaurantInitialState: RestaurantState = {
   filters: {
     isRestaurantOpen: {
       isEnabled: true,
-      isOpen: true,
+      isOpen: false,
     },
     hasRestaurantAvailableBoxes: {
       isEnabled: true,
-      hasAvailableBoxes: true,
+      hasAvailableBoxes: false,
     },
     isNotFinished: {
       isEnabled: true,
@@ -90,7 +90,7 @@ export const restaurantInitialState: RestaurantState = {
     },
     canCheckout: {
       isEnabled: true,
-      canCheckout: false,
+      canCheckout: true,
     },
     pickUpPeriod: {
       isEnabled: true,
@@ -143,7 +143,7 @@ const handleUpdateRestaurantDistanceToUserAction: RestaurantActionHandler = (sta
     ...state,
     allRestaurants: allRestaurants,
     forList: filteredRestaurants,
-    forMap: filteredRestaurants,
+    forMap: allRestaurants,
   };
 };
 
@@ -163,7 +163,7 @@ const handleRestaurantFetchedAction: RestaurantActionHandler = (state: Restauran
     ...state,
     allRestaurants: data.restaurants,
     forList: filteredRestaurants,
-    forMap: filteredRestaurants,
+    forMap: data.restaurants,
   };
 };
 
@@ -186,7 +186,6 @@ const handleRestaurantUpdateFiltersAction: RestaurantActionHandler = (state: Res
   return {
     ...state,
     forList: filteredRestaurants,
-    forMap: filteredRestaurants,
   };
 };
 

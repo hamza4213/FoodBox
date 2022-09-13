@@ -97,7 +97,7 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
               borderRadius: 200,
               marginRight: 10,
             }}
-            resizeMode={'contain'}
+            resizeMode={'cover'}
             blurRadius={canCheckout ? 0 : 10}
           />
         </View>
