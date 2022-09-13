@@ -313,6 +313,7 @@ const Login = ({navigation}: LoginProps) => {
                 items={[
                   {label: 'English', value: FBLocale.EN},
                   {label: 'Български', value: FBLocale.BG},
+                  {label: 'Română', value: FBLocale.RO},
                 ]}
               />
             </View>
