@@ -204,9 +204,8 @@ export default {
   'filter.description':
     'The filters will be applied to the offers list only. On the map you will see all the available stores. ',
   'filter.can_checkout': 'Can pick up',
-
   'filter.can_checkout_hint':
-    'Виж само обекти, от които все още можеш да спасиш храна днес.',
+    'Show only offers, which I can book now, or all offers.',
   'filter.all': 'All',
   'filter.time_range_start': 'Pick up from',
   'filter.time_range_end': 'Pick up to',

@@ -68,15 +68,21 @@ const Filter = ({navigation}: { navigation: any }) => {
             padding: 10
           }}
         >
-          <Text>{translateText(intl, 'filter.description')}</Text>
+          
+          <Text style={{
+            paddingVertical: 10
+          }}>
+            {translateText(intl, 'filter.description')}
+          </Text>
           
           <View style={styles.activeFilterWrapper}>
-            <View>
+            <Text style={{flex: 1}}>
               <Text style={styles.filterHeadingText}>
                 {translateText(intl, 'filter.can_checkout')}
               </Text>
-            </View>
-            <View>
+              <Text>{' '}{translateText(intl, 'filter.can_checkout_hint')}</Text>
+            </Text>
+            <View style={{width: 50}}>
               <Switch
                 trackColor={{false: 'grey', true: '#9ede9c'}}
                 thumbColor={canCheckout ? '#10D53A' : '#f4f3f4'}
@@ -276,7 +282,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 10,
-    borderBottomColor: '#000',
+    borderBottomColor: COLORS.black,
     borderBottomWidth: 1,
   },
   text_time: {
@@ -296,8 +302,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   filterHeadingText: {
-    fontWeight: '500',
-    color: '#29455f',
+    fontWeight: '800',
+    color: COLORS.black,
   },
 });
 
