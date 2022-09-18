@@ -12,24 +12,6 @@ export const toShowRestaurant = (restaurant: RestaurantHomeListItem, filters: FB
     // // console.log(filterCategoryName, filterCategoryConfig.isEnabled);
     if (filterCategoryConfig.isEnabled) {
       switch (filterCategoryName) {
-        case 'isRestaurantOpen': {
-          // console.log('isRestaurantOpen', RestaurantService.isOpen(box), passesFilters);
-          passesFilters = filterCategoryConfig.isOpen ? passesFilters && RestaurantService.isOpen(box) : passesFilters;
-          break;
-        }
-
-        case 'hasRestaurantAvailableBoxes': {
-          // console.log('hasRestaurantAvailableBoxes', RestaurantService.hasAvailability(box), passesFilters);
-          passesFilters = filterCategoryConfig.hasAvailableBoxes ? passesFilters && RestaurantService.hasAvailability(box) : passesFilters;
-          break;
-        }
-
-        case 'isNotFinished': {
-          // console.log('isNotFinished', !RestaurantService.isFinished(box), passesFilters);
-          passesFilters = filterCategoryConfig.isNotFinished ? passesFilters && !RestaurantService.isFinished(box) : passesFilters;
-          break;
-        }
-
         case 'canCheckout': {
           // console.log('canCheckout', !RestaurantService.canCheckout(box), passesFilters);
           passesFilters = filterCategoryConfig.canCheckout ? passesFilters && RestaurantService.canCheckout(box) : passesFilters;

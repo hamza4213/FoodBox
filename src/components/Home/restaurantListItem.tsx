@@ -2,7 +2,6 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/core';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {API_ENDPOINT_PRODUCT_PHOTOS} from '../../network/Server';
-import {Utils} from '../../utils';
 import {RestaurantHomeListItem} from '../../models/Restaurant';
 import {RestaurantService} from '../../services/RestaurantService';
 import {useIntl} from 'react-intl';

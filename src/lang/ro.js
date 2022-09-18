@@ -98,12 +98,13 @@ export default {
   ok: 'ok',
   saved: 'salvat',
 
+  warning: 'Atenție: ',
   'warning.problematic_ordering':
-    'Atenție: Obiectele nu sunt găsite prin apropriere.',
+    'obiectele nu sunt găsite prin apropriere.',
   'warning.no_location_permissions':
-    'Atenție. Nu avem acces la locația Dvs. Vă rugăm să ne acordați acces la locația Dvs. pentru a vedea ofertele cele mai apropiate de Dvs.',
+    'nu avem acces la locația Dvs. Vă rugăm să ne acordați acces la locația Dvs. pentru a vedea ofertele cele mai apropiate de Dvs.',
   'warning.check_address':
-    'Atenție. Verificați adresa înainte de a face comanda.',
+    'verificați adresa înainte de a face comanda.',
 
   'toast.heading.info': 'Informații',
   'toast.heading.error': 'Greșeală',

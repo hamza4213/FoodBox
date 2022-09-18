@@ -12,18 +12,6 @@ import {toShowRestaurant} from '../../utils/toShowRestaurant';
 import {DIET_TYPE, FOOD_TYPE} from '../../models';
 
 export interface FBRestaurantFilters {
-  isRestaurantOpen: {
-    isEnabled: boolean;
-    isOpen: boolean;
-  };
-  hasRestaurantAvailableBoxes: {
-    isEnabled: boolean;
-    hasAvailableBoxes: boolean;
-  };
-  isNotFinished: {
-    isEnabled: boolean;
-    isNotFinished: boolean;
-  };
   canCheckout: {
     isEnabled: boolean;
     canCheckout: boolean;
@@ -76,18 +64,6 @@ export interface RestaurantState {
 export const restaurantInitialState: RestaurantState = {
   allRestaurants: [],
   filters: {
-    isRestaurantOpen: {
-      isEnabled: true,
-      isOpen: false,
-    },
-    hasRestaurantAvailableBoxes: {
-      isEnabled: true,
-      hasAvailableBoxes: false,
-    },
-    isNotFinished: {
-      isEnabled: true,
-      isNotFinished: false,
-    },
     canCheckout: {
       isEnabled: true,
       canCheckout: true,

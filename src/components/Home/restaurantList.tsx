@@ -160,14 +160,26 @@ const RestaurantList = ({
         </View>
 
         {sortOrder !== RESTAURANT_SORT_OPTION.CLOSEST_DISTANCE_FIRST &&
-          <Text style={{color: COLORS.red, fontWeight: '700'}} >{translateText(intl, 'warning.problematic_ordering')}</Text>
+          <Text>
+            <Text style={{color: COLORS.red, fontWeight: '700'}} >{translateText(intl, 'warning')}</Text>
+            <Text>{translateText(intl, 'warning.problematic_ordering')}</Text>
+          </Text>
+          
         }
 
         {userLocationPermissions.userAnswer === UserPermissionAnswer.NO &&
-          <Text style={{color: COLORS.red, fontWeight: '700'}} >{translateText(intl, 'warning.no_location_permissions')}</Text>
+          <Text>
+            <Text style={{color: COLORS.red, fontWeight: '700'}} >{translateText(intl, 'warning')}</Text>
+            <Text>{translateText(intl, 'warning.no_location_permissions')}</Text>
+          </Text>
+          
         }
         
-        <Text style={{color: COLORS.red, fontWeight: '700'}} >{translateText(intl, 'warning.check_address')}</Text>
+        <Text>
+          <Text style={{color: COLORS.red, fontWeight: '700'}} >{translateText(intl, 'warning')}</Text>
+          <Text>{translateText(intl, 'warning.check_address')}</Text>
+        </Text>
+        
         
         <FlatList
           data={restaurants}

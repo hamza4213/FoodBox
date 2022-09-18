@@ -281,9 +281,9 @@ const Login = ({navigation}: LoginProps) => {
           
           <View style={{paddingHorizontal: 36, flex: 1, marginBottom: 30}}>
             <View style={styles.titleWrapper}>
-              <Text style={styles.titleText}>
-                <FormattedMessage id={'login.title'}/>
-              </Text>
+              {/*<Text style={styles.titleText}>*/}
+              {/*  <FormattedMessage id={'login.title'}/>*/}
+              {/*</Text>*/}
 
               <RNPickerSelect
                 style={{

@@ -2,21 +2,21 @@ export default {
   'login.title': 'Welcome',
   'login.email': 'Email',
   'login.password': 'Password',
-  'login.forgot_password': 'Forgotten password?',
+  'login.forgot_password': 'Forgot your password?',
   'login.login': 'Login',
   'login.sign_up_with_social_media': 'Or login with socials',
-  'login.login_facebook': 'Login with Facebook',
-  'login.login_google': 'Login with Google',
-  'login.not_have_account': "You don't have an account? ",
-  'login.sign_up': 'Register with email!',
+  'login.login_facebook': 'Continue with Facebook',
+  'login.login_google': 'Continue with Google',
+  'login.not_have_account': "Don't have an account?",
+  'login.sign_up': 'Sign up with email.',
   'login.forgotten_email_hint':
-    'We will send you a reset password link on the specified email :)',
+    'We will send you a reset password link on the specified email',
   'login.new_password': 'New password.',
-  'login.social_refused': 'Access denied!',
+  'login.social_refused': 'Access denied.',
 
-  'formErrors.required': 'Required!',
-  'formErrors.email': 'Email invalid!',
-  'formErrors.password': 'Minimum 8 symbols!',
+  'formErrors.required': 'Required.',
+  'formErrors.email': 'Invalid email.',
+  'formErrors.password': 'Minimum 8 characters.',
 
   'signup.title': 'Register',
   'signup.firstName': 'Name',
@@ -24,31 +24,30 @@ export default {
   'signup.email': 'Email',
   'signup.password': 'Password',
   'signup.repeat_password': 'Repeat password',
-  'signup.sign_up': 'Register!',
-  'signup.help': 'Help? Contact us :)',
-  'signup.error_password': "Passwords don't match!",
+  'signup.sign_up': 'Register',
+  'signup.help': 'Need help? Contact us at',
+  'signup.error_password': "Passwords don't match.",
   'signup.email_confirm':
-    "Account created. Please active through the link we send you. Please check your SPAM folder and contact us if you don't receive the email.",
-  'signup.agree_with': 'Agree with ',
+    "Account created. We have sent you an activation link. Check your email and your SPAM folder. Didn't receive the activation email? Contact us at support-customer@foodobox.com",
+  'signup.agree_with': 'Agree to the',
   'signup.conditionals': 'terms and conditions',
 
-  'prompts.location':
-    'Please give us access to your location. We will use it only to show you relevant offers.',
+  'prompts.location': 'Please allow location access to show you nearby offers.',
   'prompts.notification':
-    'Please give us access to send you notifications so that we remind you about your order',
+    'Please allow notifications for your order status updates.',
   'prompts.no_loc_permission':
-    'Permission Denied. Please allow use to locate you from Settings.',
-  'prompts.location_error': "Couldn't locate you. Plesae check your settings.",
+    'Location permission denied. Please allow location access from Settings to see nearby offers.',
+  'prompts.location_error':
+    "Couldn't locate you. Please allow location access from Settings.",
 
   'backenderror.login_error':
-    "Couldn't log you in. Please check your email and password.",
+    'Log in error. Please check your email and password and try again.',
   'backenderror.signup_error': "Couldn't register you. Please contact us.",
-  'backenderror.user_login_social_error':
-    "Couldn't log you in. Please contact us.",
+  'backenderror.user_login_social_error': 'Log in error. Please contact us.',
   'backenderror.user_reset_pass_error':
-    "Couldn't reset you pass. Please contact us.",
+    "Couldn't reset your password. Please contact us.",
   'backenderror.get_restaurant_error':
-    "Couldn't fetch available boxes. Please contact us.",
+    "Couldn't fetch available offers. Please contact us.",
   'backenderror.get_order_error':
     "Couldn't fetch your orders. Please contact us.",
   'backenderror.cancel_order_error':
@@ -62,11 +61,11 @@ export default {
 
   'networkerror.no_network': 'No internet access',
 
-  genericerror: "We don't know what happened. Please contact us",
+  genericerror: 'Error. Please contact us',
 
   'resetpassword.success': 'Please check your email.',
 
-  'home.save_food': 'Save food around me',
+  'home.save_food': 'Rescue nearby food.',
   'home.list_object': 'Hide map',
   'home.list_expand': 'Show map',
   'home.refresh': 'Refresh',
@@ -91,13 +90,15 @@ export default {
   no: 'No',
   continue: 'Continue',
   ok: 'OK',
+
   saved: 'Saved',
 
+  warning: 'Warning: ',
   'warning.problematic_ordering':
-    'Warning: offers are not ordered by proximity to you.',
+    'offers are not ordered by proximity to you.',
   'warning.no_location_permissions':
-    'Warning: location access not allowed. Please, allow location access to see offers in your proximity.',
-  'warning.check_address': 'Warning: verify address before ordering.',
+    'your phone’s location isn’t shared. Please allow location access to see nearby offers.',
+  'warning.check_address': 'check store address before ordering.',
 
   'toast.heading.info': 'Info',
   'toast.heading.error': 'Error',
@@ -109,80 +110,79 @@ export default {
   'offer.from': 'from',
   'offer.to': 'to',
   'offer.message_end': 'Pick up has ended.',
-  'offer.sale_end': 'Pick up will close in',
-  'offer.sale_start': 'Pick up will be available in',
-  'offer.description_start': 'In your Foodobox you will most often find',
+  'offer.sale_end': 'Pick up ends in',
+  'offer.sale_start': 'Pick up starts in',
+  'offer.description_start': 'What you could get:',
   'offer.description_end':
-    "If you don't eat something, please share it with your friend and family. Shared food is tastier :)",
+    'Your magic box is a surprise. Share it with your friends and family if you can’t finish everything on your own. :)',
   'offer.allergens': 'Allergens',
-  'offer.price_in_store': 'Price in store',
-  'offer.price_in_foodobox': 'Through Foodobox',
-  'offer.pick_up_info_header': 'How do I get my Foodobox?',
-  'offer.pick_up_info_description': 'You have to pick it up from the store.',
+  'offer.price_in_store': 'Original price',
+  'offer.price_in_foodobox': 'Foodobox price',
+  'offer.pick_up_info_header': 'How do I get my surprise box?',
+  'offer.pick_up_info_description': 'Pick it up from the store.',
   'offer.pick_up_info_windows_header': 'Pick up window',
   'offer.adress_dailog': 'Pick up location',
   'offer.today': 'Today',
-  'offer.increase_error': 'No more available surprise boxes.',
+  'offer.increase_error': 'No more surplus food.',
   'offer.order': 'Order',
-  'offer.invalid_promo_code': 'Invalid voucher.',
-  'offer.promo_code_hint': 'Enter voucher.',
-  'offer.add_promo_code': 'Add voucher.',
-  'offer.user_promo_add_hint':
-    'Please add 1 box to checkout and then add voucher.',
-  'offer.promo_code_added': 'Voucher successfully added.',
-  'offer.promo_code': 'Voucher: ',
+  'offer.invalid_promo_code': 'Invalid promo code.',
+  'offer.promo_code_hint': 'Enter promo code.',
+  'offer.add_promo_code': 'Add promo code.',
+  'offer.user_promo_add_hint': 'Please add min 1 box and then add promo code.',
+  'offer.promo_code_added': 'Promo code successfully added.',
+  'offer.promo_code': 'Promo code: ',
   'offer_confirm.text':
-    'You Foodobox is a surprise box full of surplus food. You will give this food a second chance. This means we are not able to guarantee exactly what you will get. In case you have allergies or need other information, please ask the waiter in the location when you pick up your Foodobox.',
+    'Your magic box is a surprise. You will find out what’s inside upon pick up time. The store will prepare a delicious selection of unsold items. In case you have any questions – please contact the store. Their phone number is displayed in ‘’My orders’’ menu.',
 
-  'sort.lowest_price_first': 'Cheapest',
-  'sort.closest_distance_first': 'Closest',
+  'sort.lowest_price_first': 'Lowest price',
+  'sort.closest_distance_first': 'Nearby',
   'sort.starting_soonest_first': 'Starting',
   'sort.closing_soonest_first': 'Ending',
 
   'payment.cash': 'Cash',
-  'payment.promo_code': 'PromoCode: ',
+  'payment.promo_code': 'Promo code: ',
   'payment.complete_order': 'Complete order',
 
-  'order.phone': 'Phone: ',
-  'order.status.request': 'Ordered',
+  'order.phone': 'Store phone: ',
+  'order.status.request': 'Booked',
   'order.status.cancelled': 'Cancelled',
-  'order.status.confirmed': 'Received',
-  'order.boxes': 'Boxes:',
-  'order.total': 'Total:',
+  'order.status.confirmed': 'Picked up',
+  'order.boxes': 'Quantity:',
+  'order.total': 'Owed:',
   'order.saved': 'Saved:',
-  'order.cancel_offer': 'Cancel!',
-  'order.confirm_order': 'Received!',
+  'order.cancel_offer': 'Cancel.',
+  'order.confirm_order': 'Picked up.',
   'order.empty_title': 'No previous orders found.',
   'order.empty_content':
-    'It is never to late to start saving food. Browse through available offers.',
-  'order.empty_button': 'To the offers.',
+    'It is never too late to start rescuing food. Browse the available offers.',
+  'order.empty_button': 'Show  offers.',
   'order.cancel_alert':
-    'I remind you that in the T&C of Foodobox, to which you have agreed to, you can cancel an order up to 90 minutes before the pick up starts. This way you allow enough time for someone else to save the food. Are you sure you want to cancel your order ?',
+    'You can only cancel your order up to 90 minutes prior to pick up window end allowing other client to rescue the surplus food. However, if the cancelation is due to closed store or to lack of surplus food, please contact us to get a refund.',
   'order.congratulation':
-    'Congratulations. You will save food in danger of being thrown away.',
+    'Congratulations, waste warrior. You are on your way to rescue food. The Planet will thank you.',
   'order.confirm_from_app':
-    'When you pick up your order, please confirm it in the app as well.',
-  'order.confirm_pin': 'Your order PIN is: ',
-  'order.time': 'You can pick up your Foodobox between ',
+    'Please click on the Picked-up button in My orders menu upon order pick up.',
+  'order.confirm_pin': 'PIN: ',
+  'order.time': 'You can pick up your surprise box between ',
   'order.pin': 'PIN: ',
   'order.from': 'from',
   'order.on': 'on',
-  'order.created_at': 'Ordered on: ',
+  'order.created_at': 'Created on: ',
   'order.pick_up_window': 'Pick up: ',
   'order.pick_up_expired': 'Expired',
+
   'order.confirm_error_1':
-    'Не можеш да маркираш кутията за взета, защото периодът за вземане не е започнал.',
-  'order.confirm_error_2':
-    'В меню поръчки можеш да видиш от колко до колко часа можеш да спасиш твоята кутия изненада.',
+    'You can’t complete your order prior to the pickup window start',
+  'order.confirm_error_2': 'Check My orders menu for pick up details.',
 
   'order_error.general':
-    'I am sorry, but we can not complete your order, because: ',
+    'I am sorry, but we can‘t complete your order, because: ',
   'order_error.reason_1':
-    '- someone just book the last Foodobox under your nose.',
+    '- someone has just booked the last surprise box available.',
   'order_error.reason_2':
-    "- the restaurant indicated it doesn't have more surplus food today.",
+    "- the store doesn't have anymore surplus food today.",
   'order_error.reason_3':
-    '- you have been temporary banned. Please contact us if you feel this is not fair.',
+    '- you have been temporarily banned. Please contact us.',
 
   'profile.user_update_error': "Couldn't update user data. Please contact us.",
   'profile.apply': 'Save',
@@ -202,19 +202,19 @@ export default {
   'profile.update_hint': 'Please, enter new value for - ',
 
   'filter.description':
-    'Use the filters to adjust the offers in the offers list. On the map you will still see all offers :)',
-  'filter.restaurant_open': 'Location is open',
-  'filter.has_available_boxes': 'Has available boxes',
-  'filter.is_not_finished': 'Not expired',
+    'The filters will be applied to the offers list only. On the map you will see all the available stores. ',
   'filter.can_checkout': 'Can pick up',
+
+  'filter.can_checkout_hint':
+    'Виж само обекти, от които все още можеш да спасиш храна днес.',
   'filter.all': 'All',
-  'filter.time_range_start': 'Pick up after',
-  'filter.time_range_end': 'Pick up before',
-  'filter.food_type': 'Food type',
-  'filter.diet_type': 'Diet type',
-  'filter.pastries': 'Pastries',
-  'filter.groceries': 'Groceried',
-  'filter.meals': 'Measl',
+  'filter.time_range_start': 'Pick up from',
+  'filter.time_range_end': 'Pick up to',
+  'filter.food_type': 'Food category',
+  'filter.diet_type': 'Diet preferences',
+  'filter.pastries': 'Bread and pastries',
+  'filter.groceries': 'Groceries',
+  'filter.meals': 'Meals',
   'filter.others': 'Other',
   'filter.vegetarian': 'Vegetarian',
   'filter.vegan': 'Vegan',
@@ -224,7 +224,7 @@ export default {
   'drawer.privacy': 'T&C',
   'drawer.faq': 'FAQ',
   'drawer.contact': 'Contact us',
-  'drawer.logout': 'Logout',
+  'drawer.logout': 'Log out',
 
   'tab.home': 'Offers',
   'tab.filter': 'Filters',

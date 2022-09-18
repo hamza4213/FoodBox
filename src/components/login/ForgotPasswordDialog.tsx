@@ -64,6 +64,7 @@ const ForgotPasswordDialog = ({isShown, setIsShown, onConfirm}: ForgotPasswordDi
                 </Text>
 
                 <FBFormInput
+                  keyboardType={'email-address'}
                   control={control}
                   name={'email'}
                   placeholder={translateText(intl,'login.email')}
