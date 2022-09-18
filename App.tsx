@@ -10,6 +10,7 @@ import FBRouter from './src/providers/FBRouter';
 import {IntlProvider} from 'react-intl';
 import MessagesInEnglish from './src/lang/en';
 import MessagesInBulgarian from './src/lang/bg';
+import MessagesInRomanian from './src/lang/ro';
 import {FBLocale} from './src/redux/user/reducer';
 import {FBRootState} from './src/redux/store';
 import {useAppState} from '@react-native-community/hooks';
@@ -21,7 +22,7 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 const messages: {[p in FBLocale]: any} = {
   [FBLocale.BG]: MessagesInBulgarian,
   [FBLocale.EN]: MessagesInEnglish,
-  [FBLocale.RO]: MessagesInEnglish
+  [FBLocale.RO]: MessagesInRomanian,
 };
 
 const CODE_PUSH_OPTIONS = {

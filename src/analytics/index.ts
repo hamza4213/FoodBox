@@ -23,6 +23,7 @@ const logEvent = async (name: string, data: any) => {
     }
 
     if (data.deviceId) {
+      data.fbDId = data.deviceId;
       delete data.deviceId;
     }
 
@@ -41,9 +42,28 @@ const logEvent = async (name: string, data: any) => {
       delete data.voucher;
     }
     
+    if (data.type) {
+      data.fbType = data.type;
+      name = name + data.type.charAt(0).toUpperCase() + data.type.slice(1);
+      delete data.type;
+    }
+    
     if (data.step) {
       data.fbStep = data.step;
+      name = name + data.step.charAt(0).toUpperCase() + data.step.slice(1);
       delete data.step;
+    }
+    
+    if (data.status) {
+      data.fbStatus = data.status;
+      name = name + data.status.charAt(0).toUpperCase() + data.status.slice(1);
+      delete data.status;
+    }
+    
+    if (data.action) {
+      data.fbAction = data.action;
+      name = name + data.action.charAt(0).toUpperCase() + data.action.slice(1);
+      delete data.action;
     }
 
     Object.keys(data).forEach((k) => {
@@ -55,27 +75,7 @@ const logEvent = async (name: string, data: any) => {
         data[k] = '';
       }
     });
-
-    // console.log(name, data);
-
-
-    if (name === 'BasketUpdated') {
-      // await analytics().logAddToCart({
-      //   items: [{item_id: '' + data.productId, quantity: data.quantity, price: data.value / data.quantity}],
-      //   currency: 'BGN',
-      //   value: data.value,
-      // });
-    }
-
-    if (name === 'CheckoutStarted' && data.step === 'completed') {
-      // await analytics().logPurchase({
-      //   items: [{item_id: '' + data['productId'], quantity: data['quantity'], price: data['value'] / data['quantity']}],
-      //   // currency: 'BGN',
-      //   // value: data.value,
-      // });
-    }
-
-
+    
     AppEventsLogger.logEvent(name, data);
     await analytics().logEvent(name, data);
   } catch (e) {
@@ -112,7 +112,7 @@ export const analyticsBasketUpdated = async (params: { userId: number, email: st
 };
 
 export const analyticsCheckoutStepChange = async (params: { userId: number, email: string, productId: number, quantity: number, voucher: FBUserVoucher | null, step: 'initiated' | 'confirmed' | 'paymentConfirm' | 'completed' | 'failed', error?: any }) => {
-  await logEvent('CheckoutStarted', { ...params});
+  await logEvent('Checkout', { ...params});
 };
 
 export const analyticsLinkOpened = async (params: { userId: number; email: string; link: string; linkName: string }) => {
