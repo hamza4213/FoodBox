@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
-import {Image, StyleSheet, TextInput, TouchableOpacity, View} from "react-native";
-import {Controller} from "react-hook-form";
-import {COLORS, icons} from "../../constants";
-import {Text} from 'react-native';
+import {Image, KeyboardTypeOptions, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {Controller} from 'react-hook-form';
+import {COLORS, icons} from '../../constants';
 
 interface FBFormInputProps {
   control: any;
@@ -11,12 +10,13 @@ interface FBFormInputProps {
   secureTextEntry: boolean;
   image?: any;
   rules?: object;
-  theme?: 'dark' | 'light'
+  theme?: 'dark' | 'light';
+  keyboardType?: KeyboardTypeOptions
 }
 
 const FBFormInput = (props: FBFormInputProps) => {
   const {
-    control, name, placeholder, secureTextEntry, image, rules = {}, theme = 'light'
+    control, name, placeholder, secureTextEntry, image, rules = {}, theme = 'light', keyboardType = 'default'
   } = props;
 
   const [isSecureTextEntry, setIsSecureTextEntry] = useState<boolean>(secureTextEntry);
@@ -30,16 +30,17 @@ const FBFormInput = (props: FBFormInputProps) => {
       render={({field: {value, onChange, onBlur}, fieldState: {error}}) => (
         <View style={styles.formFieldWrapper}>
           <View style={[
-            styles.formFieldInputWrapper, 
+            styles.formFieldInputWrapper,
             error ? {borderColor: COLORS.red, borderWidth: 1} : {}]
           }>
-            { image &&
+            {image &&
               <View style={styles.formFieldIconWrapper}>
                 <Image source={image} style={styles.formFieldIcon}/>
-              </View>  
+              </View>
             }
-            
+
             <TextInput
+              keyboardType={keyboardType}
               placeholder={placeholder}
               placeholderTextColor={styles.formFieldInputPlaceholder.color}
               style={styles.formFieldInput}
@@ -66,19 +67,19 @@ const FBFormInput = (props: FBFormInputProps) => {
       )}
       name={name}
     />
-  )
-}
+  );
+};
 
 export default FBFormInput;
 
 const stylesCreator = (params: { theme: 'dark' | 'light' }) => {
   const isDark = params.theme == 'dark';
-  
+
   return StyleSheet.create({
     formFieldWrapper: {},
     formFieldInputWrapper: {
       flexDirection: 'row',
-      backgroundColor: isDark ? 'rgba(100,100,100, 0.3)' : 'rgba(255,255,255, 0.1)' ,
+      backgroundColor: isDark ? 'rgba(100,100,100, 0.3)' : 'rgba(255,255,255, 0.1)',
       width: '100%',
       alignItems: 'center',
       marginTop: 20,
@@ -88,13 +89,13 @@ const stylesCreator = (params: { theme: 'dark' | 'light' }) => {
     formFieldIconWrapper: {
       width: 20,
       height: 20,
-      alignItems: 'center'
+      alignItems: 'center',
     },
     formFieldIcon: {
       tintColor: isDark ? '#000' : '#fff',
       width: 20,
       height: 20,
-      resizeMode: "contain"
+      resizeMode: 'contain',
     },
     formFieldInput: {
       paddingVertical: 15,
@@ -103,11 +104,11 @@ const stylesCreator = (params: { theme: 'dark' | 'light' }) => {
       flex: 1,
     },
     formFieldInputPlaceholder: {
-      color: isDark ? '#000' : '#FFF'
+      color: isDark ? '#000' : '#FFF',
     },
     errorMsg: {
       color: COLORS.red,
-      fontSize: 12
-    }
-  })
+      fontSize: 12,
+    },
+  });
 };

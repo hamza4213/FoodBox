@@ -34,6 +34,7 @@ import {RestaurantService} from '../services/RestaurantService';
 import {showOnMap} from '../utils/showOnMap';
 import {isFBAppError, isFBBackendError, isFBGenericError} from '../network/axiosClient';
 import {useFbLoading} from '../providers/FBLoaderProvider';
+import FbModal from '../components/common/fbModal';
 
 interface ListOrdersProps {
   navigation: any;
@@ -46,6 +47,7 @@ interface OrdersListItem extends FBOrder {
 const ListOrders = ({navigation}: ListOrdersProps) => {
   const {showLoading, hideLoading} = useFbLoading();
   const [showCancelDialog, setShowCancelDialog] = useState(false);
+  const [showConfirmErrorDialog, setShowConfirmErrorDialog] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<OrdersListItem | null>(null);
   const {authData} = useAuth();
   const dispatch = useDispatch();
@@ -66,11 +68,11 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
     },
     2: {
       text: translateText(intl, 'order.status.cancelled'),
-      style: {color: '#f86c6c', fontWeight: '800'},
+      style: {color: '#f86c6c', fontWeight: '700'},
     },
     1: {
       text: translateText(intl, 'order.status.confirmed'),
-      style: {color: '#00FF00', fontWeight: '800'},
+      style: {color: '#00FF00', fontWeight: '700'},
     },
   };
 
@@ -104,7 +106,7 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
       const orderRepository: OrderRepository = new OrderRepository({authData: authData!, user: user});
 
       await orderRepository.cancelOrder({orderId});
-      
+
       dispatch(orderCancelledAction({orderId}));
       await analyticsOrderStatusChange({userId: user.id, email: user.email, orderId: orderId, status: 'cancelled'});
     } catch (error) {
@@ -124,14 +126,20 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
     showOnMap({location: {latitude: order.restaurantLatitude, longitude: order.restaurantLongitude}});
   };
 
-  const ConfirmOrder = async (order: OrdersListItem) => {
+  const confirmOrder = async (order: OrdersListItem) => {
+    if (order.boxPickUpFrom > new Date().getTime()) {
+      setShowConfirmErrorDialog(true);
+      return;
+    }
+
+
     showLoading('orders');
 
     try {
       const orderRepository: OrderRepository = new OrderRepository({authData: authData!, user: user});
 
       await orderRepository.confirmOrder({orderId: order.id});
-      
+
       dispatch(orderConfirmedAction({orderId: order.id}));
       await analyticsOrderStatusChange({userId: user.id, email: user.email, orderId: order.id, status: 'confirmed'});
     } catch (error) {
@@ -150,21 +158,16 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
   const renderItem = (item: ListRenderItemInfo<OrdersListItem>) => {
     const order = item.item;
     const isRequested = order.status === 0;
+
     // @ts-ignore
     const statusDisplay = statusDisplays[order.status];
-    const pickUpFromDate = moment(order.createdAt).toDate();
-    const today = moment().toDate();
-    const isForToday =
-      pickUpFromDate.getFullYear() === today.getFullYear() &&
-      pickUpFromDate.getMonth() === today.getMonth() &&
-      pickUpFromDate.getDate() === today.getDate();
-
+    const isExpired = order.boxPickUpTo < new Date().getTime();
 
     return (
       <View style={styles.listItemWrapper}>
         <View style={styles.items}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <View style={{flexDirection: 'row', flexGrow:1}}>
+            <View style={{flexDirection: 'row', flexGrow: 1}}>
               <Image
                 source={{uri: API_ENDPOINT_ENV + 'products/' + order.boxPhoto}}
                 style={styles.boxImage}
@@ -196,17 +199,17 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
 
             <View>
 
-              {isForToday &&
+              {!isExpired &&
                 <Text style={{color: '#29455f', fontWeight: '700'}}>
                   {translateText(intl, 'order.pick_up_window')}
                   {`${translateText(intl, 'offer.from')} `}
-                  {`${RestaurantService.formatPickUpWindowDate(order.pickUpFrom)}`}
+                  {`${RestaurantService.formatPickUpWindowDate(order.boxPickUpFrom)}`}
                   {` ${translateText(intl, 'offer.to')} `}
-                  {RestaurantService.formatPickUpWindowDate(order.pickUpTo)}
+                  {RestaurantService.formatPickUpWindowDate(order.boxPickUpTo)}
                 </Text>
               }
 
-              {!isForToday &&
+              {isExpired &&
                 <Text style={{color: '#29455f'}}>
                   {translateText(intl, 'order.pick_up_window')}
                   {` ${translateText(intl, 'order.pick_up_expired')} `}
@@ -220,20 +223,22 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
               <Text style={{marginTop: 5, fontSize: 12, color: '#29455f'}}>
                 {translateText(intl, 'order.pin')}{order.pin}
               </Text>
-              
+
               <Text style={{marginTop: 5, fontSize: 12, color: '#29455f'}}>
                 {translateText(intl, 'payment.promo_code')}{order.promoCode}
               </Text>
 
               <TouchableOpacity
-                onPress={()=> {Linking.openURL(`tel:${order.restaurantPhoneNumber}`)}}
+                onPress={() => {
+                  Linking.openURL(`tel:${order.restaurantPhoneNumber}`);
+                }}
               >
                 <Text style={{marginTop: 5, fontSize: 12, color: '#29455f'}}>
                   {translateText(intl, 'order.phone')}{order.restaurantPhoneNumber}
                 </Text>
-                
+
               </TouchableOpacity>
-              
+
 
             </View>
 
@@ -280,7 +285,7 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
 
 
               <TouchableOpacity
-                onPress={() => ConfirmOrder(order)}
+                onPress={() => confirmOrder(order)}
                 style={{
                   ...styles.controlButtonWrapper,
                   backgroundColor: COLORS.primary,
@@ -309,7 +314,7 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
   if (orders.length) {
     return (
       <SafeAreaView style={styles.mainWrapper}>
-        
+
         <TouchableOpacity
           style={{
             marginHorizontal: 2,
@@ -336,7 +341,7 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
             {translateText(intl, 'home.refresh')}
           </Text>
         </TouchableOpacity>
-        
+
         <FlatList
           data={orders}
           renderItem={renderItem}
@@ -349,14 +354,24 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
             />
           }
         />
-        
+
 
         <CancelOrderDialog
           isShown={showCancelDialog}
           setIsShown={setShowCancelDialog}
           onConfirm={() => cancelOrder(selectedOrder!)}
         />
-        
+
+        <FbModal
+          contentContainerStyles={{alignItems: 'flex-start'}}
+          modalVisible={showConfirmErrorDialog}
+          confirm={() => setShowConfirmErrorDialog(false)}
+        >
+          <Text>{translateText(intl, 'order.confirm_error_1')}</Text>
+          <Text>{translateText(intl, 'order.confirm_error_2')}</Text>
+
+        </FbModal>
+
       </SafeAreaView>
     );
   }
@@ -420,7 +435,7 @@ const styles = StyleSheet.create({
   },
   boxRestaurantNameWrapper: {
     flex: 1,
-    width: 1
+    width: 1,
   },
   boxRestaurantNameText: {
     fontSize: 14,

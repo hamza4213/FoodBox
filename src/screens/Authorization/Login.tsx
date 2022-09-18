@@ -244,7 +244,7 @@ const Login = ({navigation}: LoginProps) => {
 
     try {
       const userRepo = new NotAuthenticatedUserRepository();
-      await userRepo.resetPassword({email});
+      await userRepo.resetPassword({email, locale: userLocale});
 
       showToast(translateText(intl, 'resetpassword.success'));
     } catch (error) {
@@ -326,6 +326,7 @@ const Login = ({navigation}: LoginProps) => {
             </View>
 
             <FBFormInput
+              keyboardType={'email-address'}
               control={control}
               name={'email'}
               placeholder={translateText(intl, 'login.email')}
@@ -362,8 +363,18 @@ const Login = ({navigation}: LoginProps) => {
               onClick={handleSubmit(doLogin)}
               title={translateText(intl, 'login.login')}
             />
+            
+            <TouchableOpacity
+              style={{alignItems: 'center', marginVertical: 5, paddingVertical: 5}}
+              onPress={() => navigation.navigate('SignUpScreen', {locale: userLocale})}
+            >
+              <Text style={{color: COLORS.white}}>
+                <Text>{translateText(intl, 'login.not_have_account')}</Text>
+                <Text style={{color: COLORS.red, fontWeight: '800'}}>{translateText(intl, 'login.sign_up')}</Text>
+              </Text>
+            </TouchableOpacity>
 
-            <View style={{alignItems: 'center', marginTop: 30}}>
+            <View style={{alignItems: 'center'}}>
               <Text style={{color: '#fff'}}>
                 <FormattedMessage id={'login.sign_up_with_social_media'}/>
               </Text>
@@ -406,15 +417,7 @@ const Login = ({navigation}: LoginProps) => {
                 onPress={() => onAppleLogin()}
               />
             )}
-
-            <TouchableOpacity
-              style={{alignItems: 'center'}}
-              onPress={() => navigation.navigate('SignUpScreen', {locale: userLocale})}
-            >
-              <Text style={{color: COLORS.green}}>
-                {`${translateText(intl, 'login.not_have_account')} ${translateText(intl, 'login.sign_up')}`}
-              </Text>
-            </TouchableOpacity>
+            
           </View>
         </ScrollView>
 

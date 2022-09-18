@@ -9,7 +9,6 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-// import {Avatar} from 'react-native-elements';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Utils} from '../utils';
 

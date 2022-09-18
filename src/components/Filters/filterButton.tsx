@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   TouchableOpacity,
   Image,
@@ -6,8 +6,9 @@ import {
   Text,
   StyleSheet,
   ImageSourcePropType,
-} from "react-native";
-import { Utils } from "../../utils";
+} from 'react-native';
+import { Utils } from '../../utils';
+import {COLORS} from '../../constants';
 
 interface FilterButton {
   title: boolean;
@@ -21,14 +22,14 @@ const FilterButton = ({ title, icon, onPress, active }: FilterButton) => {
     <TouchableOpacity
       style={{
         ...styles.filter,
-        backgroundColor: active ? "#00FF00" : "#fff",
+        backgroundColor: active ? COLORS.green : COLORS.darkgray,
       }}
       onPress={onPress}
     >
       <Image
         source={icon}
         style={{ width: 50, height: 50 }}
-        resizeMode={"contain"}
+        resizeMode={'contain'}
       />
       <View style={{flex:1}}>
         <Text style={styles.text}>
@@ -42,17 +43,17 @@ const FilterButton = ({ title, icon, onPress, active }: FilterButton) => {
 const styles = StyleSheet.create({
   filter: {
     shadowOpacity: 0.1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     flexDirection: 'row',
     margin: 3,
-    paddingHorizontal: 5
+    paddingHorizontal: 5,
   },
   text: {
-    fontWeight: "500",
-    color: "#29455f",
-    fontSize: 12, 
-    textAlign: "center"
+    fontWeight: '500',
+    color: '#29455f',
+    fontSize: 12,
+    textAlign: 'center',
   },
 });
 

@@ -7,7 +7,7 @@ export default {
   'login.sign_up_with_social_media': 'Или влез чрез социалните мрежи',
   'login.login_facebook': 'Вход с Facebook',
   'login.login_google': 'Вход с Google',
-  'login.not_have_account': 'Нямащ акаунт?',
+  'login.not_have_account': 'Нямащ акаунт? ',
   'login.sign_up': 'Регистрирай се',
   'login.forgotten_email_hint':
     'Ще изпратим линк за промяна на паролата на емайла, който посочи.',
@@ -18,7 +18,7 @@ export default {
   'formErrors.email': 'Невалиден емайл',
   'formErrors.password': 'Минимум 8 символа',
 
-  'signup.title': 'Peruстрирәй се',
+  'signup.title': 'Регистрирай се',
   'signup.firstName': 'Име',
   'signup.lastName': 'Фамилия',
   'signup.email': 'Имейл',
@@ -92,6 +92,7 @@ export default {
   no: 'Не',
   continue: 'Продължи',
   ok: 'ОК',
+  saved: 'Запазено',
 
   'warning.problematic_ordering':
     'Внимание: обектите не са подредени по близост.',
@@ -171,6 +172,10 @@ export default {
   'order.created_at': 'Поръчана на: ',
   'order.pick_up_window': 'Вземи: ',
   'order.pick_up_expired': 'Изтекла',
+  'order.confirm_error_1':
+    'Не можеш да маркираш кутията за взета, защото периодът за вземане не е започнал.',
+  'order.confirm_error_2':
+    'В меню поръчки можеш да видиш от колко до колко часа можеш да спасиш твоята кутия изненада.',
 
   'order_error.general':
     'Съжаляваме, но не можем да завършим твоята поръчка, поради някоя от следните причини:',
@@ -198,6 +203,8 @@ export default {
   'profile.repeat_password': 'Повтори нова парола',
   'profile.update_hint': 'Моля, въведи новата стойност на полето - ',
 
+  'filter.description':
+    'Използвай филтрите, за да настроиш какви оферти да ти се показва в списъка с оферти. На картата винаги ще виждаш всички оферти :)',
   'filter.restaurant_open': 'Отворен обект',
   'filter.has_available_boxes': 'Има налични кутии',
   'filter.is_not_finished': 'Не е изтекла',
@@ -229,4 +236,21 @@ export default {
   'permission.request.location.title': 'Достъп до локацията',
   'permission.request.location.message':
     'Моля, дай ни достъп до локацията ви, за да ви предлагаме по релевантни оферти.',
+
+  'allergens.1': 'Ракообразни',
+  'allergens.2': 'Риба',
+  'allergens.3': 'Яйца',
+  'allergens.4': 'Соя',
+  'allergens.5': 'Ядки',
+  'allergens.6': 'Фъстъци',
+  'allergens.7': 'Целина',
+  'allergens.8': 'Горчица',
+  'allergens.9': 'Сусам',
+  'allergens.10': 'Лупина',
+  'allergens.11': 'Мекотели',
+  'allergens.12': 'Серен диоксид',
+  'allergens.13': 'Млечни продукти',
+  'allergens.14': 'Глутен',
+  
+  
 };

@@ -4,10 +4,12 @@ import {Controller} from "react-hook-form";
 import {Text} from 'react-native';
 import CheckBox from "@react-native-community/checkbox";
 import {Utils} from "../../utils";
-import {WEBSITE_TERMS_OF_SERVICE} from "../../network/Server";
+import {TERMS_AND_CONDITIONS_FACTORY} from '../../network/Server';
 import {COLORS} from "../../constants";
 import {useIntl} from "react-intl";
 import {translateText} from "../../lang/translate";
+import {useSelector} from 'react-redux';
+import {FBRootState} from '../../redux/store';
 
 interface FBFormCheckboxProps {
   control: any;
@@ -21,6 +23,7 @@ const FBFormCheckbox = (props: FBFormCheckboxProps) => {
   } = props;
   
   const intl = useIntl();
+  const userLocale = useSelector((state: FBRootState) => state.userState.locale);
 
   return (
     <Controller
@@ -42,22 +45,21 @@ const FBFormCheckbox = (props: FBFormCheckboxProps) => {
             </View>
   
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <View>
-                <Text style={{color: '#fff', fontSize: Utils.ios ? 13 : 12}}>
-                  {translateText(intl,'signup.agree_with')}
-                </Text>
-              </View>
-  
-              <TouchableOpacity onPress={() => Linking.openURL(WEBSITE_TERMS_OF_SERVICE)}>
-                <Text
-                  style={{color: COLORS.green, fontSize: Utils.ios ? 13 : 12}}>
+              <TouchableOpacity onPress={() => Linking.openURL(TERMS_AND_CONDITIONS_FACTORY[userLocale])}>
+                <View>
+                  <Text style={{color: '#fff', fontSize: Utils.ios ? 13 : 12}}>
+                    {translateText(intl,'signup.agree_with')}
+                  </Text>
+                </View>
+                
+                <Text style={{color: COLORS.green, fontSize: Utils.ios ? 13 : 12}}>
                   {translateText(intl,'signup.conditionals')}
                 </Text>
               </TouchableOpacity>
             </View>
           </View>
           { error &&
-            <Text style={styles.errorMsg}> {error?.message || 'omg'}</Text>
+            <Text style={styles.errorMsg}> {error?.message || ''}</Text>
           }
         </>
       )}
@@ -72,7 +74,7 @@ const styles = StyleSheet.create({
   tcWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 30,
+    marginTop: 20,
   },
   errorMsg: {
     color: COLORS.red,

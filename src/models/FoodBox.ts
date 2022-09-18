@@ -21,7 +21,7 @@ export interface FoodBox {
 
   foodType: null | FOOD_TYPE;
   dietType: null | DIET_TYPE;
-  allergenes: string; // TODO: fix typo and add type
+  allergenes: string[]; // TODO: fix typo and add type
 
   // schedule
   isOpen: boolean;
@@ -66,7 +66,7 @@ const FoodBoxMapper = {
 
       foodType: foodType,
       dietType: dietType,
-      allergenes: fb.allergenes,
+      allergenes: JSON.parse(fb.allergenes),
 
       isOpen: fb.todaysSchedule.open,
       pickUpTo: fb.todaysSchedule.pickUpTo ? scheduleFloatToDate(fb.todaysSchedule.pickUpTo) : defaultPickUpTo.getTime(),

@@ -1,68 +1,68 @@
 import React from 'react';
-import {Image, Modal, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {Utils} from "../../utils";
-import {useIntl} from "react-intl";
-import {translateText} from "../../lang/translate";
+import {Image, Modal, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Utils} from '../../utils';
+import {useIntl} from 'react-intl';
+import {translateText} from '../../lang/translate';
 import {COLORS} from '../../constants';
 
 interface CancelOrderDialogProps {
-  isShown : boolean,
+  isShown: boolean,
   setIsShown: React.Dispatch<React.SetStateAction<boolean>>,
   onConfirm: () => void
 }
 
-const CancelOrderDialog = (props:CancelOrderDialogProps ) => {
+const CancelOrderDialog = (props: CancelOrderDialogProps) => {
   const {
     isShown,
     setIsShown,
-    onConfirm
+    onConfirm,
   } = props;
-  
+
   const styles = styleCreator();
   const intl = useIntl();
-  
+
   return (
-      <Modal
-        visible={isShown}
-        transparent={true}
-        onRequestClose={() => setIsShown(false)}>
-        <SafeAreaView style={styles.mainWrapper}>
-          <View style={{
-            backgroundColor: '#fff',
-            width: Utils.width - 100,
-            borderRadius: 30,
-          }}>
-            <TouchableOpacity onPress={() => setIsShown(false)}>
-              <Image
-                source={require('../../../assets/images/app_close_icon.png')}
-                style={styles.closeIcon}
-                resizeMode={'contain'}
-              />
-            </TouchableOpacity>
-            <View style={styles.contentWrapper}>
-              <View style={styles.contentTextWrapper}>
-                <Text style={styles.contentText}>
-                  {translateText(intl,'order.cancel_alert')}
+    <Modal
+      visible={isShown}
+      transparent={true}
+      onRequestClose={() => setIsShown(false)}>
+      <SafeAreaView style={styles.mainWrapper}>
+        <View style={{
+          backgroundColor: '#fff',
+          width: Utils.width - 100,
+          borderRadius: 30,
+        }}>
+          <TouchableOpacity onPress={() => setIsShown(false)}>
+            <Image
+              source={require('../../../assets/images/app_close_icon.png')}
+              style={styles.closeIcon}
+              resizeMode={'contain'}
+            />
+          </TouchableOpacity>
+          <View style={styles.contentWrapper}>
+            <View style={styles.contentTextWrapper}>
+              <Text style={styles.contentText}>
+                {translateText(intl, 'order.cancel_alert')}
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={styles.cancelButtonWrapper}
+              onPress={() => {
+                setIsShown(false);
+                onConfirm();
+              }}>
+              <View>
+                <Text style={styles.cancelButtonText}>
+                  {translateText(intl, 'order.cancel_offer')}
                 </Text>
               </View>
-              <TouchableOpacity
-                style={styles.cancelButtonWrapper}
-                onPress={() => {
-                  setIsShown(false);
-                  onConfirm()
-                }}>
-                <View>
-                  <Text style={styles.cancelButtonText}>
-                    {translateText(intl,'order.cancel_offer')}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+            </TouchableOpacity>
           </View>
-        </SafeAreaView>
-      </Modal>
-    );
-}
+        </View>
+      </SafeAreaView>
+    </Modal>
+  );
+};
 
 export default CancelOrderDialog;
 
@@ -74,7 +74,7 @@ const styleCreator = () => StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.6)',
   },
   closeIcon: {width: 15, height: 15, marginLeft: 20, marginTop: 30},
-  contentWrapper : {
+  contentWrapper: {
     // flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -93,5 +93,5 @@ const styleCreator = () => StyleSheet.create({
     paddingHorizontal: 20,
     alignSelf: 'center',
   },
-  cancelButtonText: {color: '#fff', fontWeight: '700'}
+  cancelButtonText: {color: '#fff', fontWeight: '700'},
 });

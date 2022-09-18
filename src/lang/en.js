@@ -7,7 +7,7 @@ export default {
   'login.sign_up_with_social_media': 'Or login with socials',
   'login.login_facebook': 'Login with Facebook',
   'login.login_google': 'Login with Google',
-  'login.not_have_account': "You don't have an account?",
+  'login.not_have_account': "You don't have an account? ",
   'login.sign_up': 'Register with email!',
   'login.forgotten_email_hint':
     'We will send you a reset password link on the specified email :)',
@@ -91,6 +91,7 @@ export default {
   no: 'No',
   continue: 'Continue',
   ok: 'OK',
+  saved: 'Saved',
 
   'warning.problematic_ordering':
     'Warning: offers are not ordered by proximity to you.',
@@ -169,6 +170,10 @@ export default {
   'order.created_at': 'Ordered on: ',
   'order.pick_up_window': 'Pick up: ',
   'order.pick_up_expired': 'Expired',
+  'order.confirm_error_1':
+    'Не можеш да маркираш кутията за взета, защото периодът за вземане не е започнал.',
+  'order.confirm_error_2':
+    'В меню поръчки можеш да видиш от колко до колко часа можеш да спасиш твоята кутия изненада.',
 
   'order_error.general':
     'I am sorry, but we can not complete your order, because: ',
@@ -196,6 +201,8 @@ export default {
   'profile.repeat_password': 'Repeat password ',
   'profile.update_hint': 'Please, enter new value for - ',
 
+  'filter.description':
+    'Use the filters to adjust the offers in the offers list. On the map you will still see all offers :)',
   'filter.restaurant_open': 'Location is open',
   'filter.has_available_boxes': 'Has available boxes',
   'filter.is_not_finished': 'Not expired',
@@ -227,4 +234,19 @@ export default {
   'permission.request.location.title': 'Location Permission Request',
   'permission.request.location.message':
     'Please grant us access to your location so that we can provide you more relevant offers.',
+
+  'allergens.1': 'Crustaceans',
+  'allergens.2': 'Fish',
+  'allergens.3': 'Eggs',
+  'allergens.4': 'Soy',
+  'allergens.5': 'Nuts',
+  'allergens.6': 'Peanuts',
+  'allergens.7': 'Celery',
+  'allergens.8': 'Mustard',
+  'allergens.9': 'Sesame',
+  'allergens.10': 'Lupine',
+  'allergens.11': 'Molluscs',
+  'allergens.12': 'Sulfur Dioxide',
+  'allergens.13': 'Dairy Products',
+  'allergens.14': 'Gluten',
 };

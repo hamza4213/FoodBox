@@ -8,7 +8,7 @@ export default {
     'Intră cu ajutorul rețelelor de socializare',
   'login.login_facebook': 'Intră cu Facebook',
   'login.login_google': 'Intră cu Google',
-  'login.not_have_account': 'Nu ai account?',
+  'login.not_have_account': 'Nu ai account? ',
   'login.sign_up': 'Înregistrează-te',
   'login.forgotten_email_hint':
     'Vom trimite un link de resetare a parolei la adresa de e-mail pe care o furnizați.',
@@ -87,8 +87,8 @@ export default {
   'currency.ron': 'lei',
 
   distance_unit: 'm',
-  box: 'o cutie',
-  boxes: 'niște cutii',
+  box: 'cutie',
+  boxes: 'cutii',
   back: 'înapoi',
   accept: 'accept',
   decline: 'nu accept',
@@ -96,6 +96,7 @@ export default {
   no: 'nu',
   continue: 'continui',
   ok: 'ok',
+  saved: 'salvat',
 
   'warning.problematic_ordering':
     'Atenție: Obiectele nu sunt găsite prin apropriere.',
@@ -179,6 +180,10 @@ export default {
   'order.created_at': 'Comandată  pe: ',
   'order.pick_up_window': 'A luat ',
   'order.pick_up_expired': 'A expirat',
+  'order.confirm_error_1':
+    'Не можеш да маркираш кутията за взета, защото периодът за вземане не е започнал.',
+  'order.confirm_error_2':
+    'В меню поръчки можеш да видиш от колко до колко часа можеш да спасиш твоята кутия изненада.',
 
   'order_error.general':
     'Ne pare rău, dar nu vă putem finaliza comanda din următoarele motive:',
@@ -207,6 +212,8 @@ export default {
   'profile.repeat_password': 'repetă nouă parola ',
   'profile.update_hint': 'Vă rugăm să introduceți noua valoare a câmpului  - ',
 
+  'filter.description':
+    'Utilizați filtrele pentru a seta ofertele care vă vor afișa în lista de oferte. Veți vedea întotdeauna toate ofertele pe hartă :)',
   'filter.restaurant_open': 'Obiect deschis',
   'filter.has_available_boxes': 'Sunt cutii în stock',
   'filter.is_not_finished': 'Nu e expirată',
@@ -238,4 +245,19 @@ export default {
   'permission.request.location.title': 'Permis la locație.',
   'permission.request.location.message':
     'Vă rugăm să ne oferiți acces la locația Dvs, astfel încât să vă putem oferi ofertele relevante.',
+
+  'allergens.1': 'Crustacee',
+  'allergens.2': 'Peşte',
+  'allergens.3': 'Ouă',
+  'allergens.4': 'Soia',
+  'allergens.5': 'Nuci',
+  'allergens.6': 'Arahide',
+  'allergens.7': 'Țelină',
+  'allergens.8': 'Muştar',
+  'allergens.9': 'Susan',
+  'allergens.10': 'Lupin',
+  'allergens.11': 'Moluște',
+  'allergens.12': 'Dioxid de sulf',
+  'allergens.13': 'Lactate',
+  'allergens.14': 'Gluten',
 };

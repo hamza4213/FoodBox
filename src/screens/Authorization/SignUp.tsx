@@ -4,7 +4,7 @@ import {COLORS, images} from '../../constants';
 import {Utils} from '../../utils';
 import {showToastError} from '../../common/FBToast';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {WEBSITE_CONTACT_US} from '../../network/Server';
+import {CONTACT_US_FACTORY} from '../../network/Server';
 import FBButton from '../../components/common/button';
 import {NotAuthenticatedUserRepository} from '../../repositories/UserRepository';
 import RegistrationCompletedDialog from '../../components/login/RegistrationCompletedDialog';
@@ -16,15 +16,16 @@ import {useIntl} from 'react-intl';
 import {translateText} from '../../lang/translate';
 import {isFBAppError, isFBBackendError, isFBGenericError} from '../../network/axiosClient';
 import {useFbLoading} from '../../providers/FBLoaderProvider';
+import {useSelector} from 'react-redux';
+import {FBRootState} from '../../redux/store';
+import BackButton from '../../components/common/BackButton';
 
 interface SignUpProps {
   navigation: any;
-  route: any;
 }
 
 interface SignUpFormData {
   firstName: string;
-  lastName: string;
   email: string;
   password: string;
   repeatPassword: string;
@@ -33,14 +34,13 @@ interface SignUpFormData {
 
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
-const SignUp = ({navigation, route}: SignUpProps) => {
-  
+const SignUp = ({navigation}: SignUpProps) => {
+
   const [isRegistrationCompleteDialogVisible, setIsRegistrationCompleteDialogVisible] = useState(false);
 
   const intl = useIntl();
   const {showLoading, hideLoading} = useFbLoading();
-
-  const userLocale = route.params.locale;
+  const userLocale = useSelector((state: FBRootState) => state.userState.locale);
 
   const {control, handleSubmit, watch} = useForm<SignUpFormData>({
     defaultValues: {
@@ -57,11 +57,11 @@ const SignUp = ({navigation, route}: SignUpProps) => {
       await userRepo.register({
         email: data.email,
         firstName: data.firstName,
-        lastName: data.lastName,
+        lastName: '',
         password: data.password,
         locale: userLocale,
       });
-      
+
       setIsRegistrationCompleteDialogVisible(true);
     } catch (error: any) {
       if (isFBAppError(error) || isFBGenericError(error)) {
@@ -88,7 +88,6 @@ const SignUp = ({navigation, route}: SignUpProps) => {
         <KeyboardAwareScrollView style={{paddingHorizontal: 24, flex: 1}}>
 
           <View style={{flex: 1}}>
-
             <View style={styles.titleWrapper}>
               <Text style={styles.titleText}>
                 {translateText(intl, 'signup.title')}
@@ -113,20 +112,12 @@ const SignUp = ({navigation, route}: SignUpProps) => {
             />
 
             <FBFormInput
-              name={'lastName'}
-              control={control}
-              rules={{required: translateText(intl, 'formErrors.required')}}
-              placeholder={translateText(intl, 'signup.lastName')}
-              secureTextEntry={false}
-              image={images.app_user}
-            />
-
-            <FBFormInput
+              keyboardType={'email-address'}
               name={'email'}
               control={control}
               rules={{
                 required: translateText(intl, 'formErrors.required'),
-                patter: {
+                pattern: {
                   value: EMAIL_REGEX,
                   message: translateText(intl, 'formErrors.email'),
                 },
@@ -169,27 +160,24 @@ const SignUp = ({navigation, route}: SignUpProps) => {
               rules={{required: translateText(intl, 'formErrors.required')}}
             />
 
-            <FBButton
-              onClick={handleSubmit(doSignUp)}
-              title={translateText(intl, 'signup.sign_up')}
-            />
+            <View style={{marginTop: 20}}>
+              <FBButton
+                onClick={handleSubmit(doSignUp)}
+                title={translateText(intl, 'signup.sign_up')}
+              />
+            </View>
 
             <TouchableOpacity
-              style={{
-                justifyContent: 'flex-end',
-                alignItems: 'center',
-              }}
-              onPress={() => Linking.openURL(WEBSITE_CONTACT_US)}
+              style={{paddingVertical: 10}}
+              onPress={() => Linking.openURL(CONTACT_US_FACTORY[userLocale])}
             >
-              <View style={{flexDirection: 'row'}}>
-                <Text style={{color: '#fff'}}>
-                  {`${translateText(intl, 'signup.help')} `}
-                </Text>
-
+              <Text style={{color: COLORS.white}}>
+                <Text>{translateText(intl, 'signup.help')}</Text>
+                <Text>{' '}</Text>
                 <Text style={{color: COLORS.green}}>
                   info@foodobox.com
                 </Text>
-              </View>
+              </Text>
             </TouchableOpacity>
 
             <FBButton
@@ -206,7 +194,7 @@ const SignUp = ({navigation, route}: SignUpProps) => {
           setIsShown={setIsRegistrationCompleteDialogVisible}
           onConfirm={() => navigation.navigate('SignInScreen')}
         />
-        
+
       </ImageBackground>
     </SafeAreaView>
   );

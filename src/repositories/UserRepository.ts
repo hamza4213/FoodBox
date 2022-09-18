@@ -49,7 +49,7 @@ interface GoogleLoginSocialParams extends BaseLoginSocialParams {
 }
 
 class NotAuthenticatedUserRepository implements BaseNotAuthenticatedUserRepository {
-  async resetPassword(params: { email: string }): Promise<boolean> {
+  async resetPassword(params: { email: string, locale: FBLocale }): Promise<boolean> {
     const url = '/user/reset-password';
     try {
       await analyticsResetPassword({step: 'initiated'});
@@ -58,6 +58,7 @@ class NotAuthenticatedUserRepository implements BaseNotAuthenticatedUserReposito
         url,
         QueryString.stringify({
           email: params.email,
+          locale: params.locale
         }),
       );
 

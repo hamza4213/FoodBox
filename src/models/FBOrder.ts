@@ -28,20 +28,19 @@ export interface FBOrder {
   promoCode: FBUserVoucher | null;
   promoAmount: number | null;
   promoDetails: string | null;
-  pickUpTo: number;
-  pickUpFrom: number;
 }
 
 export const FBOrderSortKey: keyof FBOrder = 'createdAt';
 
 export const FBOrderMapper = {
   fromApi: (fborder: any): FBOrder => {
+    const createdAt = moment(fborder.createdAt).toDate();
     return {
       id: fborder.orderId,
       boxId: fborder.productId,
       boxName: fborder.productName,
-      boxPickUpFrom: scheduleFloatToDate(fborder.todaysSchedule.pickUpFrom),
-      boxPickUpTo: scheduleFloatToDate(fborder.todaysSchedule.pickUpTo),
+      boxPickUpFrom: scheduleFloatToDate(fborder.todaysSchedule.pickUpFrom, createdAt),
+      boxPickUpTo: scheduleFloatToDate(fborder.todaysSchedule.pickUpTo, createdAt),
       boxPhoto: fborder.productPhoto,
       boxOriginalPrice: fborder.boxOriginalPrice,
       boxDiscount: fborder.boxDiscount,
@@ -50,7 +49,7 @@ export const FBOrderMapper = {
       pin: fborder.pin,
       totalAmount: roundToDecimal(fborder.totalPrice),
       currency: CURRENCY.BGN,
-      createdAt: moment(fborder.createdAt).toDate().getTime(),
+      createdAt: createdAt.getTime(),
       restaurantName: fborder.restaurantName,
       restaurantId: fborder.restaurantId,
       restaurantAddress: fborder.restaurantAddress,
@@ -60,8 +59,6 @@ export const FBOrderMapper = {
       promoCode: fborder.voucherCode,
       promoAmount: fborder.discountedPrice,
       promoDetails: fborder.voucherDetails,
-      pickUpTo: scheduleFloatToDate(fborder.todaysSchedule.pickUpTo),
-      pickUpFrom: scheduleFloatToDate(fborder.todaysSchedule.pickUpFrom),
     };
   },
 };

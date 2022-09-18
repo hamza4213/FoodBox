@@ -1,9 +1,13 @@
 import React from 'react';
 import {Image, Linking, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 // import {Avatar} from 'react-native-elements';
-import {WEBSITE_CONTACT_US, WEBSITE_FAQ, WEBSITE_REGISTER_BUSINESS, WEBSITE_TERMS_OF_SERVICE} from '../network/Server';
+import {
+  CONTACT_US_FACTORY,
+  FAQ_FACTORY, REGISTER_BUSINESS_FACTOR,
+  TERMS_AND_CONDITIONS_FACTORY,
+} from '../network/Server';
 import {useAuth} from '../providers/AuthProvider';
-import {shallowEqual, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {FBRootState} from '../redux/store';
 import {FBUser} from '../models/User';
 // @ts-ignore
@@ -11,11 +15,13 @@ import CloseIcon from '../../assets/icons/close-icon.svg';
 import {analyticsLinkOpened, analyticsSignOut} from '../analytics';
 import {useIntl} from 'react-intl';
 import {translateText} from '../lang/translate';
+import {COLORS} from '../constants';
 
 const SideMenuContent = (props: any) => {
   const navigation = props.navigation;
   const {signOut} = useAuth();
-  const user = useSelector((state: FBRootState) => state.userState.user, shallowEqual) as FBUser;
+  const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
+  const userLocale = useSelector((state: FBRootState)=> state.userState.locale);
   const styles = stylesCreator();
   const intl = useIntl();
   return (
@@ -63,13 +69,14 @@ const SideMenuContent = (props: any) => {
         <TouchableOpacity
           onPress={() => {
             navigation.closeDrawer();
+            const link = REGISTER_BUSINESS_FACTOR[userLocale];
             analyticsLinkOpened({
               userId: user.id,
               email: user.email,
-              link: WEBSITE_REGISTER_BUSINESS,
+              link: link,
               linkName: 'WEBSITE_REGISTER_BUSINESS',
             });
-            Linking.openURL(WEBSITE_REGISTER_BUSINESS);
+            Linking.openURL(link);
           }}
           style={styles.listItemWrapper}
         >
@@ -88,13 +95,14 @@ const SideMenuContent = (props: any) => {
         <TouchableOpacity
           onPress={() => {
             navigation.closeDrawer();
+            const link = TERMS_AND_CONDITIONS_FACTORY[userLocale];
             analyticsLinkOpened({
               userId: user.id,
               email: user.email,
-              link: WEBSITE_TERMS_OF_SERVICE,
+              link: link,
               linkName: 'WEBSITE_TERMS_OF_SERVICE',
             });
-            Linking.openURL(WEBSITE_TERMS_OF_SERVICE);
+            Linking.openURL(link);
           }}
           style={styles.listItemWrapper}
         >
@@ -113,8 +121,9 @@ const SideMenuContent = (props: any) => {
         <TouchableOpacity
           onPress={() => {
             navigation.closeDrawer();
-            analyticsLinkOpened({userId: user.id, email: user.email, link: WEBSITE_FAQ, linkName: 'WEBSITE_FAQ'});
-            Linking.openURL(WEBSITE_FAQ);
+            const link = FAQ_FACTORY[userLocale];
+            analyticsLinkOpened({userId: user.id, email: user.email, link: link, linkName: 'WEBSITE_FAQ'});
+            Linking.openURL(link);
           }}
           style={styles.listItemWrapper}
         >
@@ -133,13 +142,14 @@ const SideMenuContent = (props: any) => {
         <TouchableOpacity
           onPress={() => {
             navigation.closeDrawer();
+            const link = CONTACT_US_FACTORY[userLocale];
             analyticsLinkOpened({
               userId: user.id,
               email: user.email,
-              link: WEBSITE_CONTACT_US,
+              link: link,
               linkName: 'WEBSITE_CONTACT_US',
             });
-            Linking.openURL(WEBSITE_CONTACT_US);
+            Linking.openURL(link);
           }}
           style={styles.listItemWrapper}
         >
@@ -182,7 +192,7 @@ const SideMenuContent = (props: any) => {
 export default SideMenuContent;
 
 const stylesCreator = () => StyleSheet.create({
-  mainWrapper: {flex: 1},
+  mainWrapper: {flex: 1, color: COLORS.black},
   avatarWrapper: {
     backgroundColor: '#2A4764',
     justifyContent: 'center',

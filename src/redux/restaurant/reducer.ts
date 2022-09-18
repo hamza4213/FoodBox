@@ -168,23 +168,25 @@ const handleRestaurantFetchedAction: RestaurantActionHandler = (state: Restauran
 };
 
 const handleRestaurantUpdateFiltersAction: RestaurantActionHandler = (state: RestaurantState, data: RestaurantUpdateFiltersAction['data']): RestaurantState => {
-  // update filters
+  
+  const newState = {...state};
+  
   // @ts-ignore
-  state.filters[data.filterCategory][data.filterCategoryProperty] = data.newValue;
+  newState.filters[data.filterCategory][data.filterCategoryProperty] = data.newValue;
 
   // find new filtered restaurants
   const filteredRestaurants: RestaurantHomeListItem[] = [];
-  for (const restaurant of state.allRestaurants) {
-    if (toShowRestaurant(restaurant, state.filters)) {
+  for (const restaurant of newState.allRestaurants) {
+    if (toShowRestaurant(restaurant, newState.filters)) {
       filteredRestaurants.push(restaurant);
     }
   }
 
   // sort them
-  filteredRestaurants.sort(RESTAURANT_SORT_OPTION_TO_SORT_FUNCTION[state.sortOrder]);
+  filteredRestaurants.sort(RESTAURANT_SORT_OPTION_TO_SORT_FUNCTION[newState.sortOrder]);
 
   return {
-    ...state,
+    ...newState,
     forList: filteredRestaurants,
   };
 };

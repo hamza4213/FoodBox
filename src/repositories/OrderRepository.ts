@@ -6,8 +6,6 @@ import QueryString from 'query-string';
 import {FBOrder, FBOrderMapper} from '../models/FBOrder';
 import {analyticsCheckoutStepChange} from '../analytics';
 import {FBUser} from '../models/User';
-import axios from 'axios';
-import {UserRepositoryError} from './UserRepository';
 
 export interface CreateOrderParams {
   restaurantId: number,

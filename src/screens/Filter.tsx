@@ -7,12 +7,13 @@ import {RestaurantUpdateFiltersAction, restaurantUpdateFiltersAction} from '../r
 import {FBRootState} from '../redux/store';
 import DatePicker from 'react-native-date-picker';
 import FilterButton from '../components/Filters/filterButton';
-import {icons} from '../constants';
+import {COLORS, icons} from '../constants';
 import {analyticsFilterChange, analyticsPageOpen} from '../analytics';
 import {FBUser} from '../models/User';
 import {useIntl} from 'react-intl';
 import {translateText} from '../lang/translate';
 import {DIET_TYPE, FOOD_TYPE} from '../models';
+import {showToast} from '../common/FBToast';
 
 const Filter = ({navigation}: { navigation: any }) => {
 
@@ -39,6 +40,7 @@ const Filter = ({navigation}: { navigation: any }) => {
 
   const newApplyFilter = (data: RestaurantUpdateFiltersAction['data']) => {
     dispatch(restaurantUpdateFiltersAction(data));
+    showToast(translateText(intl, 'saved'));
   };
 
   useEffect(() => {
@@ -59,80 +61,79 @@ const Filter = ({navigation}: { navigation: any }) => {
 
   return (
     <SafeAreaView style={styles.mainWrapper}>
-      <ScrollView style={{flex: 1}}>
+      <ScrollView style={{flex: 1, paddingHorizontal: 10}}>
         <View
           style={{
             borderRadius: 10,
             shadowOpacity: 0.2,
             shadowOffset: {height: 1, width: 1},
             backgroundColor: '#fff',
-            marginTop: 20,
+            padding: 10
           }}
         >
+          <Text>{translateText(intl, 'filter.description')}</Text>
 
-          <View style={styles.activeFilterWrapper}>
-            <View>
-              <Text style={styles.filterHeadingText}>
-                {translateText(intl, 'filter.restaurant_open')}
-              </Text>
-            </View>
-            <View>
-              <Switch
-                trackColor={{false: 'grey', true: '#9ede9c'}}
-                thumbColor={isRestaurantOpen ? '#10D53A' : '#f4f3f4'}
-                ios_backgroundColor="grey"
-                onValueChange={(newValue) => {
-                  newApplyFilter({filterCategory: 'isRestaurantOpen', filterCategoryProperty: 'isOpen', newValue});
-                  setIsRestaurantOpen(newValue);
-                }}
-                value={isRestaurantOpen}
-              />
-            </View>
-          </View>
+          {/*<View style={styles.activeFilterWrapper}>*/}
+          {/*  <Text style={styles.filterHeadingText}>*/}
+          {/*    {translateText(intl, 'filter.restaurant_open')}*/}
+          {/*  </Text>*/}
+          {/*  <View>*/}
+          {/*    <Switch*/}
+          {/*      trackColor={{false: 'grey', true: '#9ede9c'}}*/}
+          {/*      thumbColor={isRestaurantOpen ? '#10D53A' : '#f4f3f4'}*/}
+          {/*      ios_backgroundColor="grey"*/}
+          {/*      onValueChange={(newValue) => {*/}
+          {/*        newApplyFilter({filterCategory: 'isRestaurantOpen', filterCategoryProperty: 'isOpen', newValue});*/}
+          {/*        setIsRestaurantOpen(newValue);*/}
+          {/*      }}*/}
+          {/*      value={isRestaurantOpen}*/}
+          {/*    />*/}
+          {/*  </View>*/}
+          {/*</View>*/}
 
-          <View style={styles.activeFilterWrapper}>
-            <View>
-              <Text style={styles.filterHeadingText}>
-                {translateText(intl, 'filter.has_available_boxes')}
-              </Text>
-            </View>
-            <View>
-              <Switch
-                trackColor={{false: 'grey', true: '#9ede9c'}}
-                thumbColor={hasRestaurantAvailableBoxes ? '#10D53A' : '#f4f3f4'}
-                ios_backgroundColor="grey"
-                onValueChange={(newValue) => {
-                  newApplyFilter({
-                    filterCategory: 'hasRestaurantAvailableBoxes',
-                    filterCategoryProperty: 'hasAvailableBoxes',
-                    newValue,
-                  });
-                  setHasRestaurantAvailableBoxes(newValue);
-                }}
-                value={hasRestaurantAvailableBoxes}
-              />
-            </View>
-          </View>
+          {/*<View style={styles.activeFilterWrapper}>*/}
+          {/*  <View>*/}
+          {/*    <Text style={styles.filterHeadingText}>*/}
+          {/*      {translateText(intl, 'filter.has_available_boxes')}*/}
+          {/*    </Text>*/}
+          {/*  </View>*/}
+          {/*  <View>*/}
+          {/*    <Switch*/}
+          {/*      trackColor={{false: 'grey', true: '#9ede9c'}}*/}
+          {/*      thumbColor={hasRestaurantAvailableBoxes ? '#10D53A' : '#f4f3f4'}*/}
+          {/*      ios_backgroundColor="grey"*/}
+          {/*      onValueChange={(newValue) => {*/}
+          {/*        newApplyFilter({*/}
+          {/*          filterCategory: 'hasRestaurantAvailableBoxes',*/}
+          {/*          filterCategoryProperty: 'hasAvailableBoxes',*/}
+          {/*          newValue,*/}
+          {/*        });*/}
+          {/*        setHasRestaurantAvailableBoxes(newValue);*/}
+          {/*      }}*/}
+          {/*      value={hasRestaurantAvailableBoxes}*/}
+          {/*    />*/}
+          {/*  </View>*/}
+          {/*</View>*/}
 
-          <View style={styles.activeFilterWrapper}>
-            <View>
-              <Text style={styles.filterHeadingText}>
-                {translateText(intl, 'filter.is_not_finished')}
-              </Text>
-            </View>
-            <View>
-              <Switch
-                trackColor={{false: 'grey', true: '#9ede9c'}}
-                thumbColor={isNotFinished ? '#10D53A' : '#f4f3f4'}
-                ios_backgroundColor="grey"
-                onValueChange={(newValue) => {
-                  newApplyFilter({filterCategory: 'isNotFinished', filterCategoryProperty: 'isNotFinished', newValue});
-                  setIsNotFinished(newValue);
-                }}
-                value={isNotFinished}
-              />
-            </View>
-          </View>
+          {/*<View style={styles.activeFilterWrapper}>*/}
+          {/*  <View>*/}
+          {/*    <Text style={styles.filterHeadingText}>*/}
+          {/*      {translateText(intl, 'filter.is_not_finished')}*/}
+          {/*    </Text>*/}
+          {/*  </View>*/}
+          {/*  <View>*/}
+          {/*    <Switch*/}
+          {/*      trackColor={{false: 'grey', true: '#9ede9c'}}*/}
+          {/*      thumbColor={isNotFinished ? '#10D53A' : '#f4f3f4'}*/}
+          {/*      ios_backgroundColor="grey"*/}
+          {/*      onValueChange={(newValue) => {*/}
+          {/*        newApplyFilter({filterCategory: 'isNotFinished', filterCategoryProperty: 'isNotFinished', newValue});*/}
+          {/*        setIsNotFinished(newValue);*/}
+          {/*      }}*/}
+          {/*      value={isNotFinished}*/}
+          {/*    />*/}
+          {/*  </View>*/}
+          {/*</View>*/}
 
           <View style={styles.activeFilterWrapper}>
             <View>
@@ -261,12 +262,14 @@ const Filter = ({navigation}: { navigation: any }) => {
                         } else {
                           newFoodTypes.push(value);
                         }
-                        setFoodTypes(newFoodTypes);
+                        
                         newApplyFilter({
                           filterCategory: 'foodType',
                           filterCategoryProperty: 'types',
                           newValue: newFoodTypes,
                         });
+                        
+                        setFoodTypes(newFoodTypes);
                       }}
                       // @ts-ignore
                       icon={icons[filterName]}
@@ -332,14 +335,12 @@ const Filter = ({navigation}: { navigation: any }) => {
 };
 
 const styles = StyleSheet.create({
-  mainWrapper: {flex: 1, marginHorizontal: 10},
+  mainWrapper: {flex: 1, color: COLORS.black},
   activeFilterWrapper: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: 10,
-    marginHorizontal: 10,
-    paddingBottom: 4,
+    paddingVertical: 10,
     borderBottomColor: '#000',
     borderBottomWidth: 1,
   },

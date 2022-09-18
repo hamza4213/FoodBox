@@ -1,15 +1,15 @@
 import React from 'react';
 import {useNavigation} from '@react-navigation/core';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {API_ENDPOINT_PRODUCT_PHOTOS, API_ENDPOINT_RESTAURANT_PHOTOS} from '../../network/Server';
+import {Image, Text, TouchableOpacity, View} from 'react-native';
+import {API_ENDPOINT_PRODUCT_PHOTOS} from '../../network/Server';
 import {Utils} from '../../utils';
 import {RestaurantHomeListItem} from '../../models/Restaurant';
 import {RestaurantService} from '../../services/RestaurantService';
 import {useIntl} from 'react-intl';
 import {translateText} from '../../lang/translate';
 import {FBGeoLocation} from '../../models/FBGeoLocation';
-import {FoodBox} from '../../models/FoodBox';
 import {COLORS} from '../../constants';
+import {DIET_TYPE, FOOD_TYPE} from '../../models';
 
 export type RestaurantListItemProps = {
   restaurant: RestaurantHomeListItem;
@@ -34,6 +34,7 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
   const borderColor = canCheckout ? COLORS.green : COLORS.red;
   const boxQuantityBackgroundColor = canCheckout ? COLORS.green : COLORS.red;
   const discountedPrice = box.price - (box.price * (box.discount / 100));
+  
   let statusText = `${box.quantity} ${box.quantity === 1 ? translateText(intl, 'box') : translateText(intl, 'boxes')}`;
   if (!isOpen) {
     statusText = translateText(intl, 'restaurant.status.closed');
@@ -41,6 +42,9 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
   if (isOpen && isFinished) {
     statusText = translateText(intl, 'offer.expired');
   }
+  
+  const dietTypeText = box.dietType ? translateText(intl, `filter.${DIET_TYPE[box.dietType].toLowerCase()}`) : '';
+  const foodTypeText = box.foodType ? translateText(intl, `filter.${FOOD_TYPE[box.foodType].toLowerCase()}`) : '';
   
 
   const onClickHandler = () => {
@@ -114,33 +118,32 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
             </Text>
           </View>
           
-          <Text style={{
+          <Text adjustsFontSizeToFit numberOfLines={1} style={{
             fontSize: 12,
-            color: '#c5ced3',
             fontWeight: '500',
-            width: Utils.width / 2,
-            marginRight: 5,
-            marginTop: 10,
           }}>
             {restaurant.businessType}
+          </Text>
+
+          <Text adjustsFontSizeToFit numberOfLines={2} style={{
+            fontSize: 12,
+            fontWeight: '500',
+          }}>
+            {dietTypeText} {foodTypeText} 
           </Text>
           
           {canCheckout &&
             <Text style={{
               fontSize: 12,
-              color: '#c5ced3',
               fontWeight: '500',
-              marginTop: 5,
             }}>
-              {translateText(intl, 'offer.today')}:{' '}{RestaurantService.formatPickUpWindowDate(box.pickUpFrom)}{' '}-{''}{RestaurantService.formatPickUpWindowDate(box.pickUpTo)}!
+              {RestaurantService.formatPickUpWindowDate(box.pickUpFrom)}{' '}-{''}-{' '}{RestaurantService.formatPickUpWindowDate(box.pickUpTo)}
             </Text>
           }
           
           <Text style={{
-            fontSize: 10,
-            color: '#c5ced3',
+            fontSize: 12,
             fontWeight: '500',
-            marginTop: 5,
           }}>
             {restaurant.distance}
             {translateText(intl, 'distance_unit')}
@@ -156,7 +159,7 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
             paddingVertical: 5,
             justifyContent: 'center',
           }}>
-            <Text style={{
+            <Text adjustsFontSizeToFit numberOfLines={1} style={{
               alignSelf: 'center',
               color: '#fff',
               fontSize: 12,
