@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 
-import {Platform, StatusBar} from 'react-native';
+import {Alert, BackHandler, Linking, Platform, StatusBar} from 'react-native';
 import 'react-native-gesture-handler';
 import {initialWindowMetrics, SafeAreaProvider} from 'react-native-safe-area-context';
 import CodePush from 'react-native-code-push';
@@ -18,6 +18,7 @@ import {check as checkPermission, PERMISSIONS, request as requestPermission} fro
 import {Settings as FBSettings} from 'react-native-fbsdk-next';
 import {FBLoadingProvider} from './src/providers/FBLoaderProvider';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import VersionCheck from 'react-native-version-check';
 
 const messages: {[p in FBLocale]: any} = {
   [FBLocale.BG]: MessagesInBulgarian,
@@ -68,10 +69,34 @@ let FBApp = () => {
         }
       }
     };
+    
+    const checkVersion = async () => {
+      let versionCheck = await VersionCheck.needUpdate();
+       
+      Alert.alert(
+        'Please update',
+        `versionCheck ${versionCheck.currentVersion} ${versionCheck.latestVersion} ${versionCheck.storeUrl} ${versionCheck.isNeeded}`,
+        [{
+          text: 'Update',
+          onPress: () => {
+            BackHandler.exitApp();
+            Linking.openURL(versionCheck.storeUrl);
+          }
+        }],
+        {cancelable: false}
+      )
+      
+      // if (versionCheck.isNeeded) {
+      //  
+      // }
+      
+    };
 
     if (appState === 'active' && Platform.OS === 'ios') {
       checkAttPermission();
     }
+    
+    checkVersion();
   }, [appState]);
   
   return (
