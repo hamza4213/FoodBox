@@ -65,7 +65,7 @@ export default {
 
   genericerror: 'Грешка. Моля свържи се с нас',
 
-  'resetpassword.success': 'Моля, превери пощата си.',
+  'resetpassword.success': 'Моля, провери пощата си.',
 
   'home.save_food': 'Спасявай храна около теб',
   'home.list_object': 'Уголеми списъка с обекти',
@@ -111,7 +111,7 @@ export default {
   'offer.from': 'от',
   'offer.to': 'до',
   'offer.message_end': 'Прозерецът за вземане е приключил',
-  'offer.sale_end': 'Офертата ще приключи след',
+  'offer.sale_end': 'Офертата изтича след',
   'offer.sale_start': 'Офертата започва след',
   'offer.description_start': 'В твоята кутия изненада най-често ще откриеш',
   'offer.description_end':
@@ -134,7 +134,7 @@ export default {
   'offer.promo_code_added': 'Успешно добавен промокод.',
   'offer.promo_code': 'Промокод: ',
   'offer_confirm.text':
-    'Твоята Foodobox кутия e изненада.Тя ще съдържа вкусно хапване, което е останало непродадено. При нужда от допълнителна информация - обади се в обекта на телефона в меню Поръчки.',
+    'Твоята Foodobox кутия e изненада. Тя ще съдържа вкусно хапване, което е останало непродадено. При нужда от допълнителна информация - обади се в обекта на телефона в меню Поръчки.',
 
   'sort.lowest_price_first': 'Цена',
   'sort.closest_distance_first': 'Най-близо',
@@ -151,7 +151,7 @@ export default {
   'order.status.confirmed': 'Получена',
   'order.boxes': 'Кутии:',
   'order.total': 'Дължиш:',
-  'order.saved': 'Спести:',
+  'order.saved': 'Спестяваш:',
   'order.cancel_offer': 'Анулирай',
   'order.not_confirm_order': 'Взех кутията.',
   'order.confirm_order': 'Взех кутията',
@@ -206,10 +206,10 @@ export default {
   'profile.update_hint': 'Моля, въведи новата стойност на полето - ',
 
   'filter.description':
-    'Използвай филтрите, за да настроиш какви оферти да виждаш в списъка с оферти. На картата винаги ще виждаш всички оферти. :)',
-  'filter.can_checkout': 'Мога да запазя',
+    'Използвай филтрите, за да настроиш какви оферти да виждаш в списъка. На картата винаги ще виждаш всички обекти. :)',
+  'filter.can_checkout': 'Мога да запазя днес',
   'filter.can_checkout_hint':
-    'Покажи само обекти, от които все още мога да спася храна днес, или всички обекти.',
+    'Покажи само обекти, от които все още мога да спася храна днес.',
   'filter.all': 'Всички',
   'filter.time_range_start': 'Вземи от',
   'filter.time_range_end': 'Вземи до',

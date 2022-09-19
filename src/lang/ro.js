@@ -189,9 +189,9 @@ export default {
   'profile.update_hint': 'Te rugăm să introduci noua valoare a câmpului  - ',
   'filter.description':
     'Utilizați filtrele, pentru a seta ce oferte să ți se arăte în lista cu oferte. Întotdeauna vei vedea toate ofertele pe hartă. :)',
-  'filter.can_checkout': 'Pot să o rezervez?',
+  'filter.can_checkout': 'Pot salva astăzi',
   'filter.can_checkout_hint':
-    'Poti vedea doar obiectele, pe care inca le poti salva alimentele, doar astazi.',
+    'Arata doar obiectele din care inca poti salva alimente astazi.',
   'filter.all': 'Toate',
   'filter.time_range_start': 'I-a înainte de.',
   'filter.time_range_end': 'I-a după.',

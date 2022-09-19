@@ -94,8 +94,7 @@ export default {
   saved: 'Saved',
 
   warning: 'Warning: ',
-  'warning.problematic_ordering':
-    'offers are not ordered by proximity to you.',
+  'warning.problematic_ordering': 'offers are not ordered by proximity to you.',
   'warning.no_location_permissions':
     'your phone’s location isn’t shared. Please allow location access to see nearby offers.',
   'warning.check_address': 'check store address before ordering.',
@@ -150,20 +149,20 @@ export default {
   'order.boxes': 'Quantity:',
   'order.total': 'Owed:',
   'order.saved': 'Saved:',
-  'order.cancel_offer': 'Cancel.',
-  'order.confirm_order': 'Picked up.',
+  'order.cancel_offer': 'Cancel',
+  'order.confirm_order': 'Picked up',
   'order.empty_title': 'No previous orders found.',
   'order.empty_content':
-    'It is never too late to start rescuing food. Browse the available offers.',
+    'It is never too late to start saving food. Browse the available offers.',
   'order.empty_button': 'Show  offers.',
   'order.cancel_alert':
-    'You can only cancel your order up to 90 minutes prior to pick up window end allowing other client to rescue the surplus food. However, if the cancelation is due to closed store or to lack of surplus food, please contact us to get a refund.',
+    ' You can only cancel your order up to 90 minutes before the pickup window ends, thus allowing others to save the food. However, if the cancellation is due to a closed store or the lack of surplus food, please contact us to get a refund. ',
   'order.congratulation':
-    'Congratulations, waste warrior. You are on your way to rescue food. The Planet will thank you.',
+    'Congratulations, waste warrior. You are on your way to save food. The Planet will thank you.',
   'order.confirm_from_app':
     'Please click on the Picked-up button in My orders menu upon order pick up.',
   'order.confirm_pin': 'PIN: ',
-  'order.time': 'You can pick up your surprise box between ',
+  'order.time': 'You can pick up your surprise box from ',
   'order.pin': 'PIN: ',
   'order.from': 'from',
   'order.on': 'on',
@@ -172,15 +171,14 @@ export default {
   'order.pick_up_expired': 'Expired',
 
   'order.confirm_error_1':
-    'You can’t complete your order prior to the pickup window start',
+    'You can’t complete your order prior to the pickup window start.',
   'order.confirm_error_2': 'Check My orders menu for pick up details.',
 
   'order_error.general':
     'I am sorry, but we can‘t complete your order, because: ',
   'order_error.reason_1':
     '- someone has just booked the last surprise box available.',
-  'order_error.reason_2':
-    "- the store doesn't have anymore surplus food today.",
+  'order_error.reason_2': "- the store doesn't have more surplus food today.",
   'order_error.reason_3':
     '- you have been temporarily banned. Please contact us.',
 
@@ -202,10 +200,9 @@ export default {
   'profile.update_hint': 'Please, enter new value for - ',
 
   'filter.description':
-    'The filters will be applied to the offers list only. On the map you will see all the available stores. ',
-  'filter.can_checkout': 'Can pick up',
-  'filter.can_checkout_hint':
-    'Show only offers, which I can book now, or all offers.',
+    'The filters will be applied to the offers list only. On the map you will see all the available stores.',
+  'filter.can_checkout': 'Can book today',
+  'filter.can_checkout_hint': 'Show only offers, which I can book today.',
   'filter.all': 'All',
   'filter.time_range_start': 'Pick up from',
   'filter.time_range_end': 'Pick up to',

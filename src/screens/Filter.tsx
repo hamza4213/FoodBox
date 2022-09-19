@@ -76,12 +76,12 @@ const Filter = ({navigation}: { navigation: any }) => {
           </Text>
           
           <View style={styles.activeFilterWrapper}>
-            <Text style={{flex: 1}}>
+            <View style={{flex: 1}}>
               <Text style={styles.filterHeadingText}>
                 {translateText(intl, 'filter.can_checkout')}{' '}
               </Text>
               <Text adjustsFontSizeToFit numberOfLines={2}>{translateText(intl, 'filter.can_checkout_hint')}</Text>
-            </Text>
+            </View>
             <View style={{width: 50}}>
               <Switch
                 trackColor={{false: 'grey', true: '#9ede9c'}}

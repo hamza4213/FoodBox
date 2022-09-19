@@ -267,7 +267,10 @@ const Offer = ({route, navigation}: OfferProps) => {
           </View>
 
           {canCheckout &&
-            <Text style={{color: COLORS.red, fontWeight: '700'}}>{translateText(intl, 'warning.check_address')}</Text>
+            <Text>
+              <Text style={{color: COLORS.red, fontWeight: '700'}} >{translateText(intl, 'warning')}</Text>
+              <Text>{translateText(intl, 'warning.check_address')}</Text>
+            </Text>
           }
 
           {canCheckout &&
