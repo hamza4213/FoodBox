@@ -92,11 +92,15 @@ const Offer = ({route, navigation}: OfferProps) => {
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
         >
-          <View style={styles.boxImageWrapper}>
+          <View style={{}}>
             <Image
-              style={[styles.boxImage]}
-              resizeMode={'stretch'}
-              blurRadius={canCheckout ? 0 : 10}
+              style={{
+                aspectRatio: 2,
+                width: '100%',
+                marginBottom: 10
+              }}
+              resizeMode={'contain'}
+              blurRadius={canCheckout ? 0 : 3}
               source={{uri: API_ENDPOINT_PRODUCT_PHOTOS + foodBox.photo}}
             />
           </View>
@@ -345,11 +349,6 @@ const styles = StyleSheet.create({
     color: COLORS.black
   },
   mainWrapper: {},
-  boxImageWrapper: {},
-  boxImage: {
-    height: 220,
-    marginBottom: 20,
-  },
   wrapBoxMeta: {
     flexDirection: 'row',
     flexGrow: 1,

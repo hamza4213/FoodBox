@@ -67,8 +67,6 @@ const logEvent = async (name: string, data: any) => {
     }
 
     name = name + data.env.charAt(0).toUpperCase() + data.env.slice(1);
-    
-    console.log(name);
 
     Object.keys(data).forEach((k) => {
       if (typeof data[k] === 'boolean') {

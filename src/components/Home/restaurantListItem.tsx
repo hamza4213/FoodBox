@@ -1,7 +1,7 @@
 import React from 'react';
 import {useNavigation} from '@react-navigation/core';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
-import {API_ENDPOINT_PRODUCT_PHOTOS} from '../../network/Server';
+import {API_ENDPOINT_RESTAURANT_PHOTOS} from '../../network/Server';
 import {RestaurantHomeListItem} from '../../models/Restaurant';
 import {RestaurantService} from '../../services/RestaurantService';
 import {useIntl} from 'react-intl';
@@ -33,7 +33,7 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
   const borderColor = canCheckout ? COLORS.green : COLORS.red;
   const boxQuantityBackgroundColor = canCheckout ? COLORS.green : COLORS.red;
   const discountedPrice = box.price - (box.price * (box.discount / 100));
-  
+
   let statusText = `${box.quantity} ${box.quantity === 1 ? translateText(intl, 'box') : translateText(intl, 'boxes')}`;
   if (!isOpen) {
     statusText = translateText(intl, 'restaurant.status.closed');
@@ -41,15 +41,15 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
   if (isOpen && isFinished) {
     statusText = translateText(intl, 'offer.expired');
   }
-  
+
   const dietTypeText = box.dietType ? translateText(intl, `filter.${DIET_TYPE[box.dietType].toLowerCase()}`) : '';
   const foodTypeText = box.foodType ? translateText(intl, `filter.${FOOD_TYPE[box.foodType].toLowerCase()}`) : '';
-  
+
 
   const onClickHandler = () => {
     navigation.navigate('Offer', {restaurant: restaurant, userLocation: userLocation, box: box});
   };
-  
+
   return (
     <TouchableOpacity
       style={{
@@ -74,13 +74,13 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
       {isFullscreen &&
         <View>
           <Image
-            source={{uri: API_ENDPOINT_PRODUCT_PHOTOS + box.photo}}
-            resizeMode={'cover'}
+            source={{uri: API_ENDPOINT_RESTAURANT_PHOTOS + restaurant.coverImage}}
+            resizeMode={'contain'}
             style={{
               width: '100%',
               aspectRatio: 2,
             }}
-            blurRadius={canCheckout ? 0 : 10}
+            blurRadius={canCheckout ? 0 : 3}
           />
         </View>
       }
@@ -93,30 +93,28 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
         {/*AvatarImg*/}
         <View style={{width: 70}}>
           <Image
-            source={{uri: API_ENDPOINT_PRODUCT_PHOTOS + box.thumbnailPhoto}}
+            source={{uri: API_ENDPOINT_RESTAURANT_PHOTOS + restaurant.thumbnailAvatarImage}}
             style={{
               width: 50,
               height: 50,
               borderRadius: 200,
               marginRight: 10,
+              borderColor: COLORS.red,
+              borderWidth: 1,
             }}
-            resizeMode={'cover'}
-            blurRadius={canCheckout ? 0 : 10}
           />
         </View>
 
         {/*RestaurantInfo*/}
         <View style={{flex: 1}}>
-          
-          
           <View style={{flexGrow: 1, flexDirection: 'row'}}>
             <Text style={{flex: 1, width: 1, color: '#29455f'}}>
-              <Text style={{ fontSize: 13, fontWeight: '700', color: '#29455f'}}>{box.name}</Text>
+              <Text style={{fontSize: 13, fontWeight: '700', color: '#29455f'}}>{box.name}</Text>
               <Text>{` ${translateText(intl, 'order.from')} `}</Text>
-              <Text style={{ fontSize: 13, fontWeight: '700', color: '#29455f'}}>{restaurant.name}</Text>
+              <Text style={{fontSize: 13, fontWeight: '700', color: '#29455f'}}>{restaurant.name}</Text>
             </Text>
           </View>
-          
+
           <Text adjustsFontSizeToFit numberOfLines={1} style={{
             fontSize: 12,
             fontWeight: '500',
@@ -128,18 +126,18 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
             fontSize: 12,
             fontWeight: '500',
           }}>
-            {dietTypeText} {foodTypeText} 
+            {foodTypeText} - {dietTypeText}
           </Text>
-          
+
           {canCheckout &&
             <Text style={{
               fontSize: 12,
               fontWeight: '500',
             }}>
-              {RestaurantService.formatPickUpWindowDate(box.pickUpFrom)}{' '}-{''}-{' '}{RestaurantService.formatPickUpWindowDate(box.pickUpTo)}
+              {RestaurantService.formatPickUpWindowDate(box.pickUpFrom)}{' '}-{' '}{RestaurantService.formatPickUpWindowDate(box.pickUpTo)}
             </Text>
           }
-          
+
           <Text style={{
             fontSize: 12,
             fontWeight: '500',
@@ -166,7 +164,7 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
               {statusText}
             </Text>
           </View>
-          
+
           <Text style={{
             fontSize: 10,
             color: '#afbbc4',
