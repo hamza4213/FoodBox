@@ -242,20 +242,25 @@ const ClusteredMapView = ({zoomOnRestaurant}:{zoomOnRestaurant?: RestaurantHomeL
                   })}
                   style={{width: 100}}
                 >
-                  <View style={{flexGrow: 1, flexDirection: 'row'}}>
-                    <Text style={{flex: 1, width: 1, color: '#29455f'}}>
-                      <Text style={{
-                        fontSize: 13,
-                        fontWeight: '700',
-                        color: '#29455f',
-                      }}>{box.name}</Text>
-                      <Text>{` ${translateText(intl, 'order.from')} `}</Text>
-                      <Text style={{
-                        fontSize: 13,
-                        fontWeight: '700',
-                        color: '#29455f',
-                      }}>{restaurant.name}</Text>
-                    </Text>
+                  <View style={{flexGrow: 1}}>
+                    <View style={{flexGrow: 1, flexDirection: 'row'}}>
+                      <Text style={{flex: 1, width: 1, color: '#29455f'}}>
+                        <Text style={{
+                          fontSize: 13,
+                          fontWeight: '700',
+                          color: '#29455f',
+                        }}>{box.name}</Text>
+                        <Text>{` ${translateText(intl, 'order.from')} `}</Text>
+                        <Text style={{
+                          fontSize: 13,
+                          fontWeight: '700',
+                          color: '#29455f',
+                        }}>{restaurant.name}</Text>
+                      </Text>
+                    </View>
+                    <View style={{paddingTop: 10}}>
+                      <Text style={{alignSelf: 'flex-end'}} >{translateText(intl, 'maps.marker.details')} {'=>'}</Text>
+                    </View>
                   </View>
                 </Callout>
               </Marker>

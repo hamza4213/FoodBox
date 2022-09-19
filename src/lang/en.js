@@ -43,6 +43,8 @@ export default {
   'prompts.update_text': 'Please update to newest version.',
   'prompts.update_button': 'Update',
 
+  'maps.marker.details': 'details',
+
   'backenderror.login_error':
     'Log in error. Please check your email and password and try again.',
   'backenderror.signup_error': "Couldn't register you. Please contact us.",
@@ -100,7 +102,7 @@ export default {
   'warning.problematic_ordering': 'offers are not ordered by proximity to you.',
   'warning.no_location_permissions':
     'your phone’s location isn’t shared. Please allow location access to see nearby offers.',
-  'warning.check_address': 'check store address before ordering.',
+  'warning.check_address': 'check store address before booking.',
 
   'toast.heading.info': 'Info',
   'toast.heading.error': 'Error',

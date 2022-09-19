@@ -1,11 +1,21 @@
 import {FBLocale} from '../redux/user/reducer';
 
-export const ENVIRONMENT: 'stage' | 'live' | 'dev' = 'stage'; // 'stage', 'live', 'dev'
+export enum FB_ENVIRONMENT {
+  dev = 'dev',
+  stage = 'stage',
+  live = 'live'
+}
 
-export const API_ENDPOINT_ENV = 'https://foodobox-stage.com/';
+export const ENVIRONMENT: FB_ENVIRONMENT = FB_ENVIRONMENT.live;
+const API_ENDPOINT_FACTORY: {[p in FB_ENVIRONMENT]: string} = {
+  [FB_ENVIRONMENT.dev]: 'https://foodobox-stage.com/',
+  [FB_ENVIRONMENT.stage]: 'https://foodobox-stage.com/',
+  [FB_ENVIRONMENT.live]: 'https://apiv1.foodobox.com/',
+};
+
+export const API_ENDPOINT_ENV = API_ENDPOINT_FACTORY[ENVIRONMENT];
 export const API_ENDPOINT_RESTAURANT_PHOTOS = `${API_ENDPOINT_ENV}restaurants/`;
 export const API_ENDPOINT_PRODUCT_PHOTOS = `${API_ENDPOINT_ENV}products/`;
-
 
 export const WEBSITE_ENDPOINT = 'https://foodobox.com/';
 

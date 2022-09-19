@@ -109,7 +109,7 @@ const ReduxApp = () => (
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <App/>
-      <FlashMessage position="bottom"/>
+      <FlashMessage position="top"/>
     </PersistGate>
   </Provider>
 );

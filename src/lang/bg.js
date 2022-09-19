@@ -45,6 +45,8 @@ export default {
     'Налична е нова версия. Моля, обнови приложението до последната версия',
   'prompts.update_button': 'Обнови',
 
+  'maps.marker.details': 'детайли',
+
   'backenderror.login_error':
     'Проблем при опит за влизане. Моля, провери имейла и паролата си.',
   'backenderror.signup_error':
