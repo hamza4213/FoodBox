@@ -1,6 +1,6 @@
 import {FBLocale} from '../redux/user/reducer';
 
-export const ENVIRONMENT = 'stage'; // 'stage', 'live', 'dev'
+export const ENVIRONMENT: 'stage' | 'live' | 'dev' = 'stage'; // 'stage', 'live', 'dev'
 
 export const API_ENDPOINT_ENV = 'https://foodobox-stage.com/';
 export const API_ENDPOINT_RESTAURANT_PHOTOS = `${API_ENDPOINT_ENV}restaurants/`;

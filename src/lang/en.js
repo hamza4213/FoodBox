@@ -28,7 +28,7 @@ export default {
   'signup.help': 'Need help? Contact us at',
   'signup.error_password': "Passwords don't match.",
   'signup.email_confirm':
-    "Account created. We have sent you an activation link. Check your email and your SPAM folder. Didn't receive the activation email? Contact us at support-customer@foodobox.com",
+    "Account created. We have sent you an activation link. Check your email and your SPAM folder. If you don't receive the link soon, contact us at support-customer@foodobox.com",
   'signup.agree_with': 'Agree to the',
   'signup.conditionals': 'terms and conditions',
 

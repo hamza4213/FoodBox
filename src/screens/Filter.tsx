@@ -78,9 +78,9 @@ const Filter = ({navigation}: { navigation: any }) => {
           <View style={styles.activeFilterWrapper}>
             <Text style={{flex: 1}}>
               <Text style={styles.filterHeadingText}>
-                {translateText(intl, 'filter.can_checkout')}
+                {translateText(intl, 'filter.can_checkout')}{' '}
               </Text>
-              <Text>{' '}{translateText(intl, 'filter.can_checkout_hint')}</Text>
+              <Text adjustsFontSizeToFit numberOfLines={2}>{translateText(intl, 'filter.can_checkout_hint')}</Text>
             </Text>
             <View style={{width: 50}}>
               <Switch

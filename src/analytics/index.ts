@@ -66,6 +66,8 @@ const logEvent = async (name: string, data: any) => {
       delete data.action;
     }
 
+    name = name + data.env.charAt(0).toUpperCase() + data.env.slice(1);
+
     Object.keys(data).forEach((k) => {
       if (typeof data[k] === 'boolean') {
         data[k] = data[k] ? 1 : 0;

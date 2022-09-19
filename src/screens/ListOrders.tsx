@@ -395,8 +395,8 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
             {translateText(intl, 'order.empty_content')}
           </Text>
           <TouchableOpacity
-            style={styles.empty_button}
-            onPress={() => navigation.navigate('HomeTabs')}>
+            style={[styles.empty_button]}
+            onPress={() => navigation.navigate('HOME')}>
             <Text style={styles.emptyListButtonText}>
               {translateText(intl, 'order.empty_button')}
             </Text>

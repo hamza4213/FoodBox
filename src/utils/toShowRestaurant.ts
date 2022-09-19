@@ -11,6 +11,13 @@ export const toShowRestaurant = (restaurant: RestaurantHomeListItem, filters: FB
   for (const [filterCategoryName, filterCategoryConfig] of Object.entries(filters)) {
     // // console.log(filterCategoryName, filterCategoryConfig.isEnabled);
     if (filterCategoryConfig.isEnabled) {
+      
+      // search disables other filters while active
+      if (filterCategoryName !== 'search' && filters['search']['userInput']) {
+        continue;
+      }
+      
+      
       switch (filterCategoryName) {
         case 'canCheckout': {
           // console.log('canCheckout', !RestaurantService.canCheckout(box), passesFilters);
