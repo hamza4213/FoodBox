@@ -7,7 +7,7 @@ import CodePush from 'react-native-code-push';
 import {useSelector} from 'react-redux';
 import {FBAuthProvider} from './src/providers/AuthProvider';
 import FBRouter from './src/providers/FBRouter';
-import {IntlProvider} from 'react-intl';
+import {IntlProvider, useIntl} from 'react-intl';
 import MessagesInEnglish from './src/lang/en';
 import MessagesInBulgarian from './src/lang/bg';
 import MessagesInRomanian from './src/lang/ro';
@@ -20,7 +20,7 @@ import {FBLoadingProvider} from './src/providers/FBLoaderProvider';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import VersionCheck from 'react-native-version-check';
 
-const messages: {[p in FBLocale]: any} = {
+const messages: { [p in FBLocale]: any } = {
   [FBLocale.BG]: MessagesInBulgarian,
   [FBLocale.EN]: MessagesInEnglish,
   [FBLocale.RO]: MessagesInRomanian,
@@ -50,7 +50,7 @@ let FBApp = () => {
 
   const appState = useAppState();
   useEffect(() => {
-    const setupFB = async (params: {attEnabled: boolean}) => {
+    const setupFB = async (params: { attEnabled: boolean }) => {
       await FBSettings.setAdvertiserTrackingEnabled(params.attEnabled);
     };
 
@@ -69,54 +69,52 @@ let FBApp = () => {
         }
       }
     };
-    
+
     const checkVersion = async () => {
       let versionCheck = await VersionCheck.needUpdate();
-       
-      Alert.alert(
-        'Please update',
-        `versionCheck ${versionCheck.currentVersion} ${versionCheck.latestVersion} ${versionCheck.storeUrl} ${versionCheck.isNeeded}`,
-        [{
-          text: 'Update',
-          onPress: () => {
-            BackHandler.exitApp();
-            Linking.openURL(versionCheck.storeUrl);
-          }
-        }],
-        {cancelable: false}
-      )
       
-      // if (versionCheck.isNeeded) {
-      //  
-      // }
-      
+      // TODO: get latest version info from BACKEND and decide what to do
+
+      if (versionCheck.isNeeded && false) {
+        Alert.alert(
+          'Update available',
+          'Please update to newest version.',
+          [{
+            text: 'Update',
+            onPress: () => {
+              BackHandler.exitApp();
+              Linking.openURL(versionCheck.storeUrl);
+            },
+          }],
+          {cancelable: false},
+        );
+      }
+
     };
 
     if (appState === 'active' && Platform.OS === 'ios') {
       checkAttPermission();
     }
-    
+
     checkVersion();
   }, [appState]);
-  
+
   return (
-    <>
-      <IntlProvider messages={messages[selectedLocale]} locale={selectedLocale} defaultLocale={FBLocale.BG}>
-        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-          <StatusBar
-            barStyle={'dark-content'}
-            animated={true}
-            backgroundColor={'#fff'}
-          />
-          
-          <FBLoadingProvider>
-            <FBAuthProvider>
-              <FBRouter/>
-            </FBAuthProvider>
-          </FBLoadingProvider>
-        </SafeAreaProvider>
-      </IntlProvider>
-    </>
+    <IntlProvider messages={messages[selectedLocale]} locale={selectedLocale} defaultLocale={FBLocale.BG}>
+      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+        <StatusBar
+          barStyle={'dark-content'}
+          animated={true}
+          backgroundColor={'#fff'}
+        />
+
+        <FBLoadingProvider>
+          <FBAuthProvider>
+            <FBRouter/>
+          </FBAuthProvider>
+        </FBLoadingProvider>
+      </SafeAreaProvider>
+    </IntlProvider>
   );
 };
 

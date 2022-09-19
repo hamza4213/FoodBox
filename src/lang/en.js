@@ -39,6 +39,9 @@ export default {
     'Location permission denied. Please allow location access from Settings to see nearby offers.',
   'prompts.location_error':
     "Couldn't locate you. Please allow location access from Settings.",
+  'prompts.update_heading': 'Update available',
+  'prompts.update_text': 'Please update to newest version.',
+  'prompts.update_button': 'Update',
 
   'backenderror.login_error':
     'Log in error. Please check your email and password and try again.',

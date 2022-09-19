@@ -37,6 +37,9 @@ export default {
   'prompts.no_loc_permission':
     'Nu avem acces la locație. Te rugăm să ne permiteți din setări.',
   'prompts.location_error': 'Nu am reușit sa te localizăm. Verifica setările ',
+  'prompts.update_heading': 'Actualizare disponibila',
+  'prompts.update_text': 'Vă rugăm să actualizați la cea mai nouă versiune.',
+  'prompts.update_button': 'Actualizați',
   'backenderror.login_error':
     'Problemă la incercarea de a te conecta. Te rugăm să  verifici adresa de e-mail și parola.',
   'backenderror.signup_error':
