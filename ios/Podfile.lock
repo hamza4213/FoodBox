@@ -456,6 +456,8 @@ PODS:
     - Google-Maps-iOS-Utils (= 4.1.0)
     - GoogleMaps (= 7.0.0)
     - React-Core
+  - react-native-in-app-review (4.1.1):
+    - React
   - react-native-maps (1.2.0):
     - React-Core
   - react-native-safe-area-context (4.3.1):
@@ -643,6 +645,7 @@ DEPENDENCIES:
   - react-native-fbsdk-next (from `../node_modules/react-native-fbsdk-next`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - react-native-google-maps (from `../node_modules/react-native-maps`)
+  - react-native-in-app-review (from `../node_modules/react-native-in-app-review`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-settings (from `../node_modules/react-native-settings`)
@@ -774,6 +777,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/geolocation"
   react-native-google-maps:
     :path: "../node_modules/react-native-maps"
+  react-native-in-app-review:
+    :path: "../node_modules/react-native-in-app-review"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
   react-native-safe-area-context:
@@ -905,6 +910,7 @@ SPEC CHECKSUMS:
   react-native-fbsdk-next: d6e1c6ad1693c891add104ab529d96906784ba9c
   react-native-geolocation: 205c5f619aea7bd54067b7b51e0781cae2f37151
   react-native-google-maps: 0101f3200785fc284e8561cf747a7b99e69e13d6
+  react-native-in-app-review: c5ba75cc2c91238f42bd2de44fa0e65e93b7c9ea
   react-native-maps: 3c7f8dcd7ed97cd9979205a2da93e249149e5d9b
   react-native-safe-area-context: d768fdafd416b4c0bdc7bef4240c9ee53909baf3
   react-native-settings: 6fc0f38956f8e46460e01c97db7ec3d018f2fdc1

@@ -35,6 +35,7 @@ import {showOnMap} from '../utils/showOnMap';
 import {isFBAppError, isFBBackendError, isFBGenericError} from '../network/axiosClient';
 import {useFbLoading} from '../providers/FBLoaderProvider';
 import FbModal from '../components/common/fbModal';
+import InAppReview from 'react-native-in-app-review';
 
 interface ListOrdersProps {
   navigation: any;
@@ -131,8 +132,7 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
       setShowConfirmErrorDialog(true);
       return;
     }
-
-
+    
     showLoading('orders');
 
     try {
@@ -153,6 +153,13 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
     }
 
     hideLoading('orders');
+
+    try {
+      // when return true in android it means user finished or close review flow
+      // when return true in ios it means review flow lanuched to user.
+      await InAppReview.RequestInAppReview();
+    } catch (e) {}
+    
   };
 
   const renderItem = (item: ListRenderItemInfo<OrdersListItem>) => {

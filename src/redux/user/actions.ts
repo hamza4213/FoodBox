@@ -1,5 +1,5 @@
 import {FBUser} from '../../models/User';
-import {FBLocale, UserPermissionAnswer, SystemPermissionStatus} from './reducer';
+import {FBLocale, UserPermissionAnswer} from './reducer';
 import {FBGeoLocation} from '../../models/FBGeoLocation';
 
 export type UserActionType = string;
@@ -89,7 +89,7 @@ export const userUpdateLocPermissionAction = (params: UserUpdateLocPermissionAct
 export const USER_UPDATE_NOTIFICATION_PERMISSION: UserActionType = 'UPDATE_NOTIFICATION_PERMISSION';
 
 export interface UserUpdateNotificationPermission extends UserAction {
-  data: { userAnswer?: UserPermissionAnswer, systemPermission?: SystemPermissionStatus };
+  data: { userAnswer?: UserPermissionAnswer };
 }
 
 export const userUpdateNotificationPermissionAction = (params: UserUpdateNotificationPermission['data']): UserUpdateNotificationPermission => {

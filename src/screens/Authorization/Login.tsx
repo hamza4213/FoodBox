@@ -65,7 +65,7 @@ const Login = ({navigation}: LoginProps) => {
   const {control, handleSubmit} = useForm<LoginFormData>({
     defaultValues: {
       email: 'mp3por12@gmail.com',
-      password: 'Foodobox2k23',
+      password: 'Foodobox2k24',
     },
   });
   
