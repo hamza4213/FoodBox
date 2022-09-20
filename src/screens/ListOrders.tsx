@@ -28,7 +28,7 @@ import {analyticsOrderStatusChange, analyticsPageOpen} from '../analytics';
 import {FBUser} from '../models/User';
 import {useIntl} from 'react-intl';
 import {translateText} from '../lang/translate';
-import {orderBy} from 'lodash';
+import {isNull, orderBy} from 'lodash';
 import {formatPrice} from '../utils/formatPrice';
 import {RestaurantService} from '../services/RestaurantService';
 import {showOnMap} from '../utils/showOnMap';
@@ -36,6 +36,7 @@ import {isFBAppError, isFBBackendError, isFBGenericError} from '../network/axios
 import {useFbLoading} from '../providers/FBLoaderProvider';
 import FbModal from '../components/common/fbModal';
 import InAppReview from 'react-native-in-app-review';
+import roundToDecimal from '../utils/roundToDecimal';
 
 interface ListOrdersProps {
   navigation: any;
@@ -54,9 +55,16 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
   const dispatch = useDispatch();
   const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
   const orders = useSelector<FBRootState, OrdersListItem[]>((state: FBRootState) => state.ordersState.orders.map((o => {
+    
+    let boxSavedAmount = roundToDecimal(o.numberOfCheckoutBoxes * o.boxOriginalPrice * o.boxDiscount / 100);
+    
+    if (o.promoAmount !== null) {
+      boxSavedAmount = roundToDecimal(o.boxOriginalPrice - o.promoAmount);
+    }
+    
     return {
       ...o,
-      boxSavedAmount: o.boxOriginalPrice - (o.boxOriginalPrice * o.boxDiscount / 100),
+      boxSavedAmount: boxSavedAmount,
     };
   })));
 
@@ -257,7 +265,7 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
                 {`${translateText(intl, 'order.boxes')} ${order.numberOfCheckoutBoxes} ${order.numberOfCheckoutBoxes > 1 ? translateText(intl, 'boxes') : translateText(intl, 'box')}`}
               </Text>
               <Text style={{color: '#29455f', fontWeight: '700'}}>
-                {`${translateText(intl, 'order.total')} ${order.totalAmount}${translateText(intl, `currency.${order.currency}`)}`}
+                {`${translateText(intl, 'order.total')} ${order.promoAmount !== null ? order.promoAmount : order.totalAmount}${translateText(intl, `currency.${order.currency}`)}`}
               </Text>
               {order.boxSavedAmount !== 0 &&
                 <Text style={{color: '#29455f', fontWeight: '700'}}>

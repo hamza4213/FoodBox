@@ -57,7 +57,7 @@ export const FBOrderMapper = {
       restaurantLatitude: fborder.restaurantLatitude,
       restaurantPhoneNumber: fborder.restaurantPhoneNumber,
       promoCode: fborder.voucherCode,
-      promoAmount: fborder.discountedPrice,
+      promoAmount: fborder.promoPrice,
       promoDetails: fborder.voucherDetails,
     };
   },

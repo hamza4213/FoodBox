@@ -27,6 +27,8 @@ interface ForgotPasswordFormData {
   email: string;
 }
 
+const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
 const ForgotPasswordDialog = ({isShown, setIsShown, onConfirm}: ForgotPasswordDialogProps) => {
   const styles = styleCreator({});
   const intl = useIntl();
@@ -71,6 +73,13 @@ const ForgotPasswordDialog = ({isShown, setIsShown, onConfirm}: ForgotPasswordDi
                   secureTextEntry={false}
                   image={images.mail}
                   theme={'dark'}
+                  rules={{
+                    required: translateText(intl, 'formErrors.required'),
+                    pattern: {
+                      value: EMAIL_REGEX,
+                      message: translateText(intl, 'formErrors.email'),
+                    },
+                  }}
                 />
 
                 <FBButton
