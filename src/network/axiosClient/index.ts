@@ -25,7 +25,6 @@ axiosClient.interceptors.response.use(
     
     if (error && error.response) {
       if (error.response.status >= 400 && error.response.status <= 600) {
-        console.log('error', error.response.data);
         throw new FBBackendError(
           error.response.status,
           error.response.data.message,
@@ -57,6 +56,10 @@ export class FBBackendError extends FBError{
     super();
     this.status = status;
     this.message = message;
+  }
+  
+  public toSignOut() {
+    return this.status === 401;
   }
 }
 

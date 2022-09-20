@@ -70,7 +70,7 @@ export default {
   'home.refresh': 'Restart',
   'restaurantslist.empty':
     'În acest moment nu sunt disponibile produse pentru a fi salvate.',
-  'home.find_object': 'Găsește obiect',
+  'home.find_object': 'Cauta dupa nume',
   'restaurant.status.open': 'deschis',
   'restaurant.status.closed': 'închis',
   'currency.bgn': 'leva',
@@ -122,9 +122,9 @@ export default {
   'offer.promo_code_hint': 'Introduceți voucherul',
   'offer.add_promo_code': 'Adaugă voucher',
   'offer.user_promo_add_hint':
-    'Adăuga cel puțin o cutie și apoi adăugați un voucher',
+    'Adăuga cel puțin o cutie și apoi adăugați un voucher.',
   'offer.promo_code_added': 'Ați adaugat un voucher cu succes.',
-  'offer.promo_code': 'Voucher  ',
+  'offer.promo_code': 'Voucher: ',
   'offer_confirm.text':
     'Cutia ta Foodobox e o surpriză. Ești pe cale să oferi alimentelor o a doua viață. Deoarece nu putem garanta exact ce produse va conține cutia Dvs. În cazul în care aveți alergii sau aveți nevoie de informații vă rugăm să contactați site-ul la numărul furnizat.',
   'sort.lowest_price_first': 'Preț',

@@ -75,6 +75,9 @@ const Home = ({navigation}: HomeProps) => {
         showToastError(translateText(intl, error.key));
       } else if (isFBBackendError(error)) {
         showToastError(error.message);
+        if (error.toSignOut()) {
+          signOut();
+        }
       } else {
         showToastError(translateText(intl, 'genericerror'));
       }

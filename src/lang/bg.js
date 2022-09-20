@@ -79,7 +79,7 @@ export default {
   'home.refresh': 'Обнови',
   'restaurantslist.empty': 'Няма налични продукти за спасяване в момента',
 
-  'home.find_object': 'Намери обект',
+  'home.find_object': 'Търси по име',
 
   'restaurant.status.open': 'отворен',
   'restaurant.status.closed': 'затворен',
