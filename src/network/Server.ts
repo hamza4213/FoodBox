@@ -6,7 +6,7 @@ export enum FB_ENVIRONMENT {
   live = 'live'
 }
 
-export const ENVIRONMENT: FB_ENVIRONMENT = FB_ENVIRONMENT.stage;
+export const ENVIRONMENT: FB_ENVIRONMENT = FB_ENVIRONMENT.live;
 const API_ENDPOINT_FACTORY: {[p in FB_ENVIRONMENT]: string} = {
   [FB_ENVIRONMENT.dev]: 'https://foodobox-stage.com/',
   [FB_ENVIRONMENT.stage]: 'https://foodobox-stage.com/',
