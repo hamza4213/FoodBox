@@ -5,11 +5,12 @@ import QueryString from 'query-string';
 import {FBUser, FBUserMapper} from '../models/User';
 import {
   analyticsEmailLogin,
-  analyticsRegistration, analyticsResetPassword,
+  analyticsRegistration,
+  analyticsResetPassword,
   analyticsSetLocale,
-  analyticsSetTC, analyticsSocialLogin,
+  analyticsSetTC,
+  analyticsSocialLogin,
 } from '../analytics';
-import axios from 'axios';
 import {FBLocale} from '../redux/user/reducer';
 
 class UserRepositoryError extends FBBaseError {

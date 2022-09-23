@@ -203,6 +203,13 @@ export default {
   'profile.new_password_hint': 'New password ',
   'profile.repeat_password': 'Repeat password ',
   'profile.update_hint': 'Please, enter new value for - ',
+  'profile.delete_title': 'Do you confirm you want to delete your account ?',
+  'profile.delete_account_process':
+    'If you confirm we will open your email client with a predefined email to us with your request. You should press SEND. It will take upto 24 hours to delete your data. Until then you will have access.',
+  'profile.delete_email_subject': 'Please delete my account',
+  'profile.delete_email_text': 'Please delete account with email: ',
+  'profile.delete_email_error':
+    'Email client unavailable. Please send us your request at support-customer@foodobox.com.',
 
   'filter.description':
     'The filters will be applied to the offers list only. On the map you will see all the available stores.',

@@ -1,5 +1,5 @@
-import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import React from "react";
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React from 'react';
 import {COLORS} from '../../constants';
 
 interface FBButtonProps {
@@ -18,7 +18,7 @@ const FBButton = ({onClick, title, backgroundColor = COLORS.green}: FBButtonProp
         <Text style={fbButtonStyles.title}>{title}</Text>
       </View>
     </TouchableOpacity>
-  )
+  );
 };
 
 
@@ -35,8 +35,8 @@ const fbButtonStyles = StyleSheet.create({
     paddingVertical: 12,
   },
   title: {
-    color: '#fff'
-  }
+    color: COLORS.white,
+  },
 });
 
 export default FBButton;

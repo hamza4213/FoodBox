@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import {
+  Alert,
   Image,
-  Keyboard,
+  Keyboard, Linking,
   Modal,
   StyleSheet,
   Text,
@@ -27,6 +28,8 @@ import FBFormInput from '../components/common/FBFormInput';
 import {isFBAppError, isFBBackendError, isFBGenericError} from '../network/axiosClient';
 import {useFbLoading} from '../providers/FBLoaderProvider';
 import {COLORS} from '../constants';
+import FBButton from '../components/common/button';
+import QueryString from 'query-string';
 
 interface ModalProps {
   toShow: boolean;
@@ -212,6 +215,41 @@ const Profile = () => {
       </Modal>
     );
   };
+  
+  const handleAccountDeletion = () => {
+    Alert.alert(
+      translateText(intl, 'profile.delete_title'),
+      translateText(intl, 'profile.delete_account_process'),
+      [
+        {
+          text: translateText(intl, 'back'),
+        },
+        {
+        text: translateText(intl, 'continue'),
+        onPress: async () => {
+          
+          let url = 'mailto:support-customer@foodobox.com';
+          const query = QueryString.stringify({
+            subject: translateText(intl, 'profile.delete_email_subject'),
+            body: `${translateText(intl, 'profile.delete_email_text')} ${user.email}`
+          });
+          
+          if (query.length) {
+            url += `?${query}`;
+          }
+
+          const canOpen = await Linking.canOpenURL(url);
+
+          if (!canOpen) {
+            showToastError(translateText(intl, 'profile.delete_email_error'));
+          } else {
+            Linking.openURL(url);
+          }
+        },
+      }],
+      {cancelable: true}
+    );
+  }
 
   return (
     <SafeAreaView style={styles.mainWrapper}>
@@ -266,6 +304,9 @@ const Profile = () => {
           placeholder: translateText(intl, 'profile.new_password_hint'),
           propertyKey: 'password',
         })}
+        
+        <FBButton onClick={() => handleAccountDeletion()} title={'Изтрии акаунт'} backgroundColor={COLORS.red}></FBButton>
+        
       </View>
 
       {renderModal()}
