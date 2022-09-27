@@ -3,11 +3,11 @@ import {FBGeoLocation} from '../../models/FBGeoLocation';
 import {RESTAURANT_SORT_OPTION} from './reducer';
 
 export enum RestaurantActionType {
-  RESTAURANT_UPDATE_FILTERS,
-  RESTAURANT_FETCHED,
-  UPDATE_RESTAURANT_DISTANCE_TO_USER,
-  UPDATE_RESTAURANT_SORT_ORDER,
-  RESET
+  RESTAURANT_UPDATE_FILTERS = 'RESTAURANT_UPDATE_FILTERS',
+  RESTAURANT_FETCHED = 'RESTAURANT_FETCHED',
+  UPDATE_RESTAURANT_DISTANCE_TO_USER = 'UPDATE_RESTAURANT_DISTANCE_TO_USER' ,
+  UPDATE_RESTAURANT_SORT_ORDER = 'UPDATE_RESTAURANT_SORT_ORDER',
+  RESTAURANT_RESET = 'RESTAURANT_RESET'
 }
 
 export interface RestaurantAction {
@@ -64,7 +64,7 @@ export interface RestaurantResetAction extends RestaurantAction {
 
 export const restaurantResetAction = (): RestaurantResetAction => {
   return {
-    type: RestaurantActionType.RESET,
+    type: RestaurantActionType.RESTAURANT_RESET,
     data: undefined,
   };
 };

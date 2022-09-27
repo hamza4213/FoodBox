@@ -189,7 +189,7 @@ const RESTAURANT_ACTION_TO_ACTION_HANDLER_MAP: { [p in RestaurantActionType]: Re
   [RestaurantActionType.RESTAURANT_FETCHED]: handleRestaurantFetchedAction,
   [RestaurantActionType.RESTAURANT_UPDATE_FILTERS]: handleRestaurantUpdateFiltersAction,
   [RestaurantActionType.UPDATE_RESTAURANT_SORT_ORDER]: handleUpdateRestaurantSortOrderAction,
-  [RestaurantActionType.RESET]: handleRestaurantResetAction,
+  [RestaurantActionType.RESTAURANT_RESET]: handleRestaurantResetAction,
 };
 
 const restaurantReducer = (

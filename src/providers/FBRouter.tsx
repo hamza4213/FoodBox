@@ -1,6 +1,6 @@
 import React from 'react';
 import {useAuth} from './AuthProvider';
-import {ImageBackground, Text, View} from 'react-native';
+import {Alert, ImageBackground, Text, View} from 'react-native';
 import {Utils} from '../utils';
 import {images} from '../constants';
 
@@ -16,12 +16,14 @@ import Offer from '../screens/Offer';
 import PaymentMethod from '../screens/PaymentMethod';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createStackNavigator} from '@react-navigation/stack';
+import ErrorBoundary from 'react-native-error-boundary';
+import {showToastError} from '../common/FBToast';
 
 const Drawer = createDrawerNavigator();
 const AuthStack = createStackNavigator();
 
 const FBRouter = () => {
-  const {authData, authLoading} = useAuth();
+  const {authData, authLoading, signOut} = useAuth();
 
   if (authLoading) {
     return (
@@ -56,22 +58,26 @@ const FBRouter = () => {
   }
 
   return (
-    <NavigationContainer>
-      <Drawer.Navigator
-        screenOptions={{headerShown: false}}
-        initialRouteName={'HomeTabs'}
-        drawerContent={props => <SideMenuContent {...props} />}
-      >
-        <Drawer.Screen name="HomeTabs" component={HomeTabs}/>
-        <Drawer.Screen name="Offer" component={Offer}/>
-        <Drawer.Screen name="Profile" component={Profile}/>
-        <Drawer.Screen name="PaymentMethod" component={PaymentMethod}/>
-        <Drawer.Screen name="OrderFinalized" component={OrderFinalized}/>
-        <Drawer.Screen name="OrderError" component={OrderError}/>
-      </Drawer.Navigator>
-    </NavigationContainer>
+    <ErrorBoundary onError={(e: Error) => {
+      showToastError('Имаше проблем. Моля, влезте на ново');
+      signOut();
+    }}>
+      <NavigationContainer>
+        <Drawer.Navigator
+          screenOptions={{headerShown: false}}
+          initialRouteName={'HomeTabs'}
+          drawerContent={props => <SideMenuContent {...props} />}
+        >
+          <Drawer.Screen name="HomeTabs" component={HomeTabs}/>
+          <Drawer.Screen name="Offer" component={Offer}/>
+          <Drawer.Screen name="Profile" component={Profile}/>
+          <Drawer.Screen name="PaymentMethod" component={PaymentMethod}/>
+          <Drawer.Screen name="OrderFinalized" component={OrderFinalized}/>
+          <Drawer.Screen name="OrderError" component={OrderError}/>
+        </Drawer.Navigator>
+      </NavigationContainer>
+    </ErrorBoundary>
   );
-
 };
 
 export default FBRouter;

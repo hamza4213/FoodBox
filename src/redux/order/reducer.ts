@@ -1,27 +1,27 @@
-import {FBOrder} from "../../models/FBOrder";
+import {FBOrder} from '../../models/FBOrder';
 import {
   ORDER_CANCELLED,
-  ORDER_CONFIRMED,
+  ORDER_CONFIRMED, ORDER_RESET,
   OrderAction,
   OrderCancelledAction, OrderConfirmedAction,
   ORDERS_FETCHED,
-  OrdersFetchedAction
-} from "./actions";
+  OrdersFetchedAction,
+} from './actions';
 
 export interface OrdersState {
-  orders: FBOrder[]
+  orders: FBOrder[];
 }
 
 export const ordersInitialState: OrdersState = {
-  orders: []
-}
+  orders: [],
+};
 
 const handleOrdersFetchedAction = (state: OrdersState, data: OrdersFetchedAction['data']): OrdersState => {
   return {
     ...state,
-    orders: data.orders
+    orders: data.orders,
   };
-}
+};
 
 const handleOrderCancelledAction = (state: OrdersState, data: OrderCancelledAction['data']): OrdersState => {
   for (let order of state.orders) {
@@ -33,9 +33,9 @@ const handleOrderCancelledAction = (state: OrdersState, data: OrderCancelledActi
 
   return {
     ...state,
-    orders: state.orders
-  }
-}
+    orders: state.orders,
+  };
+};
 
 const handleOrderConfirmedAction = (state: OrdersState, data: OrderConfirmedAction['data']): OrdersState => {
   for (let order of state.orders) {
@@ -47,15 +47,22 @@ const handleOrderConfirmedAction = (state: OrdersState, data: OrderConfirmedActi
 
   return {
     ...state,
-    orders: state.orders
-  }
-}
- 
+    orders: state.orders,
+  };
+};
+
+const handleOrderResetAction = (state: OrdersState): OrdersState => {
+  return {
+    ...state,
+    orders: [],
+  };
+};
+
 const ordersReducer = (
   state: OrdersState = ordersInitialState,
-  action: OrderAction
+  action: OrderAction,
 ): OrdersState => {
-  
+
   switch (action.type) {
     case ORDERS_FETCHED: {
       return handleOrdersFetchedAction(state, action.data);
@@ -66,11 +73,14 @@ const ordersReducer = (
     case ORDER_CONFIRMED: {
       return handleOrderConfirmedAction(state, action.data);
     }
-    
+    case ORDER_RESET : {
+      return handleOrderResetAction(state);
+    }
+
     default:
-      return state
+      return state;
 
   }
-}
+};
 
 export default ordersReducer;

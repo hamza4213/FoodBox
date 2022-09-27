@@ -63,6 +63,7 @@ const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   version: currentStoreVersion,
+  whitelist: ['userState'],
   migrate: async (state: PersistedState, currentVersion: number) => {
     if (!state) {
       return Promise.resolve(undefined);
