@@ -191,6 +191,7 @@ export default {
   'profile.new_password_hint': 'Parola nouă ',
   'profile.repeat_password': 'repetă nouă parola ',
   'profile.update_hint': 'Te rugăm să introduci noua valoare a câmpului  - ',
+  'profile.delete_account_btn': 'șterge cont',
   'profile.delete_title': 'Ești sigur că dorești să-ți ștergi contul tău ?',
   'profile.delete_account_process':
     'Dacă continuați, vă vom redirecționa către aplicația de e-mail implicită. Trebuie sa apăsați EXPEDIAZĂ. Vom avea nevoie de cel puțin 24 de ore pentru a vă șterge contul. Până atunci vei avea acces la cont.',

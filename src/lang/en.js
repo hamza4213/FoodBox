@@ -203,6 +203,7 @@ export default {
   'profile.new_password_hint': 'New password ',
   'profile.repeat_password': 'Repeat password ',
   'profile.update_hint': 'Please, enter new value for - ',
+  'profile.delete_account_btn': 'delete account',
   'profile.delete_title': 'Do you confirm you want to delete your account ?',
   'profile.delete_account_process':
     'If you confirm we will open your email client with a predefined email to us with your request. You should press SEND. It will take upto 24 hours to delete your data. Until then you will have access.',

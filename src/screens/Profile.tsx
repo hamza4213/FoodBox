@@ -249,7 +249,7 @@ const Profile = () => {
       }],
       {cancelable: true}
     );
-  }
+  };
 
   return (
     <SafeAreaView style={styles.mainWrapper}>
@@ -305,7 +305,7 @@ const Profile = () => {
           propertyKey: 'password',
         })}
         
-        <FBButton onClick={() => handleAccountDeletion()} title={'Изтрии акаунт'} backgroundColor={COLORS.red}></FBButton>
+        <FBButton onClick={() => handleAccountDeletion()} title={translateText(intl, 'profile.delete_account_btn')} backgroundColor={COLORS.red}></FBButton>
         
       </View>
 
