@@ -18,12 +18,15 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createStackNavigator} from '@react-navigation/stack';
 import ErrorBoundary from 'react-native-error-boundary';
 import {showToastError} from '../common/FBToast';
+import {translateText} from '../lang/translate';
+import {useIntl} from 'react-intl';
 
 const Drawer = createDrawerNavigator();
 const AuthStack = createStackNavigator();
 
 const FBRouter = () => {
   const {authData, authLoading, signOut} = useAuth();
+  const intl = useIntl();
 
   if (authLoading) {
     return (
@@ -58,8 +61,8 @@ const FBRouter = () => {
   }
 
   return (
-    <ErrorBoundary onError={(e: Error) => {
-      showToastError('Имаше проблем. Моля, влезте на ново');
+    <ErrorBoundary onError={(_e: Error) => {
+      showToastError(translateText(intl, 'genericerror'));
       signOut();
     }}>
       <NavigationContainer>
