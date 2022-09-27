@@ -15,3 +15,9 @@ export enum CURRENCY {
   EUR = 'eur',
   RON = 'ron'
 }
+
+export const BE_CURRENCY_TO_CURRENCY_MAPPER : {[key in string]: CURRENCY} = {
+  'RON': CURRENCY.RON,
+  'BGN': CURRENCY.BGN,
+  'EUR': CURRENCY.EUR,
+};

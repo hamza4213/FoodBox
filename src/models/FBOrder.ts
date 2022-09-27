@@ -2,7 +2,7 @@ import {FBUserVoucher} from './FBUserVoucher';
 import {scheduleFloatToDate} from '../utils/scheduleFloatToDate';
 import moment from 'moment';
 import roundToDecimal from '../utils/roundToDecimal';
-import {CURRENCY} from './index';
+import {BE_CURRENCY_TO_CURRENCY_MAPPER, CURRENCY} from './index';
 
 export interface FBOrder {
   id: number;
@@ -35,6 +35,12 @@ export const FBOrderSortKey: keyof FBOrder = 'createdAt';
 export const FBOrderMapper = {
   fromApi: (fborder: any): FBOrder => {
     const createdAt = moment(fborder.createdAt).toDate();
+
+    let currency = CURRENCY.BGN;
+    if (fborder.currency in BE_CURRENCY_TO_CURRENCY_MAPPER) {
+      currency = BE_CURRENCY_TO_CURRENCY_MAPPER[fborder.currency];
+    }
+    
     return {
       id: fborder.orderId,
       boxId: fborder.productId,
@@ -48,7 +54,7 @@ export const FBOrderMapper = {
       status: fborder.status,
       pin: fborder.pin,
       totalAmount: roundToDecimal(fborder.totalPrice),
-      currency: CURRENCY.BGN,
+      currency: currency,
       createdAt: createdAt.getTime(),
       restaurantName: fborder.restaurantName,
       restaurantId: fborder.restaurantId,

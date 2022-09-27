@@ -1,6 +1,6 @@
 import {scheduleFloatToDate} from '../utils/scheduleFloatToDate';
 import roundToDecimal from '../utils/roundToDecimal';
-import {CURRENCY, DIET_TYPE, FOOD_TYPE} from './index';
+import {BE_CURRENCY_TO_CURRENCY_MAPPER, CURRENCY, DIET_TYPE, FOOD_TYPE} from './index';
 
 export interface FoodBox {
   id: number;
@@ -46,8 +46,13 @@ const FoodBoxMapper = {
     defaultPickUpTo.setHours(23, 59);
     const defaultPickUpFrom = new Date();
     defaultPickUpFrom.setHours(0, 0);
+    
+    let currency = CURRENCY.BGN;
+    if (fb.currency in BE_CURRENCY_TO_CURRENCY_MAPPER) {
+      currency = BE_CURRENCY_TO_CURRENCY_MAPPER[fb.currency];
+    }
 
-    const box : FoodBox = {
+    const box: FoodBox = {
       id: fb.id,
       restaurantId: fb.restaurantId,
 
@@ -56,7 +61,7 @@ const FoodBoxMapper = {
       isActive: !!fb.isActive,
 
       price: fb.price,
-      currency: CURRENCY.BGN,
+      currency: currency,
       discount: fb.discount,
       quantity: fb.quantity,
       discountedPrice: roundToDecimal(fb.price - fb.price * fb.discount / 100),
@@ -72,7 +77,7 @@ const FoodBoxMapper = {
       pickUpTo: fb.todaysSchedule.pickUpTo ? scheduleFloatToDate(fb.todaysSchedule.pickUpTo) : defaultPickUpTo.getTime(),
       pickUpFrom: fb.todaysSchedule.pickUpFrom ? scheduleFloatToDate(fb.todaysSchedule.pickUpFrom) : defaultPickUpFrom.getTime(),
       boxesCount: fb.todaysSchedule.boxesCount,
-      
+
     };
 
     return box;

@@ -70,7 +70,7 @@ export const userInitialState: UserState = {
 };
 
 
-const handleUserUnsetUserAction = (state: UserState, data: UserUnsetUserAction['data']): UserState => {
+const handleUserUnsetUserAction = (state: UserState, _data: UserUnsetUserAction['data']): UserState => {
   return {
     ...state,
     user: null,
