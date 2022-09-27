@@ -131,7 +131,6 @@ const userReducer = (
   state: UserState = userInitialState,
   action: UserAction,
 ): UserState => {
-  console.log('userReducer ', action, state);
   switch (action.type) {
     case USER_UPDATE_LOC_PERMISSION:
       return handleUserUpdateLocPermissionAction(state, action.data);

@@ -1,6 +1,6 @@
 import React from 'react';
 import {useAuth} from './AuthProvider';
-import {Alert, ImageBackground, Text, View} from 'react-native';
+import {ImageBackground, Text, View} from 'react-native';
 import {Utils} from '../utils';
 import {images} from '../constants';
 
