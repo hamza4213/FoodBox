@@ -7,7 +7,7 @@ import {
   TERMS_AND_CONDITIONS_FACTORY,
 } from '../network/Server';
 import {useAuth} from '../providers/AuthProvider';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {FBRootState} from '../redux/store';
 import {FBUser} from '../models/User';
 // @ts-ignore
@@ -16,6 +16,12 @@ import {analyticsLinkOpened, analyticsSignOut} from '../analytics';
 import {useIntl} from 'react-intl';
 import {translateText} from '../lang/translate';
 import {COLORS} from '../constants';
+import {FBLocale} from '../redux/user/reducer';
+import ENFLag from '../../assets/flags/us.svg';
+import ROFLag from '../../assets/flags/ro.svg';
+import BGFlag from '../../assets/flags/bg.svg';
+import {userUpdateLocaleAction} from '../redux/user/actions';
+import RNPickerSelect from 'react-native-picker-select';
 
 const SideMenuContent = (props: any) => {
   const navigation = props.navigation;
@@ -24,6 +30,7 @@ const SideMenuContent = (props: any) => {
   const userLocale = useSelector((state: FBRootState)=> state.userState.locale);
   const styles = stylesCreator();
   const intl = useIntl();
+  const dispatch = useDispatch();
   return (
     <SafeAreaView style={styles.mainWrapper}>
       <View style={styles.avatarWrapper}>
@@ -47,6 +54,37 @@ const SideMenuContent = (props: any) => {
       </View>
 
       <View style={styles.listItemsWrapper}>
+        <RNPickerSelect
+          style={{
+            ...pickerSelectStyles,
+            iconContainer: {
+              top: 10,
+              right: 12,
+            },
+          }}
+          useNativeAndroidPickerStyle={false}
+          // @ts-ignore
+          Icon={() => {
+            if (userLocale === FBLocale.EN) {
+              return (<ENFLag/>);
+            } else if (userLocale === FBLocale.RO) {
+              return (<ROFLag/>);
+            } else {
+              return (<BGFlag/>);
+            }
+          }}
+          value={userLocale}
+          onValueChange={(locale: FBLocale | null) => {
+            if (locale) {
+              dispatch(userUpdateLocaleAction({locale: locale}));
+            }
+          }}
+          items={[
+            {label: 'English', value: FBLocale.EN},
+            {label: 'Български', value: FBLocale.BG},
+            {label: 'Română', value: FBLocale.RO},
+          ]}
+        />
         <TouchableOpacity
           onPress={() => {
             navigation.closeDrawer();
@@ -190,6 +228,37 @@ const SideMenuContent = (props: any) => {
 };
 
 export default SideMenuContent;
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOSContainer: {
+    width: 200,
+    alignSelf: 'center',
+  },
+  inputIOS: {
+    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 4,
+    color: COLORS.white,
+    paddingRight: 30, // to ensure the text is never behind the icon
+  },
+  inputAndroidContainer: {
+    width: 200,
+    alignSelf: 'center',
+  },
+  inputAndroid: {
+    fontSize: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: 'purple',
+    borderRadius: 8,
+    color: COLORS.white,
+    paddingRight: 30, // to ensure the text is never behind the icon
+  },
+});
 
 const stylesCreator = () => StyleSheet.create({
   mainWrapper: {flex: 1, color: COLORS.black},
