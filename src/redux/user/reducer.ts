@@ -66,7 +66,7 @@ export const userInitialState: UserState = {
   notificationPermission: {
     userAnswer: UserPermissionAnswer.NO,
   },
-  locale: FBLocale.BG,
+  locale: FBLocale.EN,
 };
 
 

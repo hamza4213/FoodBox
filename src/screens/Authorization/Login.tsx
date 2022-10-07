@@ -62,7 +62,12 @@ const Login = ({navigation}: LoginProps) => {
   const intl = useIntl();
   const dispatch = useDispatch();
 
-  const {control, handleSubmit} = useForm<LoginFormData>();
+  const {control, handleSubmit} = useForm<LoginFormData>({
+    defaultValues: {
+      email: 'mp3por12@gmail.com',
+      password:'Foodobox2k23'
+    }
+  });
   
   const doLogin = async (data: LoginFormData) => {
     let {

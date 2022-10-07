@@ -241,7 +241,7 @@ const pickerSelectStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'gray',
     borderRadius: 4,
-    color: COLORS.white,
+    color: COLORS.black,
     paddingRight: 30, // to ensure the text is never behind the icon
   },
   inputAndroidContainer: {
@@ -255,7 +255,7 @@ const pickerSelectStyles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: 'purple',
     borderRadius: 8,
-    color: COLORS.white,
+    color: COLORS.black,
     paddingRight: 30, // to ensure the text is never behind the icon
   },
 });
