@@ -76,7 +76,7 @@ let FBApp = () => {
       // TODO: get latest version info from BACKEND and decide what to do
       // TODO: surround with try-catch and ensure proper handling
 
-      if (versionCheck.isNeeded && false) {
+      if (versionCheck.isNeeded) {
         Alert.alert(
           'Update available',
           'Please update to newest version.',
