@@ -1,7 +1,7 @@
 import MapView from 'react-native-map-clustering';
 import {Image, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Callout, Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-import {API_ENDPOINT_PRODUCT_PHOTOS} from '../../network/Server';
+import {API_ENDPOINT_PRODUCT_PHOTOS, API_ENDPOINT_RESTAURANT_PHOTOS} from '../../network/Server';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/core';
 import {useDispatch, useSelector} from 'react-redux';
@@ -224,7 +224,7 @@ const ClusteredMapView = ({zoomOnRestaurant}:{zoomOnRestaurant?: RestaurantHomeL
                 }}>
                 <Image
                   source={{
-                    uri: API_ENDPOINT_PRODUCT_PHOTOS + box.thumbnailPhoto,
+                    uri: API_ENDPOINT_RESTAURANT_PHOTOS + restaurant.thumbnailAvatarImage,
                   }}
                   style={{
                     width: 40,
