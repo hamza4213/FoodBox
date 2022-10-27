@@ -1,22 +1,21 @@
 package com.foodobox;
 
 import android.app.Application;
-import android.content.Context;
+import android.content.IntentFilter;
+
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
-import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.config.ReactFeatureFlags;
 import com.facebook.soloader.SoLoader;
 import com.foodobox.newarchitecture.MainApplicationReactNativeHost;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 import com.microsoft.codepush.react.CodePush;
-import android.content.IntentFilter;
-import io.rumors.reactnativesettings.RNSettingsPackage;
-import io.rumors.reactnativesettings.receivers.GpsLocationReceiver;
+
+import java.util.List;
+
 import io.rumors.reactnativesettings.receivers.AirplaneModeReceiver;
+import io.rumors.reactnativesettings.receivers.GpsLocationReceiver;
 
 public class MainApplication extends Application implements ReactApplication {
 
