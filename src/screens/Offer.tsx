@@ -4,7 +4,6 @@ import {COLORS, icons} from './../constants';
 import {Utils} from '../utils';
 import {API_ENDPOINT_PRODUCT_PHOTOS} from '../network/Server';
 import CountDown from 'react-native-countdown-component';
-import {FoodBox} from '../models/FoodBox';
 import {RestaurantHomeListItem} from '../models/Restaurant';
 import BackButton from '../components/common/BackButton';
 import FoodBoxCheckoutControl from '../components/RestaurantDetails/FoodBoxCheckoutControl';
@@ -17,24 +16,7 @@ import {useIntl} from 'react-intl';
 import {translateText} from '../lang/translate';
 import {showOnMap} from '../utils/showOnMap';
 import {useIsFocused} from '@react-navigation/native';
-
-// TODO: this has to be a model
-const allergensNames: string[] = [
-  'Ракообразни',
-  'Риба',
-  'Яйца',
-  'Соя',
-  'Ядки',
-  'Фъстъци',
-  'Целина',
-  'Горчица',
-  'Сусам',
-  'Лупина',
-  'Мекотели',
-  'Серен диоксид',
-  'Млечни продукти',
-  'Глутен',
-];
+import {FBBox} from '../models/FBBox';
 
 // TODO: make proper ts type
 export interface OfferProps {
@@ -44,19 +26,21 @@ export interface OfferProps {
 
 const Offer = ({route, navigation}: OfferProps) => {
   // TODO: make it react if the pick-up time starts or ends
-
-  const restaurant: RestaurantHomeListItem = route.params.restaurant;
-  const foodBox: FoodBox = route.params.box;
-
-  const now = new Date().getTime();
-  const isOpen = RestaurantService.isOpen(foodBox);
-  const canCheckout = RestaurantService.canCheckout(foodBox);
-  const availableBoxes = foodBox.quantity;
-  const hasAvailableBoxes = RestaurantService.hasAvailability(foodBox);
-  const isFinished = RestaurantService.isFinished(foodBox);
-  const isStarted = RestaurantService.isStarted(foodBox);
   const intl = useIntl();
   const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
+  const restaurant: RestaurantHomeListItem = route.params.restaurant;
+  const box: FBBox = route.params.box;
+  const dietTypeText = RestaurantService.getDietTypeText(box, intl);
+  const foodTypeText = RestaurantService.getFoodTypeText(box, intl);
+
+  const now = new Date().getTime();
+  const isOpen = RestaurantService.isOpen(box);
+  const canCheckout = RestaurantService.canCheckout(box);
+  const availableBoxes = box.quantity;
+  const hasAvailableBoxes = RestaurantService.hasAvailability(box);
+  const isFinished = RestaurantService.isFinished(box);
+  const isStarted = RestaurantService.isStarted(box);
+  
 
   useEffect(() => {
     return navigation.addListener('focus', async () => {
@@ -64,7 +48,7 @@ const Offer = ({route, navigation}: OfferProps) => {
         userId: user.id,
         email: user.email,
         pageName: 'OfferDetails',
-        data: {boxId: foodBox.id, isStarted: isStarted, isFinished: isFinished, isOpen: isOpen},
+        data: {boxId: box.id, isStarted: isStarted, isFinished: isFinished, isOpen: isOpen},
       });
     });
   }, [navigation]);
@@ -101,13 +85,13 @@ const Offer = ({route, navigation}: OfferProps) => {
               }}
               resizeMode={'contain'}
               blurRadius={canCheckout ? 0 : 3}
-              source={{uri: API_ENDPOINT_PRODUCT_PHOTOS + foodBox.photo}}
+              source={{uri: API_ENDPOINT_PRODUCT_PHOTOS + box.photo}}
             />
           </View>
 
           <View style={styles.wrapBoxMeta}>
             <Text numberOfLines={2} adjustsFontSizeToFit style={{flex: 1, width: 1, color: '#29455f'}}>
-              <Text style={styles.boxTitleText}>{foodBox.name}</Text>
+              <Text style={styles.boxTitleText}>{box.name}</Text>
               <Text>{` ${translateText(intl, 'order.from')} `}</Text>
               <Text style={styles.boxTitleText}>{restaurant.name}</Text>
             </Text>
@@ -162,7 +146,7 @@ const Offer = ({route, navigation}: OfferProps) => {
                 resizeMode="contain"
               />
               <Text style={styles.pickUpTimeText}>
-                {`${translateText(intl, 'offer.pick_up_window')} ${translateText(intl, 'offer.from')} ${RestaurantService.formatPickUpWindowDate(foodBox.pickUpFrom)} ${translateText(intl, 'offer.to')} ${RestaurantService.formatPickUpWindowDate(foodBox.pickUpTo)}!`}
+                {`${translateText(intl, 'offer.pick_up_window')} ${translateText(intl, 'offer.from')} ${RestaurantService.formatPickUpWindowDate(box.pickUpFrom)} ${translateText(intl, 'offer.to')} ${RestaurantService.formatPickUpWindowDate(box.pickUpTo)}!`}
               </Text>
             </View>
           }
@@ -216,7 +200,7 @@ const Offer = ({route, navigation}: OfferProps) => {
               </Text>
 
               <CountDown
-                until={(isStarted ? foodBox.pickUpTo - now : foodBox.pickUpFrom - now) / 1000}
+                until={(isStarted ? box.pickUpTo - now : box.pickUpFrom - now) / 1000}
                 size={11}
                 digitStyle={{backgroundColor: isStarted ? COLORS.red : COLORS.primary}}
                 style={{marginTop: 3, marginLeft: 2}}
@@ -245,29 +229,44 @@ const Offer = ({route, navigation}: OfferProps) => {
           </TouchableOpacity>
 
           <Text style={styles.description}>
-            {`${translateText(intl, 'offer.description_start')} ${foodBox.summary} ${translateText(intl, 'offer.description_end')}`}
+            {`${translateText(intl, 'offer.description_start')} ${box.summary} ${translateText(intl, 'offer.description_end')}`}
           </Text>
 
           <Text style={styles.allergens}>
             {`${translateText(intl, 'offer.allergens')}: `}
-            {foodBox.allergenes.map((item: string, key: number) => {
-              let dot = foodBox.allergenes.length - 1 === key ? '' : ', ';
+            {box.allergenes.map((item: string, key: number) => {
+              let dot = box.allergenes.length - 1 === key ? '' : ', ';
               return <Text key={key}>{translateText(intl, `allergens.${item}`)}{dot}</Text>;
             })}
           </Text>
 
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.h3}>
+              {translateText(intl, 'offer.diet_type')}
+            </Text>
+            <Text>{dietTypeText}</Text>
+          </View>
+
+          <View style={{flexDirection: 'row'}}>
+            <Text style={styles.h3}>
+              {translateText(intl, 'offer.food_type')}
+            </Text>
+            <Text>{foodTypeText}</Text>
+          </View>
+          
+
+          <View style={{flexDirection: 'row'}}>
+            <Text style={styles.h3}>
               {translateText(intl, 'offer.price_in_store')}
             </Text>
-            <Text>{` ${foodBox.price}${translateText(intl, `currency.${foodBox.currency}`)}`}</Text>
+            <Text>{` ${box.price}${translateText(intl, `currency.${box.currency}`)}`}</Text>
           </View>
 
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.h3}>
               {translateText(intl, 'offer.price_in_foodobox')}
             </Text>
-            <Text>{` ${foodBox.discountedPrice}${translateText(intl, `currency.${foodBox.currency}`)} (-${foodBox.discount}%)`}</Text>
+            <Text>{` ${box.discountedPrice}${translateText(intl, `currency.${box.currency}`)} (-${box.discount}%)`}</Text>
           </View>
 
           {canCheckout &&
@@ -280,7 +279,7 @@ const Offer = ({route, navigation}: OfferProps) => {
           {canCheckout &&
             <FoodBoxCheckoutControl
               restaurant={restaurant}
-              foodbox={foodBox}
+              foodbox={box}
               isOnFocus={isOnFocus}
             />
           }
@@ -298,9 +297,9 @@ const Offer = ({route, navigation}: OfferProps) => {
               </Text>
               <Text style={styles.howToPickUpDetails}>
                 {`${translateText(intl, 'offer.from')} `}
-                {RestaurantService.formatPickUpWindowDate(foodBox.pickUpFrom)}
+                {RestaurantService.formatPickUpWindowDate(box.pickUpFrom)}
                 {` ${translateText(intl, 'offer.to')} `}
-                {RestaurantService.formatPickUpWindowDate(foodBox.pickUpTo)}
+                {RestaurantService.formatPickUpWindowDate(box.pickUpTo)}
               </Text>
               <Text style={styles.howToPickUpTitle}>
                 {translateText(intl, 'offer.adress_dailog')}
@@ -412,7 +411,7 @@ const styles = StyleSheet.create({
   },
 
   h3: {
-    fontSize: 12,
+    fontSize: 14,
     lineHeight: 16,
     fontWeight: 'bold',
   },

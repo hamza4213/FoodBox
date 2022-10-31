@@ -119,7 +119,9 @@ export default {
   'offer.description_start': 'What you could get:',
   'offer.description_end':
     'Your magic box is a surprise. Share it with your friends and family if you can’t finish everything on your own. :)',
-  'offer.allergens': 'Allergens',
+  'offer.allergens': 'Allergens: ',
+  'offer.diet_type': 'Diet: ',
+  'offer.food_type': 'Тype: ',
   'offer.price_in_store': 'Original price',
   'offer.price_in_foodobox': 'Foodobox price',
   'offer.pick_up_info_header': 'How do I get my surprise box?',

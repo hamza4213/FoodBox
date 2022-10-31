@@ -42,8 +42,8 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
     statusText = translateText(intl, 'offer.expired');
   }
 
-  const dietTypeText = box.dietType ? translateText(intl, `filter.${DIET_TYPE[box.dietType].toLowerCase()}`) : '';
-  const foodTypeText = box.foodType ? translateText(intl, `filter.${FOOD_TYPE[box.foodType].toLowerCase()}`) : '';
+  const dietTypeText = RestaurantService.getDietTypeText(box, intl);
+  const foodTypeText = RestaurantService.getFoodTypeText(box, intl);
 
 
   const onClickHandler = () => {
@@ -99,7 +99,7 @@ const RestaurantListItem = (componentProps: RestaurantListItemProps) => {
               height: 50,
               borderRadius: 200,
               marginRight: 10,
-              borderColor: COLORS.red,
+              borderColor: COLORS.black,
               borderWidth: 1,
             }}
           />

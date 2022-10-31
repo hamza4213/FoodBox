@@ -2,7 +2,7 @@ import {scheduleFloatToDate} from '../utils/scheduleFloatToDate';
 import roundToDecimal from '../utils/roundToDecimal';
 import {BE_CURRENCY_TO_CURRENCY_MAPPER, CURRENCY, DIET_TYPE, FOOD_TYPE} from './index';
 
-export interface FoodBox {
+export interface FBBox {
   id: number;
   restaurantId: number;
 
@@ -30,8 +30,8 @@ export interface FoodBox {
   boxesCount: number; // total boxes
 }
 
-const FoodBoxMapper = {
-  fromApi: (fb: any): FoodBox => {
+const FBBoxMapper = {
+  fromApi: (fb: any): FBBox => {
     let foodType = null;
     if (fb.foodType in FOOD_TYPE) {
       foodType = fb.foodType;
@@ -52,7 +52,7 @@ const FoodBoxMapper = {
       currency = BE_CURRENCY_TO_CURRENCY_MAPPER[fb.currency];
     }
 
-    const box: FoodBox = {
+    const box: FBBox = {
       id: fb.id,
       restaurantId: fb.restaurantId,
 
@@ -85,5 +85,5 @@ const FoodBoxMapper = {
 };
 
 export {
-  FoodBoxMapper,
+  FBBoxMapper,
 };

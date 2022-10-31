@@ -1,7 +1,7 @@
 import MapView from 'react-native-map-clustering';
 import {Image, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Callout, Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-import {API_ENDPOINT_PRODUCT_PHOTOS, API_ENDPOINT_RESTAURANT_PHOTOS} from '../../network/Server';
+import {API_ENDPOINT_RESTAURANT_PHOTOS} from '../../network/Server';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/core';
 import {useDispatch, useSelector} from 'react-redux';
@@ -9,7 +9,6 @@ import {FBRootState} from '../../redux/store';
 import Geolocation, {GeolocationError} from '@react-native-community/geolocation';
 import {RestaurantService} from '../../services/RestaurantService';
 import {restaurantDistanceUpdateAction} from '../../redux/restaurant/actions';
-import {FoodBox} from '../../models/FoodBox';
 import {userUpdateLocationAction, userUpdateLocPermissionAction} from '../../redux/user/actions';
 import {translateText} from '../../lang/translate';
 import {useIntl} from 'react-intl';
@@ -20,6 +19,7 @@ import {FBGeoLocation} from '../../models/FBGeoLocation';
 import {RestaurantHomeListItem} from '../../models/Restaurant';
 import {COLORS} from '../../constants';
 import {UserPermissionAnswer} from '../../redux/user/reducer';
+import {FBBox} from '../../models/FBBox';
 
 
 enum ZoomLevel {
@@ -211,7 +211,7 @@ const ClusteredMapView = ({zoomOnRestaurant}:{zoomOnRestaurant?: RestaurantHomeL
       >
         {
           restaurants.map(restaurant => {
-            const box: FoodBox = restaurant.products[0];
+            const box: FBBox = restaurant.products[0];
             const canCheckout = RestaurantService.canCheckout(box);
 
             return (

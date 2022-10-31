@@ -1,4 +1,4 @@
-import {FoodBox, FoodBoxMapper} from './FoodBox';
+import {FBBox, FBBoxMapper} from './FBBox';
 
 export interface Restaurant {
   id: number;
@@ -19,7 +19,7 @@ export interface Restaurant {
   avatarImage: string;
 
   businessType: string; // TODO: add type
-  boxes: FoodBox[];
+  boxes: FBBox[];
 }
 
 // TODO: remove this bullshit
@@ -37,7 +37,7 @@ export interface RestaurantHomeListItem extends Restaurant {
   photoCover: string;
   photoAvatar: string;
 
-  products: FoodBox[],
+  products: FBBox[],
   listIndex: number
 }
 
@@ -62,7 +62,7 @@ const RestaurantMapper = {
       avatarImage: r.originalPhotoAvatar,
 
       businessType: r.businessType,
-      boxes: r.products.map((product: any) => FoodBoxMapper.fromApi(product)),
+      boxes: r.products.map((product: any) => FBBoxMapper.fromApi(product)),
     };
   },
 };
