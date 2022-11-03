@@ -107,7 +107,9 @@ export default {
     'În cutia ta Foodobox Surpriză cel mai des vei găsi:',
   'offer.description_end':
     'Dacă nu totul este pe gustul tău, împărtășește-te cu familia și prietenii tăi. Mâncarea comună este mai dulce.:)',
-  'offer.allergens': 'Alergeni',
+  'offer.allergens': 'Alergeni: ',
+  'offer.diet_type': 'Dietă: ',
+  'offer.food_type': 'Tip: ',
   'offer.price_in_store': 'Prețul initial',
   'offer.price_in_foodobox': 'Pret prin rin foodobox',
   'offer.pick_up_info_header': 'Cum să-mi i-au cutia Foodobox ?',

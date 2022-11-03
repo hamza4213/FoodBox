@@ -6,7 +6,7 @@ import {showToastError} from '../common/FBToast';
 import BackButton from '../components/common/BackButton';
 import {RestaurantHomeListItem} from '../models/Restaurant';
 import {FBUserVoucher} from '../models/FBUserVoucher';
-import {FoodBox} from '../models/FoodBox';
+import {FBBox} from '../models/FBBox';
 import FBButton from '../components/common/button';
 import {OrderRepository} from '../repositories/OrderRepository';
 import {useAuth} from '../providers/AuthProvider';
@@ -27,7 +27,7 @@ const PaymentMethod = ({route, navigation}: PaymentMethodProps) => {
   
 
   const restaurant: RestaurantHomeListItem = route.params.restaurant;
-  const foodBox: FoodBox = route.params.product;
+  const foodBox: FBBox = route.params.product;
   const numberOfBoxesToCheckout: number = route.params.count;
   const userVoucher: FBUserVoucher = route.params.userVoucher;
   const {authData} = useAuth();

@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {FoodBox} from '../models/FoodBox';
+import {FBBox} from '../models/FBBox';
 import {RestaurantService} from '../services/RestaurantService';
 import {FBUserVoucher} from '../models/FBUserVoucher';
 import {useAuth} from '../providers/AuthProvider';
@@ -21,7 +21,7 @@ interface OrderFinalizedProps {
 
 const OrderFinalized = ({route, navigation}: OrderFinalizedProps) => {
   const orderPin = route.params.orderPin;
-  const foodBox: FoodBox = route.params.foodBox;
+  const foodBox: FBBox = route.params.foodBox;
   const userVoucher: FBUserVoucher = route.params.userVoucher;
   const {authData} = useAuth();
   const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);

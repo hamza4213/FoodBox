@@ -45,16 +45,16 @@ export const toShowRestaurant = (restaurant: RestaurantHomeListItem, filters: FB
 
         case 'foodType': {
           // console.log(`foodtype ${box.foodType} in ${filterCategoryConfig.types} ${passesFilters}`);
-          if (box.foodType && filterCategoryConfig.types.length) {
-            passesFilters = passesFilters && filterCategoryConfig.types.includes(box.foodType);
+          if (filterCategoryConfig.types.length) {
+            passesFilters = !!box.foodType && passesFilters && filterCategoryConfig.types.includes(box.foodType);
           }
           break;
         }
 
         case 'dietType': {
           // console.log(`dietType ${box.dietType} in ${filterCategoryConfig.types} ${passesFilters}`);
-          if (box.dietType && filterCategoryConfig.types.length) {
-            passesFilters = passesFilters && filterCategoryConfig.types.includes(box.dietType);
+          if (filterCategoryConfig.types.length) {
+            passesFilters = !!box.dietType && passesFilters && filterCategoryConfig.types.includes(box.dietType);
           }
           break;
         }

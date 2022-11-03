@@ -5,9 +5,8 @@ import VoucherInput from './VoucherInput';
 import ConfirmOrderDialog from './ConfirmOrderDialog';
 import {RestaurantHomeListItem} from '../../models/Restaurant';
 import {useNavigation} from '@react-navigation/core';
-import {FoodBox} from '../../models/FoodBox';
+import {FBBox} from '../../models/FBBox';
 import {FBUserVoucher} from '../../models/FBUserVoucher';
-import moment from 'moment';
 import {analyticsBasketUpdated, analyticsCheckoutStepChange} from '../../analytics';
 import {useSelector} from 'react-redux';
 import {FBRootState} from '../../redux/store';
@@ -19,7 +18,7 @@ import {RestaurantService} from '../../services/RestaurantService';
 
 export interface FoodBoxCheckoutControlProps {
   restaurant: RestaurantHomeListItem,
-  foodbox: FoodBox,
+  foodbox: FBBox,
   isOnFocus: boolean
 }
 

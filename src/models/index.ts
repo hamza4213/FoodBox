@@ -1,7 +1,7 @@
 export enum FOOD_TYPE {
-  PASTRIES = 1,
-  GROCERIES = 2,
-  MEALS = 3,
+  PASTRIES = 2,
+  GROCERIES = 3,
+  MEALS = 1,
   OTHERS = 4
 }
 

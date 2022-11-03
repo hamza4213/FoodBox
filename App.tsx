@@ -1,13 +1,13 @@
 import React, {useEffect} from 'react';
 
-import {Alert, BackHandler, Linking, Platform, StatusBar} from 'react-native';
+import {Alert, AlertButton, BackHandler, Linking, Platform, StatusBar} from 'react-native';
 import 'react-native-gesture-handler';
 import {initialWindowMetrics, SafeAreaProvider} from 'react-native-safe-area-context';
 import CodePush from 'react-native-code-push';
 import {useSelector} from 'react-redux';
 import {FBAuthProvider} from './src/providers/AuthProvider';
 import FBRouter from './src/providers/FBRouter';
-import {IntlProvider, useIntl} from 'react-intl';
+import {IntlProvider} from 'react-intl';
 import MessagesInEnglish from './src/lang/en';
 import MessagesInBulgarian from './src/lang/bg';
 import MessagesInRomanian from './src/lang/ro';
@@ -29,6 +29,8 @@ const messages: { [p in FBLocale]: any } = {
 const CODE_PUSH_OPTIONS = {
   checkFrequency: CodePush.CheckFrequency.ON_APP_RESUME,
 };
+
+const isDebug = __DEV__;
 
 // initialize the FB sdk
 FBSettings.initializeSDK();
@@ -77,17 +79,25 @@ let FBApp = () => {
       // TODO: surround with try-catch and ensure proper handling
 
       if (versionCheck.isNeeded) {
+        const buttons: AlertButton[] = [{
+          text: 'Update',
+          onPress: () => {
+            BackHandler.exitApp();
+            Linking.openURL(versionCheck.storeUrl);
+          },
+        }];
+        
+        if (isDebug) {
+          buttons.unshift({
+            text: 'Cancel',
+          });
+        }
+
         Alert.alert(
           'Update available',
           'Please update to newest version.',
-          [{
-            text: 'Update',
-            onPress: () => {
-              BackHandler.exitApp();
-              Linking.openURL(versionCheck.storeUrl);
-            },
-          }],
-          {cancelable: false},
+          buttons,
+          {cancelable: isDebug},
         );
       }
 
@@ -119,8 +129,10 @@ let FBApp = () => {
   );
 };
 
-if (!__DEV__) {
+if (!isDebug) {
   FBApp = CodePush(CODE_PUSH_OPTIONS)(FBApp);
+} else {
+  console.log('skipping CodePush since this is debug');
 }
 
 export default FBApp;

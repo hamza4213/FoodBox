@@ -22,6 +22,7 @@ import ROFLag from '../../assets/flags/ro.svg';
 import BGFlag from '../../assets/flags/bg.svg';
 import {userUpdateLocaleAction} from '../redux/user/actions';
 import RNPickerSelect from 'react-native-picker-select';
+import {UserRepository} from '../repositories/UserRepository';
 
 const SideMenuContent = (props: any) => {
   const navigation = props.navigation;
@@ -30,6 +31,7 @@ const SideMenuContent = (props: any) => {
   const userLocale = useSelector((state: FBRootState)=> state.userState.locale);
   const styles = stylesCreator();
   const intl = useIntl();
+  const {authData} = useAuth();
   const dispatch = useDispatch();
   return (
     <SafeAreaView style={styles.mainWrapper}>
@@ -74,9 +76,11 @@ const SideMenuContent = (props: any) => {
             }
           }}
           value={userLocale}
-          onValueChange={(locale: FBLocale | null) => {
+          onValueChange={async (locale: FBLocale | null) => {
             if (locale) {
               dispatch(userUpdateLocaleAction({locale: locale}));
+              const userRepository = new UserRepository({authData: authData!});
+              await userRepository.updateLocale({locale});
             }
           }}
           items={[

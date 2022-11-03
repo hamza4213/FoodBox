@@ -1,10 +1,12 @@
 import {BaseRestaurantRepository} from '../repositories/RestaurantRepository';
 import {Restaurant, RestaurantHomeListItem} from '../models/Restaurant';
-import {getDistance} from 'geolib';
 import moment from 'moment';
 import {FBGeoLocation} from '../models/FBGeoLocation';
-import {FoodBox} from '../models/FoodBox';
 import getDistanceToLocation from '../utils/getDistanceToLocation';
+import {FBBox} from '../models/FBBox';
+import {translateText} from '../lang/translate';
+import {DIET_TYPE, FOOD_TYPE} from '../models';
+import {IntlShape} from 'react-intl/src/types';
 
 class RestaurantService {
   restaurantRepository: BaseRestaurantRepository;
@@ -19,26 +21,34 @@ class RestaurantService {
     return moment(date).format('HH:mm');
   }
 
-  static isFinished(foodobox: FoodBox): boolean {
+  static isFinished(foodobox: FBBox): boolean {
     const now = new Date().getTime();
     return now > foodobox.pickUpTo;
   }
 
-  static isStarted(foodobox: FoodBox): boolean {
+  static isStarted(foodobox: FBBox): boolean {
     const now = new Date().getTime();
     return now > foodobox.pickUpFrom;
   }
 
-  static hasAvailability(foodobox: FoodBox): boolean {
+  static hasAvailability(foodobox: FBBox): boolean {
     return foodobox.quantity > 0;
   }
 
-  static isOpen(foodobox: FoodBox): boolean {
+  static isOpen(foodobox: FBBox): boolean {
     return foodobox.isOpen;
   }
 
-  static canCheckout(foodobox: FoodBox): boolean {
+  static canCheckout(foodobox: FBBox): boolean {
     return !RestaurantService.isFinished(foodobox) && RestaurantService.hasAvailability(foodobox) && RestaurantService.isOpen(foodobox);
+  }
+  
+  static getDietTypeText(box: FBBox, intl: IntlShape): string {
+    return box.dietType ? translateText(intl, `filter.${DIET_TYPE[box.dietType].toLowerCase()}`) : '';
+  }
+  
+  static getFoodTypeText(box: FBBox, intl: IntlShape): string {
+    return box.foodType ? translateText(intl, `filter.${FOOD_TYPE[box.foodType].toLowerCase()}`) : '';
   }
 
   async getRestaurantsForHome(params: { userLocation: FBGeoLocation }): Promise<RestaurantHomeListItem[]> {
