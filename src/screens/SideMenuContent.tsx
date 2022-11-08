@@ -1,9 +1,10 @@
-import React from 'react';
-import {Image, Linking, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-// import {Avatar} from 'react-native-elements';
+import React, {useEffect} from 'react';
+import {Alert, Image, Linking, Platform, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import messaging from '@react-native-firebase/messaging';
 import {
   CONTACT_US_FACTORY,
-  FAQ_FACTORY, REGISTER_BUSINESS_FACTOR,
+  FAQ_FACTORY,
+  REGISTER_BUSINESS_FACTOR,
   TERMS_AND_CONDITIONS_FACTORY,
 } from '../network/Server';
 import {useAuth} from '../providers/AuthProvider';
@@ -23,16 +24,79 @@ import BGFlag from '../../assets/flags/bg.svg';
 import {userUpdateLocaleAction} from '../redux/user/actions';
 import RNPickerSelect from 'react-native-picker-select';
 import {UserRepository} from '../repositories/UserRepository';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const SideMenuContent = (props: any) => {
   const navigation = props.navigation;
   const {signOut} = useAuth();
   const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
-  const userLocale = useSelector((state: FBRootState)=> state.userState.locale);
+  const userLocale = useSelector((state: FBRootState) => state.userState.locale);
   const styles = stylesCreator();
   const intl = useIntl();
   const {authData} = useAuth();
   const dispatch = useDispatch();
+  const userRepository = new UserRepository({authData: authData!});
+  
+  useEffect(() => {
+    const unsubscriptions: any[] = [];
+    
+    const getUserNotificationsConsent = async (): Promise<boolean> => {
+      const authStatus = await messaging().requestPermission();
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+      return enabled;
+    };
+
+    const setUpNotifications = async (): Promise<any[]> => {
+      let hasUserConsent = true;
+
+      if (Platform.OS === 'ios') {
+        hasUserConsent = await getUserNotificationsConsent();
+      }
+      
+      if (hasUserConsent) {
+        // const installationId = await firebase.installations().getId();
+        let fcmToken = await messaging().getToken();
+        await userRepository.setFcmToken({fcmToken: fcmToken});
+        
+        const onTokenUpdateUnsubscribe = messaging().onTokenRefresh(async (token)=> {
+          fcmToken = token;
+          await userRepository.setFcmToken({fcmToken: fcmToken});
+        });
+        
+        const initialRemoteMessage = await messaging().getInitialNotification();
+        if (initialRemoteMessage) {
+          // Notification caused app to open from quit state
+          // console.log('setUpNotifications initialRemoteMessage', JSON.stringify(initialRemoteMessage));
+        }
+        
+        const onNotificationOpenAppUnsubscribe = messaging().onNotificationOpenedApp(async remoteMessage => {
+          // Notification caused app to open from background state
+          // console.log('setUpNotifications onNotificationOpenedApp remoteMessage', JSON.stringify(remoteMessage));
+        });
+
+        const onMessageUnsubscribe = messaging().onMessage(async remoteMessage => {
+          // notification received when app is focused
+          // console.log('setUpNotifications onMessage', JSON.stringify(remoteMessage));
+        });
+        
+        unsubscriptions.push(onNotificationOpenAppUnsubscribe);
+        unsubscriptions.push(onMessageUnsubscribe);
+        unsubscriptions.push(onTokenUpdateUnsubscribe);
+      }
+      
+      return unsubscriptions;
+    };
+    
+    setUpNotifications();
+    
+    return () => {
+      unsubscriptions.forEach(unsubscription => unsubscription());
+    };
+  }, []);
+  
   return (
     <SafeAreaView style={styles.mainWrapper}>
       <View style={styles.avatarWrapper}>

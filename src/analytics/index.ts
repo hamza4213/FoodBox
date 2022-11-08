@@ -18,7 +18,6 @@ const logEvent = async (name: string, data: any) => {
     }
 
     if (data.email) {
-      data.uEmail = data.email;
       delete data.email;
     }
 

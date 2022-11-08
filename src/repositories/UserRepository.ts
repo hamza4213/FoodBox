@@ -283,7 +283,7 @@ interface BaseAuthenticatedUserRepository extends BaseNotAuthenticatedUserReposi
 
   acceptTC(params: {}): Promise<boolean>;
 
-  setCommunicationId(params: { communicationId: string }): Promise<boolean>;
+  setFcmToken(params: { fcmToken: string }): Promise<boolean>;
 
   updateLocale(params: { locale: FBLocale }): Promise<boolean>;
 
@@ -374,13 +374,13 @@ class UserRepository extends NotAuthenticatedUserRepository implements BaseAuthe
     return result.success;
   }
 
-  async setCommunicationId(params: { communicationId: string }): Promise<boolean> {
+  async setFcmToken(params: { fcmToken: string }): Promise<boolean> {
     const url = '/user/device-id';
     
     const result: { success: boolean } = await axiosClient.post(
       url,
       QueryString.stringify({
-        deviceId: params.communicationId,
+        deviceId: params.fcmToken,
       }),
       {
         headers: {
