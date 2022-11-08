@@ -115,8 +115,12 @@ const ReduxApp = () => {
   
   useEffect(()=> {
     const verifyIsHeadless = async () => {
-      const isHeadlessResult = await messaging().getIsHeadless();
-      setIsHeadless(isHeadlessResult);
+      try {
+        const isHeadlessResult = await messaging().getIsHeadless();
+        setIsHeadless(isHeadlessResult);
+      } catch (e) {
+        setIsHeadless(false);
+      }
     };
     
     verifyIsHeadless();
