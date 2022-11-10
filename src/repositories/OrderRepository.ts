@@ -107,16 +107,7 @@ class OrderRepository implements BaseOrderRepository {
           },
         },
       );
-
-      await analyticsCheckoutStepChange({
-        userId: this.user.id,
-        email: this.user.email,
-        productId: params.boxId,
-        quantity: params.numberOfBoxesInBasket,
-        voucher: params.userVoucher,
-        step: 'completed',
-      });
-
+      
       return {
         isCreated: responseData.success,
         pin: responseData.pin,

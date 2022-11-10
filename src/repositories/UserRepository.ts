@@ -368,9 +368,7 @@ class UserRepository extends NotAuthenticatedUserRepository implements BaseAuthe
         },
       },
     );
-
-    await analyticsSetTC({...params, action: 'accept'});
-
+    
     return result.success;
   }
 

@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Alert, Image, Linking, Platform, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, Linking, Platform, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import {
   CONTACT_US_FACTORY,
@@ -24,13 +24,13 @@ import BGFlag from '../../assets/flags/bg.svg';
 import {userUpdateLocaleAction} from '../redux/user/actions';
 import RNPickerSelect from 'react-native-picker-select';
 import {UserRepository} from '../repositories/UserRepository';
-import AsyncStorage from '@react-native-community/async-storage';
 
 const SideMenuContent = (props: any) => {
   const navigation = props.navigation;
   const {signOut} = useAuth();
   const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
   const userLocale = useSelector((state: FBRootState) => state.userState.locale);
+  const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
   const styles = stylesCreator();
   const intl = useIntl();
   const {authData} = useAuth();
@@ -181,6 +181,7 @@ const SideMenuContent = (props: any) => {
               email: user.email,
               link: link,
               linkName: 'WEBSITE_REGISTER_BUSINESS',
+              loc: userLocation,
             });
             Linking.openURL(link);
           }}
@@ -207,6 +208,7 @@ const SideMenuContent = (props: any) => {
               email: user.email,
               link: link,
               linkName: 'WEBSITE_TERMS_OF_SERVICE',
+              loc: userLocation,
             });
             Linking.openURL(link);
           }}
@@ -228,7 +230,7 @@ const SideMenuContent = (props: any) => {
           onPress={() => {
             navigation.closeDrawer();
             const link = FAQ_FACTORY[userLocale];
-            analyticsLinkOpened({userId: user.id, email: user.email, link: link, linkName: 'WEBSITE_FAQ'});
+            analyticsLinkOpened({userId: user.id, email: user.email, link: link, linkName: 'WEBSITE_FAQ', loc: userLocation,});
             Linking.openURL(link);
           }}
           style={styles.listItemWrapper}
@@ -254,6 +256,7 @@ const SideMenuContent = (props: any) => {
               email: user.email,
               link: link,
               linkName: 'WEBSITE_CONTACT_US',
+              loc: userLocation,
             });
             Linking.openURL(link);
           }}
@@ -274,7 +277,7 @@ const SideMenuContent = (props: any) => {
         <TouchableOpacity
           onPress={() => {
             navigation.closeDrawer();
-            analyticsSignOut({userId: user.id, email: user.email});
+            analyticsSignOut({userId: user.id, email: user.email, loc: userLocation});
             signOut();
           }}
           style={styles.listItemWrapper}

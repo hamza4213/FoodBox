@@ -32,6 +32,7 @@ const PaymentMethod = ({route, navigation}: PaymentMethodProps) => {
   const userVoucher: FBUserVoucher = route.params.userVoucher;
   const {authData} = useAuth();
   const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
+  const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
   const {showLoading, hideLoading} = useFbLoading();
   const intl = useIntl();
 
@@ -47,6 +48,7 @@ const PaymentMethod = ({route, navigation}: PaymentMethodProps) => {
         quantity: numberOfBoxesToCheckout,
         voucher: userVoucher,
         step: 'paymentConfirm',
+        loc: userLocation,
       });
 
       const createResult = await orderRepository.createOrder({
@@ -54,6 +56,16 @@ const PaymentMethod = ({route, navigation}: PaymentMethodProps) => {
         numberOfBoxesInBasket: numberOfBoxesToCheckout,
         boxId: foodBox.id,
         userVoucher: userVoucher,
+      });
+
+      await analyticsCheckoutStepChange({
+        userId: user.id,
+        email: user.email,
+        productId: foodBox.id,
+        quantity: numberOfBoxesToCheckout,
+        voucher: userVoucher,
+        step: 'completed',
+        loc: userLocation,
       });
 
       navigation.navigate('OrderFinalized', {
