@@ -14,7 +14,6 @@ import {useIntl} from 'react-intl';
 import {translateText} from '../lang/translate';
 import {DIET_TYPE, FOOD_TYPE} from '../models';
 import {showToast} from '../common/FBToast';
-import {FBGeoLocation} from '../models/FBGeoLocation';
 
 const Filter = ({navigation}: { navigation: any }) => {
 

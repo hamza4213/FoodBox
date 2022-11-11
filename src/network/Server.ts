@@ -13,7 +13,14 @@ const API_ENDPOINT_FACTORY: {[p in FB_ENVIRONMENT]: string} = {
   [FB_ENVIRONMENT.live]: 'https://apiv1.foodobox.com/',
 };
 
+const ANALYTICS_ENDPOINT_FACTORY: {[p in FB_ENVIRONMENT]: string} = {
+  [FB_ENVIRONMENT.dev]: 'https://analytics.foodobox-stage.com/',
+  [FB_ENVIRONMENT.stage]: 'https://analytics.foodobox-stage.com/',
+  [FB_ENVIRONMENT.live]: 'https://analytics.apiv1.foodobox.com/',
+};
+
 export const API_ENDPOINT_ENV = API_ENDPOINT_FACTORY[ENVIRONMENT];
+export const ANALYTICS_ENDPOINT_ENV = ANALYTICS_ENDPOINT_FACTORY[ENVIRONMENT];
 export const API_ENDPOINT_RESTAURANT_PHOTOS = `${API_ENDPOINT_ENV}restaurants/`;
 export const API_ENDPOINT_PRODUCT_PHOTOS = `${API_ENDPOINT_ENV}products/`;
 

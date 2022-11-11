@@ -1,17 +1,19 @@
 import analytics from '@react-native-firebase/analytics';
 import {FBRestaurantFilters} from '../redux/restaurant/reducer';
 import {FB_CITIES_TO_LOCATION_MAP, FBLocale} from '../redux/user/reducer';
-import {ENVIRONMENT} from '../network/Server';
+import {ANALYTICS_ENDPOINT_ENV, ENVIRONMENT} from '../network/Server';
 import {FBUserVoucher} from '../models/FBUserVoucher';
 import {AppEventsLogger} from 'react-native-fbsdk-next';
 import {FBGeoLocation} from '../models/FBGeoLocation';
+import axiosClient from '../network/axiosClient';
+import moment from 'moment';
 
 
 const logEvent = async (name: string, data: any) => {
   try {
     data.env = ENVIRONMENT;
     
-    let loc: FBGeoLocation;
+    let loc: FBGeoLocation | undefined = undefined;
     if (data.loc) {
       if (!Object.values(FB_CITIES_TO_LOCATION_MAP).find(city_location => city_location === data.loc)) {
         loc = data.loc;
@@ -86,8 +88,14 @@ const logEvent = async (name: string, data: any) => {
       }
     });
     
+    await axiosClient.post(
+      ANALYTICS_ENDPOINT_ENV,
+      { event: {...data, name: name, loc: loc, created_at_utc: moment.utc().format(), created_at_local: moment().format(), created_at: moment().valueOf()}},
+      {headers: {'Content-Type': 'application/json'}}
+    );
     AppEventsLogger.logEvent(name, data);
     await analytics().logEvent(name, data);
+    
   } catch (e) {
     console.log(e);
   }
