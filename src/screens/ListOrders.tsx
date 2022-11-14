@@ -118,7 +118,7 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
       await orderRepository.cancelOrder({orderId});
 
       dispatch(orderCancelledAction({orderId}));
-      await analyticsOrderStatusChange({userId: user.id, email: user.email, orderId: orderId, status: 'cancelled', loc: userLocation});
+      analyticsOrderStatusChange({userId: user.id, email: user.email, orderId: orderId, status: 'cancelled', loc: userLocation});
     } catch (error) {
       if (isFBAppError(error) || isFBGenericError(error)) {
         showToastError(translateText(intl, error.key));
@@ -150,7 +150,7 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
       await orderRepository.confirmOrder({orderId: order.id});
 
       dispatch(orderConfirmedAction({orderId: order.id}));
-      await analyticsOrderStatusChange({userId: user.id, email: user.email, orderId: order.id, status: 'confirmed', loc: userLocation});
+      analyticsOrderStatusChange({userId: user.id, email: user.email, orderId: order.id, status: 'confirmed', loc: userLocation});
     } catch (error) {
       if (isFBAppError(error) || isFBGenericError(error)) {
         showToastError(translateText(intl, error.key));

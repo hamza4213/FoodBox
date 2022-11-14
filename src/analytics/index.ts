@@ -88,14 +88,14 @@ const logEvent = async (name: string, data: any) => {
       }
     });
     
+    
+    AppEventsLogger.logEvent(name, data);
+    await analytics().logEvent(name, data);
     await axiosClient.post(
       ANALYTICS_ENDPOINT_ENV,
       { event: {...data, name: name, loc: loc, created_at_utc: moment.utc().format(), created_at_local: moment().format(), created_at: moment().valueOf()}},
       {headers: {'Content-Type': 'application/json'}}
     );
-    AppEventsLogger.logEvent(name, data);
-    await analytics().logEvent(name, data);
-    
   } catch (e) {
     console.log(e);
   }

@@ -109,7 +109,7 @@ const Home = ({navigation}: HomeProps) => {
       // update TC
       await userRepository.acceptTC({userId: user.id, email: user.email});
 
-      await analyticsSetTC({userId: user.id, email: user.email, action: 'accept', loc: userLocation});
+      analyticsSetTC({userId: user.id, email: user.email, action: 'accept', loc: userLocation});
 
       // fetch user again
       const newUser = await userRepository.checkMe({});
@@ -127,9 +127,9 @@ const Home = ({navigation}: HomeProps) => {
 
   const declineTermsAndConditions = async () => {
     // TODO: add loading
-    await analyticsSetTC({userId: user.id, email: user.email, action: 'decline', loc: userLocation});
-    setTermsAndConditionsModalVisible(false);
+    analyticsSetTC({userId: user.id, email: user.email, action: 'decline', loc: userLocation});
     signOut();
+    setTermsAndConditionsModalVisible(false);
   };
 
   return (

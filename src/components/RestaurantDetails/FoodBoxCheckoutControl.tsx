@@ -186,7 +186,7 @@ const FoodBoxCheckoutControl = (params: FoodBoxCheckoutControlProps) => {
           setPriceAfterPromo(discountedPricePerBox);
           setCanAddToCheckout(false);
           setCanRemoveFromCheckout(false);
-          await analyticsBasketUpdated({
+          analyticsBasketUpdated({
             userId: user.id,
             email: user.email,
             productId: foodbox.id,

@@ -113,7 +113,7 @@ class OrderRepository implements BaseOrderRepository {
         pin: responseData.pin,
       };
     } catch (e: any) {
-      await analyticsCheckoutStepChange({
+      analyticsCheckoutStepChange({
         userId: this.user.id,
         email: this.user.email,
         productId: params.boxId,

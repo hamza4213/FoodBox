@@ -58,7 +58,7 @@ const PaymentMethod = ({route, navigation}: PaymentMethodProps) => {
         userVoucher: userVoucher,
       });
 
-      await analyticsCheckoutStepChange({
+      analyticsCheckoutStepChange({
         userId: user.id,
         email: user.email,
         productId: foodBox.id,

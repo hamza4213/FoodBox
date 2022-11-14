@@ -53,7 +53,7 @@ class NotAuthenticatedUserRepository implements BaseNotAuthenticatedUserReposito
   async resetPassword(params: { email: string, locale: FBLocale }): Promise<boolean> {
     const url = '/user/reset-password';
     try {
-      await analyticsResetPassword({step: 'initiated'});
+      analyticsResetPassword({step: 'initiated'});
 
       const result: { success: boolean } = await axiosClient.post(
         url,
@@ -63,13 +63,13 @@ class NotAuthenticatedUserRepository implements BaseNotAuthenticatedUserReposito
         }),
       );
 
-      await analyticsResetPassword({step: 'completed', data: {email: params.email}});
+      analyticsResetPassword({step: 'completed', data: {email: params.email}});
 
       return result.success;
     } catch (e) {
 
       if (isFBGenericError(e) || isFBAppError(e)) {
-        await analyticsResetPassword({
+        analyticsResetPassword({
           step: 'failed',
           data: {
             email: params.email,
@@ -77,7 +77,7 @@ class NotAuthenticatedUserRepository implements BaseNotAuthenticatedUserReposito
           },
         });
       } else if (isFBBackendError(e)) {
-        await analyticsResetPassword({
+        analyticsResetPassword({
           step: 'failed',
           data: {
             email: params.email,
@@ -105,7 +105,7 @@ class NotAuthenticatedUserRepository implements BaseNotAuthenticatedUserReposito
       const authData: AuthData = {userToken: result.token};
       const user: FBUser = new FBUserMapper().fromApi(result.user);
 
-      await analyticsSocialLogin({
+      analyticsSocialLogin({
         type: isFbLogin ? 'fb' : 'google',
         step: 'completed',
         data: {userId: user.id, email: user.email},
@@ -113,20 +113,20 @@ class NotAuthenticatedUserRepository implements BaseNotAuthenticatedUserReposito
 
       const userRepository = new UserRepository({authData: authData});
       await userRepository.updateLocale({locale: params.locale});
-      await analyticsSetLocale({email: user.email, userId: user.id, locale: params.locale});
+      analyticsSetLocale({email: user.email, userId: user.id, locale: params.locale});
 
       return {
         user, authData,
       };
     } catch (e) {
       if (isFBGenericError(e) || isFBAppError(e)) {
-        await analyticsSocialLogin({
+        analyticsSocialLogin({
           type: isFbLogin ? 'fb' : 'google',
           step: 'failed',
           data: {errorCode: e.status},
         });
       } else if (isFBBackendError(e)) {
-        await analyticsSocialLogin({
+        analyticsSocialLogin({
           type: isFbLogin ? 'fb' : 'google',
           step: 'failed',
           data: {
@@ -155,24 +155,24 @@ class NotAuthenticatedUserRepository implements BaseNotAuthenticatedUserReposito
       const authData: AuthData = {userToken: result.token};
       const user: FBUser = new FBUserMapper().fromApi(result.user);
 
-      await analyticsSocialLogin({type: 'apple', step: 'completed', data: {userId: user.id, email: user.email}});
+      analyticsSocialLogin({type: 'apple', step: 'completed', data: {userId: user.id, email: user.email}});
 
       const userRepository = new UserRepository({authData: authData});
       await userRepository.updateLocale({locale: params.locale});
-      await analyticsSetLocale({email: user.email, userId: user.id, locale: params.locale});
+      analyticsSetLocale({email: user.email, userId: user.id, locale: params.locale});
 
       return {
         user, authData,
       };
     } catch (e) {
       if (isFBGenericError(e) || isFBAppError(e)) {
-        await analyticsSocialLogin({
+        analyticsSocialLogin({
           type: 'apple',
           step: 'failed',
           data: {errorCode: e.status}
         });
       } else if (isFBBackendError(e)) {
-        await analyticsSocialLogin({
+        analyticsSocialLogin({
           type: 'apple',
           step: 'failed',
           data: {
@@ -189,7 +189,7 @@ class NotAuthenticatedUserRepository implements BaseNotAuthenticatedUserReposito
   async login(params: { email: string, password: string; locale: FBLocale }): Promise<LoginResponse> {
     const url = '/user/login';
     try {
-      await analyticsEmailLogin({email: params.email, step: 'initiated'});
+      analyticsEmailLogin({email: params.email, step: 'initiated'});
 
       const result: { user: any, token: string } = await axiosClient.post(
         url,
@@ -203,18 +203,18 @@ class NotAuthenticatedUserRepository implements BaseNotAuthenticatedUserReposito
       const authData: AuthData = {userToken: result.token};
       const user: FBUser = new FBUserMapper().fromApi(result.user);
 
-      await analyticsEmailLogin({email: user.email, step: 'completed', data: {userId: user.id}});
+      analyticsEmailLogin({email: user.email, step: 'completed', data: {userId: user.id}});
 
       const userRepository = new UserRepository({authData: authData});
       await userRepository.updateLocale({locale: params.locale});
-      await analyticsSetLocale({email: user.email, userId: user.id, locale: params.locale});
+      analyticsSetLocale({email: user.email, userId: user.id, locale: params.locale});
 
       return {
         user, authData,
       };
     } catch (e) {
       if (isFBGenericError(e) || isFBAppError(e)) {
-        await analyticsEmailLogin({
+        analyticsEmailLogin({
           email: params.email,
           step: 'failed',
           data: {
@@ -222,7 +222,7 @@ class NotAuthenticatedUserRepository implements BaseNotAuthenticatedUserReposito
           },
         });
       } else if (isFBBackendError(e)) {
-        await analyticsEmailLogin({
+        analyticsEmailLogin({
           email: params.email,
           step: 'failed',
           data: {
@@ -239,7 +239,7 @@ class NotAuthenticatedUserRepository implements BaseNotAuthenticatedUserReposito
   async register(params: { email: string; firstName: string; lastName: string; password: string; locale: FBLocale}): Promise<boolean> {
     const url = '/user/register';
     try {
-      await analyticsRegistration({email: params.email, step: 'initiated'});
+      analyticsRegistration({email: params.email, step: 'initiated'});
 
       const result: { userId: number } = await axiosClient.post(
         url,
@@ -253,17 +253,17 @@ class NotAuthenticatedUserRepository implements BaseNotAuthenticatedUserReposito
         }),
       );
 
-      await analyticsRegistration({email: params.email, step: 'completed', data: {userId: result.userId}});
+      analyticsRegistration({email: params.email, step: 'completed', data: {userId: result.userId}});
       return true;
     } catch (e) {
       if (isFBGenericError(e) || isFBAppError(e)) {
-        await analyticsRegistration({
+        analyticsRegistration({
           email: params.email,
           step: 'failed',
           data: { errorCode: e.status }
         });
       } else if (isFBBackendError(e)) {
-        await analyticsRegistration({
+        analyticsRegistration({
           email: params.email,
           step: 'failed',
           data: {
