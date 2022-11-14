@@ -19,6 +19,7 @@ import {Settings as FBSettings} from 'react-native-fbsdk-next';
 import {FBLoadingProvider} from './src/providers/FBLoaderProvider';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import VersionCheck from 'react-native-version-check';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const messages: { [p in FBLocale]: any } = {
   [FBLocale.BG]: MessagesInBulgarian,

@@ -92,13 +92,13 @@ const Login = ({navigation}: LoginProps) => {
 
   const googleLogin = async () => {
     showLoading('login');
-    await analyticsSocialLogin({type: 'google', step: 'initiated'});
+    analyticsSocialLogin({type: 'google', step: 'initiated'});
     try {
       const result = await GoogleSignin.signIn();
       let tt = await GoogleSignin.getTokens();
 
       const isAuthorized = !!tt.accessToken;
-      await analyticsSocialLogin({
+      analyticsSocialLogin({
         type: 'google',
         step: 'external_completed',
         data: {isAuthorized, isCancelled: false},
@@ -115,7 +115,7 @@ const Login = ({navigation}: LoginProps) => {
         await signIn(res);
       } else {
         showToastError(translateText(intl, 'login.social_refused'));
-        await analyticsSocialLogin({type: 'google', step: 'refused'});
+        analyticsSocialLogin({type: 'google', step: 'refused'});
       }
     } catch (error) {
       if (isFBAppError(error) || isFBGenericError(error)) {
@@ -123,7 +123,7 @@ const Login = ({navigation}: LoginProps) => {
       } else if (isFBBackendError(error)) {
         showToastError(error.message);
       } else {
-        await analyticsSocialLogin({type: 'google', step: 'failed'});
+        analyticsSocialLogin({type: 'google', step: 'failed'});
         showToastError(translateText(intl, 'backenderror.user_login_social_error'));
       }
     }
@@ -132,7 +132,7 @@ const Login = ({navigation}: LoginProps) => {
 
   const onFacebookLogin = async () => {
     showLoading('login');
-    await analyticsSocialLogin({type: 'fb', step: 'initiated'});
+    analyticsSocialLogin({type: 'fb', step: 'initiated'});
     try {
       if (Platform.OS === 'android') {
         LoginManager.setLoginBehavior('native_with_fallback');
@@ -142,12 +142,12 @@ const Login = ({navigation}: LoginProps) => {
       const loginResult = await LoginManager.logInWithPermissions(['email', 'public_profile']);
 
       if (loginResult.isCancelled) {
-        await analyticsSocialLogin({type: 'fb', step: 'completed', data: {isAuthorized: false, isCancelled: true}});
+        analyticsSocialLogin({type: 'fb', step: 'completed', data: {isAuthorized: false, isCancelled: true}});
         showToastError(translateText(intl, 'login.social_refused'));
       } else {
         const fbAccessToken = await AccessToken.getCurrentAccessToken();
         const isAuthorized = !!fbAccessToken;
-        await analyticsSocialLogin({type: 'fb', step: 'external_completed', data: {isAuthorized, isCancelled: false}});
+        analyticsSocialLogin({type: 'fb', step: 'external_completed', data: {isAuthorized, isCancelled: false}});
 
         if (fbAccessToken) {
           const response = await fetch(
@@ -165,7 +165,7 @@ const Login = ({navigation}: LoginProps) => {
           await signIn(res);
         } else {
           showToastError(translateText(intl, 'login.social_refused'));
-          await analyticsSocialLogin({type: 'fb', step: 'refused'});
+          analyticsSocialLogin({type: 'fb', step: 'refused'});
         }
       }
     } catch (error) {
@@ -174,7 +174,7 @@ const Login = ({navigation}: LoginProps) => {
       } else if (isFBBackendError(error)) {
         showToastError(error.message);
       } else {
-        await analyticsSocialLogin({type: 'fb', step: 'failed'});
+        analyticsSocialLogin({type: 'fb', step: 'failed'});
         showToastError(translateText(intl, 'backenderror.user_login_social_error'));
       }
     }
@@ -185,7 +185,7 @@ const Login = ({navigation}: LoginProps) => {
   const onAppleLogin = async () => {
     showLoading('login');
 
-    await analyticsSocialLogin({type: 'apple', step: 'initiated'});
+    analyticsSocialLogin({type: 'apple', step: 'initiated'});
     try {
       // performs login request
 
@@ -197,7 +197,7 @@ const Login = ({navigation}: LoginProps) => {
       const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
 
       const isAuthorized = credentialState === appleAuth.State.AUTHORIZED;
-      await analyticsSocialLogin({
+      analyticsSocialLogin({
         type: 'apple',
         step: 'external_completed',
         data: {isAuthorized: isAuthorized, isCancelled: false},
@@ -215,7 +215,7 @@ const Login = ({navigation}: LoginProps) => {
         await signIn(res);
       } else {
         showToastError(translateText(intl, 'login.social_refused'));
-        await analyticsSocialLogin({type: 'apple', step: 'refused'});
+        analyticsSocialLogin({type: 'apple', step: 'refused'});
       }
     } catch (error) {
       if (isFBAppError(error) || isFBGenericError(error)) {
@@ -223,7 +223,7 @@ const Login = ({navigation}: LoginProps) => {
       } else if (isFBBackendError(error)) {
         showToastError(error.message);
       } else {
-        await analyticsSocialLogin({type: 'apple', step: 'failed'});
+        analyticsSocialLogin({type: 'apple', step: 'failed'});
         showToastError(translateText(intl, 'backenderror.user_login_social_error'));
       }
     }

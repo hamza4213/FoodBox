@@ -54,6 +54,7 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
   const {authData} = useAuth();
   const dispatch = useDispatch();
   const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
+  const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
   const orders = useSelector<FBRootState, OrdersListItem[]>((state: FBRootState) => state.ordersState.orders.map((o => {
     
     let boxSavedAmount = roundToDecimal(o.numberOfCheckoutBoxes * o.boxOriginalPrice * o.boxDiscount / 100);
@@ -117,7 +118,7 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
       await orderRepository.cancelOrder({orderId});
 
       dispatch(orderCancelledAction({orderId}));
-      await analyticsOrderStatusChange({userId: user.id, email: user.email, orderId: orderId, status: 'cancelled'});
+      analyticsOrderStatusChange({userId: user.id, email: user.email, orderId: orderId, status: 'cancelled', loc: userLocation});
     } catch (error) {
       if (isFBAppError(error) || isFBGenericError(error)) {
         showToastError(translateText(intl, error.key));
@@ -149,7 +150,7 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
       await orderRepository.confirmOrder({orderId: order.id});
 
       dispatch(orderConfirmedAction({orderId: order.id}));
-      await analyticsOrderStatusChange({userId: user.id, email: user.email, orderId: order.id, status: 'confirmed'});
+      analyticsOrderStatusChange({userId: user.id, email: user.email, orderId: order.id, status: 'confirmed', loc: userLocation});
     } catch (error) {
       if (isFBAppError(error) || isFBGenericError(error)) {
         showToastError(translateText(intl, error.key));
@@ -322,7 +323,7 @@ const ListOrders = ({navigation}: ListOrdersProps) => {
 
   useEffect(() => {
     return navigation.addListener('focus', async () => {
-      await analyticsPageOpen({userId: user.id, email: user.email, pageName: 'MyOrders'});
+      await analyticsPageOpen({userId: user.id, email: user.email, pageName: 'MyOrders', loc: userLocation});
     });
   }, [navigation]);
 

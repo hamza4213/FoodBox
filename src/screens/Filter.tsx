@@ -33,6 +33,7 @@ const Filter = ({navigation}: { navigation: any }) => {
   const [foodTypes, setFoodTypes] = useState(newFilters.foodType.types);
 
   const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
+  const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
   const intl = useIntl();
 
   const newApplyFilter = (data: RestaurantUpdateFiltersAction['data']) => {
@@ -42,7 +43,7 @@ const Filter = ({navigation}: { navigation: any }) => {
 
   useEffect(() => {
     return navigation.addListener('focus', async () => {
-      await analyticsPageOpen({userId: user.id, email: user.email, pageName: 'Filter'});
+      await analyticsPageOpen({userId: user.id, email: user.email, pageName: 'Filter', loc: userLocation});
     });
   }, [navigation]);
 
@@ -53,7 +54,7 @@ const Filter = ({navigation}: { navigation: any }) => {
       return;
     }
 
-    analyticsFilterChange({userId: user.id, email: user.email, filters: newFilters});
+    analyticsFilterChange({userId: user.id, email: user.email, filters: newFilters, loc: userLocation});
   }, [newFilters]);
 
   return (

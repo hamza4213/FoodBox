@@ -89,7 +89,7 @@ const Home = ({navigation}: HomeProps) => {
 
   useEffect(() => {
     return navigation.addListener('focus', async () => {
-      await analyticsPageOpen({userId: user.id, email: user.email, pageName: 'Home'});
+      await analyticsPageOpen({userId: user.id, email: user.email, pageName: 'Home', loc: userLocation});
     });
   }, [navigation, user.email, user.id]);
 
@@ -109,6 +109,8 @@ const Home = ({navigation}: HomeProps) => {
       // update TC
       await userRepository.acceptTC({userId: user.id, email: user.email});
 
+      analyticsSetTC({userId: user.id, email: user.email, action: 'accept', loc: userLocation});
+
       // fetch user again
       const newUser = await userRepository.checkMe({});
       dispatch(userSetUserAction({user: newUser}));
@@ -125,9 +127,9 @@ const Home = ({navigation}: HomeProps) => {
 
   const declineTermsAndConditions = async () => {
     // TODO: add loading
-    await analyticsSetTC({userId: user.id, email: user.email, action: 'decline'});
-    setTermsAndConditionsModalVisible(false);
+    analyticsSetTC({userId: user.id, email: user.email, action: 'decline', loc: userLocation});
     signOut();
+    setTermsAndConditionsModalVisible(false);
   };
 
   return (

@@ -28,6 +28,7 @@ const Offer = ({route, navigation}: OfferProps) => {
   // TODO: make it react if the pick-up time starts or ends
   const intl = useIntl();
   const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
+  const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
   const restaurant: RestaurantHomeListItem = route.params.restaurant;
   const box: FBBox = route.params.box;
   const dietTypeText = RestaurantService.getDietTypeText(box, intl);
@@ -49,6 +50,7 @@ const Offer = ({route, navigation}: OfferProps) => {
         email: user.email,
         pageName: 'OfferDetails',
         data: {boxId: box.id, isStarted: isStarted, isFinished: isFinished, isOpen: isOpen},
+        loc: userLocation
       });
     });
   }, [navigation]);

@@ -61,6 +61,14 @@
             {
               "client_id": "378104807990-kf7eh44l746m88am2mcjl3mt13ouiiuq.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "378104807990-7ja0c1cbjj9una8hnt1hj7uihqcld6ne.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.foodobox",
+                "app_store_id": "1580528736"
+              }
             }
           ]
         }

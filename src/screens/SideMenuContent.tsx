@@ -1,9 +1,10 @@
-import React from 'react';
-import {Image, Linking, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-// import {Avatar} from 'react-native-elements';
+import React, {useEffect} from 'react';
+import {Image, Linking, Platform, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import messaging from '@react-native-firebase/messaging';
 import {
   CONTACT_US_FACTORY,
-  FAQ_FACTORY, REGISTER_BUSINESS_FACTOR,
+  FAQ_FACTORY,
+  REGISTER_BUSINESS_FACTOR,
   TERMS_AND_CONDITIONS_FACTORY,
 } from '../network/Server';
 import {useAuth} from '../providers/AuthProvider';
@@ -28,11 +29,74 @@ const SideMenuContent = (props: any) => {
   const navigation = props.navigation;
   const {signOut} = useAuth();
   const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
-  const userLocale = useSelector((state: FBRootState)=> state.userState.locale);
+  const userLocale = useSelector((state: FBRootState) => state.userState.locale);
+  const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
   const styles = stylesCreator();
   const intl = useIntl();
   const {authData} = useAuth();
   const dispatch = useDispatch();
+  const userRepository = new UserRepository({authData: authData!});
+  
+  useEffect(() => {
+    const unsubscriptions: any[] = [];
+    
+    const getUserNotificationsConsent = async (): Promise<boolean> => {
+      const authStatus = await messaging().requestPermission();
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+      return enabled;
+    };
+
+    const setUpNotifications = async (): Promise<any[]> => {
+      let hasUserConsent = true;
+
+      if (Platform.OS === 'ios') {
+        hasUserConsent = await getUserNotificationsConsent();
+      }
+      
+      if (hasUserConsent) {
+        // const installationId = await firebase.installations().getId();
+        let fcmToken = await messaging().getToken();
+        await userRepository.setFcmToken({fcmToken: fcmToken});
+        
+        const onTokenUpdateUnsubscribe = messaging().onTokenRefresh(async (token)=> {
+          fcmToken = token;
+          await userRepository.setFcmToken({fcmToken: fcmToken});
+        });
+        
+        const initialRemoteMessage = await messaging().getInitialNotification();
+        if (initialRemoteMessage) {
+          // Notification caused app to open from quit state
+          // console.log('setUpNotifications initialRemoteMessage', JSON.stringify(initialRemoteMessage));
+        }
+        
+        const onNotificationOpenAppUnsubscribe = messaging().onNotificationOpenedApp(async remoteMessage => {
+          // Notification caused app to open from background state
+          // console.log('setUpNotifications onNotificationOpenedApp remoteMessage', JSON.stringify(remoteMessage));
+        });
+
+        const onMessageUnsubscribe = messaging().onMessage(async remoteMessage => {
+          // notification received when app is focused
+          // console.log('setUpNotifications onMessage', JSON.stringify(remoteMessage));
+        });
+        
+        unsubscriptions.push(onNotificationOpenAppUnsubscribe);
+        unsubscriptions.push(onMessageUnsubscribe);
+        unsubscriptions.push(onTokenUpdateUnsubscribe);
+      }
+      
+      return unsubscriptions;
+    };
+    
+    setUpNotifications();
+    
+    return () => {
+      unsubscriptions.forEach(unsubscription => unsubscription());
+    };
+  }, []);
+  
   return (
     <SafeAreaView style={styles.mainWrapper}>
       <View style={styles.avatarWrapper}>
@@ -117,6 +181,7 @@ const SideMenuContent = (props: any) => {
               email: user.email,
               link: link,
               linkName: 'WEBSITE_REGISTER_BUSINESS',
+              loc: userLocation,
             });
             Linking.openURL(link);
           }}
@@ -143,6 +208,7 @@ const SideMenuContent = (props: any) => {
               email: user.email,
               link: link,
               linkName: 'WEBSITE_TERMS_OF_SERVICE',
+              loc: userLocation,
             });
             Linking.openURL(link);
           }}
@@ -164,7 +230,7 @@ const SideMenuContent = (props: any) => {
           onPress={() => {
             navigation.closeDrawer();
             const link = FAQ_FACTORY[userLocale];
-            analyticsLinkOpened({userId: user.id, email: user.email, link: link, linkName: 'WEBSITE_FAQ'});
+            analyticsLinkOpened({userId: user.id, email: user.email, link: link, linkName: 'WEBSITE_FAQ', loc: userLocation,});
             Linking.openURL(link);
           }}
           style={styles.listItemWrapper}
@@ -190,6 +256,7 @@ const SideMenuContent = (props: any) => {
               email: user.email,
               link: link,
               linkName: 'WEBSITE_CONTACT_US',
+              loc: userLocation,
             });
             Linking.openURL(link);
           }}
@@ -210,7 +277,7 @@ const SideMenuContent = (props: any) => {
         <TouchableOpacity
           onPress={() => {
             navigation.closeDrawer();
-            analyticsSignOut({userId: user.id, email: user.email});
+            analyticsSignOut({userId: user.id, email: user.email, loc: userLocation});
             signOut();
           }}
           style={styles.listItemWrapper}

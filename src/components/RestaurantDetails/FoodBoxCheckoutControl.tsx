@@ -32,6 +32,7 @@ const FoodBoxCheckoutControl = (params: FoodBoxCheckoutControlProps) => {
   } = params;
 
   const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
+  const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
   const styles = stylesCreator({});
   const navigation = useNavigation();
   const intl = useIntl();
@@ -75,7 +76,9 @@ const FoodBoxCheckoutControl = (params: FoodBoxCheckoutControlProps) => {
       quantity: numberOfBoxesToCheckout,
       voucher: userVoucher,
       step: 'confirmed',
+      loc: userLocation,
     });
+    
     navigation.navigate('PaymentMethod', {
       restaurant,
       product: foodbox,
@@ -128,6 +131,7 @@ const FoodBoxCheckoutControl = (params: FoodBoxCheckoutControlProps) => {
               quantity: newNumberOfBoxesToCheckout,
               voucher: userVoucher,
               value: foodbox.discountedPrice * newNumberOfBoxesToCheckout,
+              loc: userLocation,
             });
           }}
         >
@@ -161,6 +165,7 @@ const FoodBoxCheckoutControl = (params: FoodBoxCheckoutControlProps) => {
               quantity: newNumberOfBoxesToCheckout,
               voucher: userVoucher,
               value: foodbox.discountedPrice * newNumberOfBoxesToCheckout,
+              loc: userLocation,
             });
           }}
         >
@@ -181,13 +186,14 @@ const FoodBoxCheckoutControl = (params: FoodBoxCheckoutControlProps) => {
           setPriceAfterPromo(discountedPricePerBox);
           setCanAddToCheckout(false);
           setCanRemoveFromCheckout(false);
-          await analyticsBasketUpdated({
+          analyticsBasketUpdated({
             userId: user.id,
             email: user.email,
             productId: foodbox.id,
             quantity: numberOfBoxesToCheckout,
             voucher: promoCode,
             value: discountedPricePerBox * numberOfBoxesToCheckout,
+            loc: userLocation,
           });
         }}
       />
@@ -208,6 +214,7 @@ const FoodBoxCheckoutControl = (params: FoodBoxCheckoutControlProps) => {
               quantity: numberOfBoxesToCheckout,
               voucher: userVoucher,
               step: 'initiated',
+              loc: userLocation,
             });
           }
         }}

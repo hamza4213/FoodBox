@@ -57,9 +57,11 @@ export const FB_CITIES_TO_LOCATION_MAP: { [key in FB_CITIES]: FBGeoLocation } = 
   },
 };
 
+export const DEFAULT_USER_LOCATION = FB_CITIES_TO_LOCATION_MAP[FB_CITIES.BUL_VARNA];
+
 export const userInitialState: UserState = {
   user: null,
-  userLocation: FB_CITIES_TO_LOCATION_MAP[FB_CITIES.BUL_VARNA],
+  userLocation: DEFAULT_USER_LOCATION,
   locationPermission: {
     userAnswer: UserPermissionAnswer.NO,
   },

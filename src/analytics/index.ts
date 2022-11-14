@@ -1,14 +1,25 @@
 import analytics from '@react-native-firebase/analytics';
 import {FBRestaurantFilters} from '../redux/restaurant/reducer';
-import {FBLocale} from '../redux/user/reducer';
-import {ENVIRONMENT} from '../network/Server';
+import {FB_CITIES_TO_LOCATION_MAP, FBLocale} from '../redux/user/reducer';
+import {ANALYTICS_ENDPOINT_ENV, ENVIRONMENT} from '../network/Server';
 import {FBUserVoucher} from '../models/FBUserVoucher';
 import {AppEventsLogger} from 'react-native-fbsdk-next';
+import {FBGeoLocation} from '../models/FBGeoLocation';
+import axiosClient from '../network/axiosClient';
+import moment from 'moment';
 
 
 const logEvent = async (name: string, data: any) => {
   try {
     data.env = ENVIRONMENT;
+    
+    let loc: FBGeoLocation | undefined = undefined;
+    if (data.loc) {
+      if (!Object.values(FB_CITIES_TO_LOCATION_MAP).find(city_location => city_location === data.loc)) {
+        loc = data.loc;
+      }
+      delete data.loc;
+    }
 
     // console.log(name, data);
     
@@ -18,7 +29,6 @@ const logEvent = async (name: string, data: any) => {
     }
 
     if (data.email) {
-      data.uEmail = data.email;
       delete data.email;
     }
 
@@ -78,8 +88,14 @@ const logEvent = async (name: string, data: any) => {
       }
     });
     
+    
     AppEventsLogger.logEvent(name, data);
     await analytics().logEvent(name, data);
+    await axiosClient.post(
+      ANALYTICS_ENDPOINT_ENV,
+      { event: {...data, name: name, loc: loc, created_at_utc: moment.utc().format(), created_at_local: moment().format(), created_at: moment().valueOf()}},
+      {headers: {'Content-Type': 'application/json'}}
+    );
   } catch (e) {
     console.log(e);
   }
@@ -101,39 +117,39 @@ export const analyticsResetPassword = async (params: {step: 'initiated' | 'compl
   await logEvent('ResetPassword', {...params});
 };
 
-export const analyticsPageOpen = async (params: { userId: number, email: string, pageName: string, data?: { [key: string]: any } }) => {
+export const analyticsPageOpen = async (params: { userId: number, email: string, pageName: string, data?: { [key: string]: any }, loc?: FBGeoLocation}) => {
   await logEvent('PageOpen', { ...params});
 };
 
-export const analyticsOrderStatusChange = async (params: { userId: number, email: string, orderId: number, status: 'confirmed' | 'cancelled' }) => {
+export const analyticsOrderStatusChange = async (params: { userId: number, email: string, orderId: number, status: 'confirmed' | 'cancelled', loc?: FBGeoLocation }) => {
   await logEvent('OrderStatusChange', { ...params});
 };
 
-export const analyticsBasketUpdated = async (params: { userId: number, email: string, productId: number, quantity: number, voucher: FBUserVoucher | null, value: number }) => {
+export const analyticsBasketUpdated = async (params: { userId: number, email: string, productId: number, quantity: number, voucher: FBUserVoucher | null, value: number, loc?: FBGeoLocation }) => {
   await logEvent('BasketUpdated', { ...params});
 };
 
-export const analyticsCheckoutStepChange = async (params: { userId: number, email: string, productId: number, quantity: number, voucher: FBUserVoucher | null, step: 'initiated' | 'confirmed' | 'paymentConfirm' | 'completed' | 'failed', error?: any }) => {
+export const analyticsCheckoutStepChange = async (params: { userId: number, email: string, productId: number, quantity: number, voucher: FBUserVoucher | null, step: 'initiated' | 'confirmed' | 'paymentConfirm' | 'completed' | 'failed', error?: any, loc?: FBGeoLocation }) => {
   await logEvent('Checkout', { ...params});
 };
 
-export const analyticsLinkOpened = async (params: { userId: number; email: string; link: string; linkName: string }) => {
+export const analyticsLinkOpened = async (params: { userId: number; email: string; link: string; linkName: string, loc?: FBGeoLocation }) => {
   await logEvent('LinkOpened', { ...params});
 };
 
-export const analyticsSignOut = async (params: { userId: number; email: string }) => {
+export const analyticsSignOut = async (params: { userId: number; email: string, loc?: FBGeoLocation }) => {
   await logEvent('SignOut', { ...params});
 };
 
-export const analyticsFilterChange = async (params: { userId: number; email: string; filters: FBRestaurantFilters }) => {
+export const analyticsFilterChange = async (params: { userId: number; email: string; filters: FBRestaurantFilters, loc?: FBGeoLocation }) => {
   await logEvent('FilterChange', { ...params});
 };
 
-export const analyticsSetLocale = async (params: { userId: number; email: string; locale: FBLocale }) => {
+export const analyticsSetLocale = async (params: { userId: number; email: string; locale: FBLocale, loc?: FBGeoLocation }) => {
   await logEvent('SetLocale', { ...params});
 };
 
-export const analyticsSetTC = async (params: { userId: number; email: string; action: 'accept' | 'decline' }) => {
+export const analyticsSetTC = async (params: { userId: number; email: string; action: 'accept' | 'decline', loc?: FBGeoLocation }) => {
   await logEvent('SetTC', { ...params});
 };
 

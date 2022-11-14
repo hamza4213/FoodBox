@@ -5,7 +5,7 @@
 import {AppRegistry, LogBox} from 'react-native';
 import App from './App';
 import {Provider} from 'react-redux';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import allReducer, {FBRootState} from './src/redux/store';
 import {persistReducer, persistStore} from 'redux-persist';
 import {PersistGate} from 'redux-persist/integration/react';
@@ -20,6 +20,10 @@ import {UserRepository} from './src/repositories/UserRepository';
 import {createStore} from 'redux';
 import {name as appName} from './app.json';
 import FlashMessage from 'react-native-flash-message';
+import messaging from '@react-native-firebase/messaging';
+
+// catches DATA-ONLY notifications
+messaging().setBackgroundMessageHandler(async remoteMessage => {});
 
 interface StateV0 {
   auth: any;
@@ -106,13 +110,34 @@ LogBox.ignoreLogs([
   '`new NativeEventEmitter()` was called with a non-null argument without',
 ]);
 
-const ReduxApp = () => (
-  <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
-      <App/>
-      <FlashMessage position="top"/>
-    </PersistGate>
-  </Provider>
-);
+const ReduxApp = () => {
+  const [isHeadless, setIsHeadless] = useState(true);
+  
+  useEffect(()=> {
+    const verifyIsHeadless = async () => {
+      try {
+        const isHeadlessResult = await messaging().getIsHeadless();
+        setIsHeadless(isHeadlessResult);
+      } catch (e) {
+        setIsHeadless(false);
+      }
+    };
+    
+    verifyIsHeadless();
+  }, []);
+  
+  if (isHeadless) {
+    return null;
+  }
+
+  return (
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <App/>
+        <FlashMessage position="top"/>
+      </PersistGate>
+    </Provider>
+  );
+};
 
 AppRegistry.registerComponent(appName, () => ReduxApp);
