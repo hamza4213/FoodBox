@@ -16,7 +16,7 @@ const API_ENDPOINT_FACTORY: {[p in FB_ENVIRONMENT]: string} = {
 const ANALYTICS_ENDPOINT_FACTORY: {[p in FB_ENVIRONMENT]: string} = {
   [FB_ENVIRONMENT.dev]: 'https://analytics.foodobox-stage.com/',
   [FB_ENVIRONMENT.stage]: 'https://analytics.foodobox-stage.com/',
-  [FB_ENVIRONMENT.live]: 'https://analytics.apiv1.foodobox.com/',
+  [FB_ENVIRONMENT.live]: 'https://analytics.foodobox.com/',
 };
 
 export const API_ENDPOINT_ENV = API_ENDPOINT_FACTORY[ENVIRONMENT];

@@ -37,8 +37,6 @@ const RestaurantSearch = ({onSelect, toHideResults}: RestaurantSearchProps) => {
     
     setUserHasSelected(false);
 
-    userInputQuery = userInputQuery.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&');
-
     dispatch(restaurantUpdateFiltersAction({
       filterCategory: 'search',
       filterCategoryProperty: 'userInput',
