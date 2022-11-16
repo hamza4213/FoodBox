@@ -62,10 +62,11 @@ export const toShowRestaurant = (restaurant: RestaurantHomeListItem, filters: FB
         case 'search': {
           // console.log('search', filterCategoryConfig);
           if (filterCategoryConfig.userInput) {
-            const regex = new RegExp(`${filterCategoryConfig.userInput}`, 'gmi');
+            const regexString = filterCategoryConfig.userInput.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const regex = new RegExp(regexString, 'gmi');
             const doesMatch = restaurant.name.search(regex) >= 0;
             
-            // // console.log('search doesMatch', restaurant.name, regex, passesFilters);
+            // console.log('search doesMatch', restaurant.name, regex, passesFilters, doesMatch);
             passesFilters = passesFilters && doesMatch;
           }
           break;
