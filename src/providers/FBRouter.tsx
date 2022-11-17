@@ -1,9 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import {useAuth} from './AuthProvider';
-import {ImageBackground, Text, View} from 'react-native';
+import {ImageBackground, Text, View, Image} from 'react-native';
 import {Utils} from '../utils';
 import {images} from '../constants';
-import {SvgXml, WithLocalSvg} from 'react-native-svg';
+// import {SvgXml, WithLocalSvg} from 'react-native-svg';
 
 import {NavigationContainer} from '@react-navigation/native';
 import SignInScreen from '../screens/Authorization/Login';
@@ -21,6 +21,7 @@ import ErrorBoundary from 'react-native-error-boundary';
 import {showToastError} from '../common/FBToast';
 import {translateText} from '../lang/translate';
 import {useIntl} from 'react-intl';
+import {SelectLanguageScreen, LoginScreen} from '../screens';
 
 const Drawer = createDrawerNavigator();
 const AuthStack = createStackNavigator();
@@ -30,23 +31,28 @@ const FBRouter = () => {
   const intl = useIntl();
   const [showSPlashScreen, setShowSPlashScreen] = useState(true);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setShowSPlashScreen(false);
+    }, 3000);
+  }, []);
+
   if (showSPlashScreen) {
     return (
       <View
         style={{
           flex: 1,
-          // height: Utils.height,
-          // width: Utils.width,
           backgroundColor: '#182550',
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <WithLocalSvg
+        {/* <WithLocalSvg
           asset={require('./../../assets/images/logo.svg')}
           width={210}
           height={210}
           fill={'#fff'}
-        />
+        /> */}
+        <Image source={images.app_logo} style={{width: 224, height: 80}} />
       </View>
     );
   }
@@ -59,9 +65,14 @@ const FBRouter = () => {
             headerShown: false,
             animationEnabled: false,
           }}
-          initialRouteName={'SignUpScreen'}>
-          <AuthStack.Screen name="SignInScreen" component={SignInScreen} />
-          <AuthStack.Screen name="SignUpScreen" component={SignUpScreen} />
+          initialRouteName={'LoginScreen'}>
+          {/* <AuthStack.Screen name="SignInScreen" component={SignInScreen} />
+          <AuthStack.Screen name="SignUpScreen" component={SignUpScreen} /> */}
+          <AuthStack.Screen
+            name="SelectLanguageScreen"
+            component={SelectLanguageScreen}
+          />
+          <AuthStack.Screen name="LoginScreen" component={LoginScreen} />
         </AuthStack.Navigator>
       </NavigationContainer>
     );

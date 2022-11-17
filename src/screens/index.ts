@@ -5,7 +5,9 @@ import PaymentMethod from './PaymentMethod';
 import OrderFinalized from './OrderFinalized';
 import OrderError from './OrderError';
 import Profile from './Profile';
-import SplashScreen from './SplashScreen'
+// import SplashScreen from './SplashScreen';
+import SelectLanguageScreen from './SelectLanguageScreen';
+import LoginScreen from './Login';
 
 export {
   Home,
@@ -15,6 +17,8 @@ export {
   OrderFinalized,
   OrderError,
   Profile,
-  SplashScreen
+  SelectLanguageScreen,
+  LoginScreen
+  // SplashScreen
 };
 

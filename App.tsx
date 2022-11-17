@@ -1,8 +1,18 @@
 import React, {useEffect} from 'react';
 
-import {Alert, AlertButton, BackHandler, Linking, Platform, StatusBar} from 'react-native';
+import {
+  Alert,
+  AlertButton,
+  BackHandler,
+  Linking,
+  Platform,
+  StatusBar,
+} from 'react-native';
 import 'react-native-gesture-handler';
-import {initialWindowMetrics, SafeAreaProvider} from 'react-native-safe-area-context';
+import {
+  initialWindowMetrics,
+  SafeAreaProvider,
+} from 'react-native-safe-area-context';
 import CodePush from 'react-native-code-push';
 import {useSelector} from 'react-redux';
 import {FBAuthProvider} from './src/providers/AuthProvider';
@@ -14,14 +24,18 @@ import MessagesInRomanian from './src/lang/ro';
 import {FBLocale} from './src/redux/user/reducer';
 import {FBRootState} from './src/redux/store';
 import {useAppState} from '@react-native-community/hooks';
-import {check as checkPermission, PERMISSIONS, request as requestPermission} from 'react-native-permissions';
+import {
+  check as checkPermission,
+  PERMISSIONS,
+  request as requestPermission,
+} from 'react-native-permissions';
 import {Settings as FBSettings} from 'react-native-fbsdk-next';
 import {FBLoadingProvider} from './src/providers/FBLoaderProvider';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import VersionCheck from 'react-native-version-check';
 import AsyncStorage from '@react-native-community/async-storage';
 
-const messages: { [p in FBLocale]: any } = {
+const messages: {[p in FBLocale]: any} = {
   [FBLocale.BG]: MessagesInBulgarian,
   [FBLocale.EN]: MessagesInEnglish,
   [FBLocale.RO]: MessagesInRomanian,
@@ -49,22 +63,28 @@ GoogleSignin.configure({
 });
 
 let FBApp = () => {
-  const selectedLocale = useSelector((state: FBRootState) => state.userState.locale);
+  const selectedLocale = useSelector(
+    (state: FBRootState) => state.userState.locale,
+  );
 
   const appState = useAppState();
   useEffect(() => {
-    const setupFB = async (params: { attEnabled: boolean }) => {
+    const setupFB = async (params: {attEnabled: boolean}) => {
       await FBSettings.setAdvertiserTrackingEnabled(params.attEnabled);
     };
 
     const checkAttPermission = async () => {
-      const attCheck = await checkPermission(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
+      const attCheck = await checkPermission(
+        PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY,
+      );
       if (attCheck === 'granted' || attCheck === 'unavailable') {
         await setupFB({attEnabled: true});
       } else if (attCheck === 'blocked') {
         await setupFB({attEnabled: true});
       } else {
-        const attRequest = await requestPermission(PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY);
+        const attRequest = await requestPermission(
+          PERMISSIONS.IOS.APP_TRACKING_TRANSPARENCY,
+        );
         if (attRequest === 'granted' || attRequest === 'unavailable') {
           await setupFB({attEnabled: true});
         } else {
@@ -75,19 +95,21 @@ let FBApp = () => {
 
     const checkVersion = async () => {
       let versionCheck = await VersionCheck.needUpdate();
-      
+
       // TODO: get latest version info from BACKEND and decide what to do
       // TODO: surround with try-catch and ensure proper handling
 
       if (versionCheck.isNeeded) {
-        const buttons: AlertButton[] = [{
-          text: 'Update',
-          onPress: () => {
-            BackHandler.exitApp();
-            Linking.openURL(versionCheck.storeUrl);
+        const buttons: AlertButton[] = [
+          {
+            text: 'Update',
+            onPress: () => {
+              BackHandler.exitApp();
+              Linking.openURL(versionCheck.storeUrl);
+            },
           },
-        }];
-        
+        ];
+
         if (isDebug) {
           buttons.unshift({
             text: 'Cancel',
@@ -101,7 +123,6 @@ let FBApp = () => {
           {cancelable: isDebug},
         );
       }
-
     };
 
     if (appState === 'active' && Platform.OS === 'ios') {
@@ -112,17 +133,20 @@ let FBApp = () => {
   }, [appState]);
 
   return (
-    <IntlProvider messages={messages[selectedLocale]} locale={selectedLocale} defaultLocale={FBLocale.BG}>
+    <IntlProvider
+      messages={messages[selectedLocale]}
+      locale={selectedLocale}
+      defaultLocale={FBLocale.BG}>
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
         <StatusBar
-          barStyle={'dark-content'}
+          barStyle={'light-content'}
           animated={true}
-          backgroundColor={'#fff'}
+          backgroundColor={'#182550'}
         />
 
         <FBLoadingProvider>
           <FBAuthProvider>
-            <FBRouter/>
+            <FBRouter />
           </FBAuthProvider>
         </FBLoadingProvider>
       </SafeAreaProvider>
