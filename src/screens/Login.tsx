@@ -14,10 +14,17 @@ import AppleIcon from './../../assets/images/apple.svg';
 import FacebookIcon from './../../assets/images/facebook.svg';
 import GoogleIcon from './../../assets/images/google.svg';
 import CloseIcon from './../../assets/images/close.svg';
+import MailIcon from './../../assets/images/mail.svg';
 import {images} from '../constants';
 
-const LoginScreen = () => {
+interface LoginProps {
+  route: any;
+  navigation: any;
+}
+
+const LoginScreen = ({navigation}: LoginProps) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [secondModalVisible, setSecondModalVisible] = useState(false);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -57,7 +64,9 @@ const LoginScreen = () => {
           </TouchableOpacity>
           <View style={styles.registerSec}>
             <Text style={styles.registerSecTxt}>Нямаш акаунт?</Text>
-            <TouchableOpacity style={styles.registerBtn}>
+            <TouchableOpacity
+              style={styles.registerBtn}
+              onPress={() => navigation.navigate('SignUpScreen')}>
               <Text style={styles.registerBtnTxt}>Регистрирай се</Text>
             </TouchableOpacity>
           </View>
@@ -94,13 +103,56 @@ const LoginScreen = () => {
         }}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <TouchableOpacity style={styles.closeBtn}>
+            <TouchableOpacity
+              style={styles.closeBtn}
+              onPress={() => setModalVisible(false)}>
               <CloseIcon />
             </TouchableOpacity>
             <Text style={styles.modalHeading}>Забравена парола</Text>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.textStyle}>Нова парола</Text>
+            <Text style={styles.emailSendTxt}>
+              Ще изпратим линк за промяна на паролата на посочения от теб имейл.
+            </Text>
+            <View style={styles.modalInputView}>
+              <Text style={styles.inputLabel}>имейл</Text>
+              <TextInput
+                placeholder=""
+                style={styles.modalInput}
+                placeholderTextColor="#182550"
+              />
+            </View>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                setModalVisible(false);
+                setSecondModalVisible(true);
+              }}>
+              <Text style={styles.buttonTxt}>Нова парола</Text>
             </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={secondModalVisible}
+        onRequestClose={() => {
+          setSecondModalVisible(!secondModalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <TouchableOpacity
+              style={styles.closeBtn}
+              onPress={() => setSecondModalVisible(false)}>
+              <CloseIcon />
+            </TouchableOpacity>
+            <Text style={styles.modalHeading}>Нова парола</Text>
+            <View style={{marginTop: 30, marginBottom: 10}}>
+              <MailIcon />
+            </View>
+            <Text style={styles.emailSendTxt}>
+              Изпратихме ти съобщение с линк за промяна на паролата.
+            </Text>
           </View>
         </View>
       </Modal>
@@ -242,7 +294,10 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     width: '90%',
-    paddingVertical: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 30,
+    paddingTop: 20,
   },
   button: {
     borderRadius: 8,
@@ -252,21 +307,38 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '70%',
     alignSelf: 'center',
+    marginTop: 20,
   },
-  textStyle: {
-    color: 'white',
+  buttonTxt: {
+    color: '#fff',
     fontWeight: 'bold',
-    textAlign: 'center',
+    fontSize: 16,
   },
   modalHeading: {
     textAlign: 'center',
     color: '#182550',
     fontSize: 16,
     fontWeight: 'bold',
-    
   },
   closeBtn: {
     alignSelf: 'flex-end',
+  },
+  emailSendTxt: {
+    textAlign: 'center',
+    color: '#000000',
+    width: '90%',
+    alignSelf: 'center',
+    marginTop: 10,
+  },
+  modalInput: {
+    borderBottomWidth: 1,
+    height: 30,
+    borderColor: '#CCCCCC',
+  },
+  modalInputView: {
+    marginTop: 15,
+    width: '90%',
+    alignSelf: 'center',
   },
 });
 

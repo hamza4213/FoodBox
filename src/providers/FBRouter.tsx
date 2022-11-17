@@ -7,7 +7,7 @@ import {images} from '../constants';
 
 import {NavigationContainer} from '@react-navigation/native';
 import SignInScreen from '../screens/Authorization/Login';
-import SignUpScreen from '../screens/Authorization/SignUp';
+// import SignUpScreen from '../screens/Authorization/SignUp';
 import HomeTabs from '../navigation/homeTabs';
 import OrderFinalized from '../screens/OrderFinalized';
 import OrderError from '../screens/OrderError';
@@ -21,7 +21,12 @@ import ErrorBoundary from 'react-native-error-boundary';
 import {showToastError} from '../common/FBToast';
 import {translateText} from '../lang/translate';
 import {useIntl} from 'react-intl';
-import {SelectLanguageScreen, LoginScreen} from '../screens';
+import {
+  SelectLanguageScreen,
+  LoginScreen,
+  SignUpScreen,
+  GeneralTerms,
+} from '../screens';
 
 const Drawer = createDrawerNavigator();
 const AuthStack = createStackNavigator();
@@ -73,6 +78,8 @@ const FBRouter = () => {
             component={SelectLanguageScreen}
           />
           <AuthStack.Screen name="LoginScreen" component={LoginScreen} />
+          <AuthStack.Screen name="SignUpScreen" component={SignUpScreen} />
+          <AuthStack.Screen name="GeneralTerms" component={GeneralTerms} />
         </AuthStack.Navigator>
       </NavigationContainer>
     );

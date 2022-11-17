@@ -8,6 +8,8 @@ import Profile from './Profile';
 // import SplashScreen from './SplashScreen';
 import SelectLanguageScreen from './SelectLanguageScreen';
 import LoginScreen from './Login';
+import SignUpScreen from './SignUpScreen';
+import GeneralTerms from './GeneralTerms';
 
 export {
   Home,
@@ -18,7 +20,9 @@ export {
   OrderError,
   Profile,
   SelectLanguageScreen,
-  LoginScreen
+  LoginScreen,
+  SignUpScreen,
+  GeneralTerms
   // SplashScreen
 };
 
