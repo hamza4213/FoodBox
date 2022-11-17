@@ -33,7 +33,6 @@ interface StateV0 {
 
 const migrations = {
   1: async (_oldState: StateV0): Promise<FBRootState> => {
-
     const state: FBRootState = {
       restaurantState: restaurantInitialState,
       ordersState: ordersInitialState,
@@ -96,7 +95,6 @@ const persistConfig = {
     } catch (err) {
       return Promise.reject(err);
     }
-
   },
 };
 
@@ -112,8 +110,8 @@ LogBox.ignoreLogs([
 
 const ReduxApp = () => {
   const [isHeadless, setIsHeadless] = useState(true);
-  
-  useEffect(()=> {
+
+  useEffect(() => {
     const verifyIsHeadless = async () => {
       try {
         const isHeadlessResult = await messaging().getIsHeadless();
@@ -122,10 +120,10 @@ const ReduxApp = () => {
         setIsHeadless(false);
       }
     };
-    
+
     verifyIsHeadless();
   }, []);
-  
+
   if (isHeadless) {
     return null;
   }
@@ -133,8 +131,8 @@ const ReduxApp = () => {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <App/>
-        <FlashMessage position="top"/>
+        <App />
+        <FlashMessage position="top" />
       </PersistGate>
     </Provider>
   );

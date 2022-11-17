@@ -5,6 +5,7 @@ import PaymentMethod from './PaymentMethod';
 import OrderFinalized from './OrderFinalized';
 import OrderError from './OrderError';
 import Profile from './Profile';
+import SplashScreen from './SplashScreen'
 
 export {
   Home,
@@ -14,4 +15,6 @@ export {
   OrderFinalized,
   OrderError,
   Profile,
+  SplashScreen
 };
+

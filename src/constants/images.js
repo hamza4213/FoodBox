@@ -6,6 +6,7 @@ const facebook = require('../../assets/images/auth_facebook.png');
 const app_logo = require('../../assets/images/app_logo.png');
 const app_user = require('../../assets/images/app_username_icon.png');
 const app_background = require('../../assets/images/app_background.png');
+const app_background2 = require('../../assets/images/LoadingScreen.png');
 // const phone = require('../../images/auth_phone.png');
 // const mail = require('../../images/auth_mail.png');
 // const lock = require('../../images/auth_lock_close.png');
@@ -24,4 +25,5 @@ export default {
   app_user,
   app_logo,
   app_background,
+  app_background2,
 };

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {useAuth} from './AuthProvider';
 import {ImageBackground, Text, View} from 'react-native';
 import {Utils} from '../utils';
 import {images} from '../constants';
+import {SvgXml, WithLocalSvg} from 'react-native-svg';
 
 import {NavigationContainer} from '@react-navigation/native';
 import SignInScreen from '../screens/Authorization/Login';
@@ -27,56 +28,62 @@ const AuthStack = createStackNavigator();
 const FBRouter = () => {
   const {authData, authLoading, signOut} = useAuth();
   const intl = useIntl();
+  const [showSPlashScreen, setShowSPlashScreen] = useState(true);
 
-  if (authLoading) {
+  if (showSPlashScreen) {
     return (
-      <ImageBackground
-        source={images.app_background}
+      <View
         style={{
           flex: 1,
-          height: Utils.height,
-          width: Utils.width,
+          // height: Utils.height,
+          // width: Utils.width,
+          backgroundColor: '#182550',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}>
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <View style={{flex: 1, alignSelf: 'center'}}>
-            <Text>Loading</Text>
-          </View>
-        </View>
-      </ImageBackground>
+        <WithLocalSvg
+          asset={require('./../../assets/images/logo.svg')}
+          width={210}
+          height={210}
+          fill={'#fff'}
+        />
+      </View>
     );
   }
 
-  if (!authData?.userToken) {
+  if (!showSPlashScreen) {
     return (
       <NavigationContainer>
-        <AuthStack.Navigator screenOptions={{
-          headerShown: false,
-          animationEnabled: false,
-        }} initialRouteName={'SignInScreen'}>
-          <AuthStack.Screen name="SignInScreen" component={SignInScreen}/>
-          <AuthStack.Screen name="SignUpScreen" component={SignUpScreen}/>
+        <AuthStack.Navigator
+          screenOptions={{
+            headerShown: false,
+            animationEnabled: false,
+          }}
+          initialRouteName={'SignUpScreen'}>
+          <AuthStack.Screen name="SignInScreen" component={SignInScreen} />
+          <AuthStack.Screen name="SignUpScreen" component={SignUpScreen} />
         </AuthStack.Navigator>
       </NavigationContainer>
     );
   }
 
   return (
-    <ErrorBoundary onError={(_e: Error) => {
-      showToastError(translateText(intl, 'genericerror'));
-      signOut();
-    }}>
+    <ErrorBoundary
+      onError={(_e: Error) => {
+        showToastError(translateText(intl, 'genericerror'));
+        signOut();
+      }}>
       <NavigationContainer>
         <Drawer.Navigator
           screenOptions={{headerShown: false}}
           initialRouteName={'HomeTabs'}
-          drawerContent={props => <SideMenuContent {...props} />}
-        >
-          <Drawer.Screen name="HomeTabs" component={HomeTabs}/>
-          <Drawer.Screen name="Offer" component={Offer}/>
-          <Drawer.Screen name="Profile" component={Profile}/>
-          <Drawer.Screen name="PaymentMethod" component={PaymentMethod}/>
-          <Drawer.Screen name="OrderFinalized" component={OrderFinalized}/>
-          <Drawer.Screen name="OrderError" component={OrderError}/>
+          drawerContent={props => <SideMenuContent {...props} />}>
+          <Drawer.Screen name="HomeTabs" component={HomeTabs} />
+          <Drawer.Screen name="Offer" component={Offer} />
+          <Drawer.Screen name="Profile" component={Profile} />
+          <Drawer.Screen name="PaymentMethod" component={PaymentMethod} />
+          <Drawer.Screen name="OrderFinalized" component={OrderFinalized} />
+          <Drawer.Screen name="OrderError" component={OrderError} />
         </Drawer.Navigator>
       </NavigationContainer>
     </ErrorBoundary>
