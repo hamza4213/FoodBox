@@ -59,7 +59,7 @@ const ChooseCity = () => {
         <Slider
           style={{width: '105%', marginTop: 30, alignSelf: 'center'}}
           minimumValue={0}
-          maximumValue={1}
+          maximumValue={10}
           minimumTrackTintColor="#79C54A"
           maximumTrackTintColor="gray"
           thumbTintColor="#79C54A"

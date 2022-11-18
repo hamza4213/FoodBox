@@ -11,6 +11,10 @@ import LoginScreen from './Login';
 import SignUpScreen from './SignUpScreen';
 import GeneralTerms from './GeneralTerms';
 import ChooseCity from './ChooseCity';
+import Objects from './Objects';
+import Orders from './Orders';
+import LovedOnes from './LovedOnes';
+import ProfileScreen from './ProfileScreen';
 export {
   Home,
   Offer,
@@ -23,7 +27,11 @@ export {
   LoginScreen,
   SignUpScreen,
   GeneralTerms,
-  ChooseCity
+  ChooseCity,
+  Objects,
+  Orders,
+  LovedOnes,
+  ProfileScreen
   // SplashScreen
 };
 
