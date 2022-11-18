@@ -26,6 +26,7 @@ import {
   LoginScreen,
   SignUpScreen,
   GeneralTerms,
+  ChooseCity
 } from '../screens';
 
 const Drawer = createDrawerNavigator();
@@ -70,7 +71,7 @@ const FBRouter = () => {
             headerShown: false,
             animationEnabled: false,
           }}
-          initialRouteName={'LoginScreen'}>
+          initialRouteName={'ChooseCity'}>
           {/* <AuthStack.Screen name="SignInScreen" component={SignInScreen} />
           <AuthStack.Screen name="SignUpScreen" component={SignUpScreen} /> */}
           <AuthStack.Screen
@@ -80,6 +81,7 @@ const FBRouter = () => {
           <AuthStack.Screen name="LoginScreen" component={LoginScreen} />
           <AuthStack.Screen name="SignUpScreen" component={SignUpScreen} />
           <AuthStack.Screen name="GeneralTerms" component={GeneralTerms} />
+          <AuthStack.Screen name="ChooseCity" component={ChooseCity} />
         </AuthStack.Navigator>
       </NavigationContainer>
     );

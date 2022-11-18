@@ -10,7 +10,7 @@ import SelectLanguageScreen from './SelectLanguageScreen';
 import LoginScreen from './Login';
 import SignUpScreen from './SignUpScreen';
 import GeneralTerms from './GeneralTerms';
-
+import ChooseCity from './ChooseCity';
 export {
   Home,
   Offer,
@@ -22,7 +22,8 @@ export {
   SelectLanguageScreen,
   LoginScreen,
   SignUpScreen,
-  GeneralTerms
+  GeneralTerms,
+  ChooseCity
   // SplashScreen
 };
 
