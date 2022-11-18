@@ -15,6 +15,7 @@ import Objects from './Objects';
 import Orders from './Orders';
 import LovedOnes from './LovedOnes';
 import ProfileScreen from './ProfileScreen';
+import ProductDetail from './ProductDetail';
 export {
   Home,
   Offer,
@@ -31,7 +32,8 @@ export {
   Objects,
   Orders,
   LovedOnes,
-  ProfileScreen
+  ProfileScreen,
+  ProductDetail
   // SplashScreen
 };
 

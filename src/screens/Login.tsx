@@ -59,7 +59,9 @@ const LoginScreen = ({navigation}: LoginProps) => {
             onPress={() => setModalVisible(!modalVisible)}>
             <Text style={styles.forgotBtnTxt}>Забравена парола?</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.loginBtn}>
+          <TouchableOpacity
+            style={styles.loginBtn}
+            onPress={() => navigation.navigate('Objects')}>
             <Text style={styles.loginBtnTxt}>Вход</Text>
           </TouchableOpacity>
           <View style={styles.registerSec}>
