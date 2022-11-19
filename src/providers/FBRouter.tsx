@@ -32,6 +32,7 @@ import {
   LovedOnes,
   ProfileScreen,
   ProductDetail,
+  OrderDetailScreen,
 } from '../screens';
 
 const Drawer = createDrawerNavigator();
@@ -76,7 +77,7 @@ const FBRouter = () => {
             headerShown: false,
             animationEnabled: false,
           }}
-          initialRouteName={'ProductDetail'}>
+          initialRouteName={'OrderDetailScreen'}>
           {/* <AuthStack.Screen name="SignInScreen" component={SignInScreen} />
           <AuthStack.Screen name="SignUpScreen" component={SignUpScreen} /> */}
           <AuthStack.Screen
@@ -92,6 +93,10 @@ const FBRouter = () => {
           <AuthStack.Screen name="ProfileScreen" component={ProfileScreen} />
           <AuthStack.Screen name="Orders" component={Orders} />
           <AuthStack.Screen name="ProductDetail" component={ProductDetail} />
+          <AuthStack.Screen
+            name="OrderDetailScreen"
+            component={OrderDetailScreen}
+          />
         </AuthStack.Navigator>
       </NavigationContainer>
     );
