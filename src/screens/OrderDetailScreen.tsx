@@ -26,10 +26,11 @@ import LocationIcon from './../../assets/images/location.svg';
 import BoxIcon from './../../assets/images/box2.svg';
 import CartIcon from './../../assets/images/shopping-cart.svg';
 import CloseIcon from './../../assets/images/close.svg';
-import CashPaymentIcon from './../../assets/images/cashPayment.svg';
+import InformationIcon from './../../assets/images/info-circle.svg';
 import JumpingIcon from './../../assets/images/jumpingMascot.svg';
 import MoscatIcon from './../../assets/images/showingMascot.svg';
-import {stubArray} from 'lodash';
+import ExcitedIcon from './../../assets/images/excitedMascot.svg';
+import CameraIcon from './../../assets/images/camera.svg';
 
 interface OrderDetailProps {
   route: any;
@@ -43,11 +44,15 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
   const [thirdModal, setThirdModal] = useState(false);
   const [fourthModal, setFourthModal] = useState(false);
   const [fifthModal, setFifthModal] = useState(false);
-  const [itemNumber, setItemNumber] = useState(1);
+  const [sixthModal, setSixthModal] = useState(false);
+  const [seventhModal, setSeventhModal] = useState(false);
   const [cashPayment, setCashPayment] = useState(false);
-  const [selectedRestaurant, setSelectedRestaurant] = useState<
-    RestaurantHomeListItem | undefined
-  >(undefined);
+  const [secondRadioBtn, setSecondRadioBtn] = useState(false);
+  const [thirdRaddioBtn, setThirdRaddioBtn] = useState(false);
+  const [fourthRadioBtn, setFourthRadioBtn] = useState(false);
+  const [fifthRadioBtn, setFifthRadioBtn] = useState(false);
+  const [cancelOrderSatus, setCancelOrderSatus] = useState(false);
+
   const foodPhotos = [1, 2, 3, 4, 5, 6];
   return (
     <SafeAreaView style={styles.container}>
@@ -80,8 +85,19 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
               +359 885 00 42 43
             </Text>
           </Text>
-          <View style={styles.orderDetailsSec}>
-            <Text style={styles.orderDetailsHeading}>ПИН: 559821</Text>
+          <View
+            style={[
+              styles.orderDetailsSec,
+              cancelOrderSatus ? {backgroundColor: '#FFE5E5'} : null,
+            ]}>
+            {cancelOrderSatus ? (
+              <Text style={[styles.orderDetailsHeading, {color: '#CF4F4F'}]}>
+                Отменена поръчка
+              </Text>
+            ) : (
+              <Text style={styles.orderDetailsHeading}>ПИН: 559821</Text>
+            )}
+
             <View style={[styles.clockSec, {marginTop: 10}]}>
               <ClockIcon fill={'#fff'} />
               <Text style={styles.clockTxt2}> Вземи от 16:30 до 17:30</Text>
@@ -196,12 +212,18 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
 
           <TouchableOpacity
             style={styles.toTheResultBtn}
-            onPress={() => setModalVisible(true)}>
+            onPress={() => setFourthModal(true)}>
             <Text style={styles.toTheResultBtnTXt}>Кутията е спасена</Text>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
             <Text style={styles.foodPriceTxt}>Отмени поръчка</Text>
           </TouchableOpacity>
+          {/* <TouchableOpacity
+            onPress={() => setSixthModal(true)}
+            style={styles.cancelTheOrderBtn}>
+            <Text style={styles.cancelTheOrderBtnTxt}>Отмени поръчката</Text>
+            <InformationIcon />
+          </TouchableOpacity> */}
         </ScrollView>
       </View>
 
@@ -221,40 +243,27 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
               onPress={() => setModalVisible(false)}>
               <CloseIcon />
             </TouchableOpacity>
-            <Text style={styles.modalHeading}>
-              Кутия с пица и салата от Food Corner
+            <Text style={[styles.modalHeading, {color: '#CF4F4F'}]}>
+              Отмяна на поръчка
             </Text>
-            <Text style={styles.addressLabel}>Адрес на заведението</Text>
-            <Text
-              style={[
-                styles.addressTxt,
-                {borderBottomWidth: 1, borderBottomColor: '#182550'},
-              ]}>
-              ул. “Бели Дунав” 10, София, България
+            <Text style={styles.desTxt}>
+              Сигурен ли си, че искаш да се откажеш от поръчката си?
             </Text>
-            <View
-              style={{
-                height: 63,
-                width: '100%',
-                marginTop: 10,
-                borderRadius: 10,
-              }}>
-              <TouchableOpacity style={styles.seeloctionBtn}>
-                <Text style={styles.seeloctionTxt}>Виж локацията</Text>
+            <View style={styles.firstModalBtns}>
+              <TouchableOpacity
+                style={styles.backBtn}
+                onPress={() => {
+                  setModalVisible(false);
+                  setSecondModal(true);
+                }}>
+                <Text style={styles.backBtnTxt}>Назад</Text>
               </TouchableOpacity>
-              <ClusteredMapView zoomOnRestaurant={selectedRestaurant} />
+              <TouchableOpacity
+                style={styles.cancelBtn}
+                onPress={() => setModalVisible(false)}>
+                <Text style={styles.cancelBtnTxt}>Отмени</Text>
+              </TouchableOpacity>
             </View>
-
-            <Text style={styles.addressLabel}>Час за вземане</Text>
-            <Text style={styles.addressTxt}>от 16:30 до 17:30 </Text>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                setModalVisible(false);
-                setSecondModal(true);
-              }}>
-              <Text style={styles.buttonTxt}>Продължи с поръчката</Text>
-            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -273,52 +282,78 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
               onPress={() => setSecondModal(false)}>
               <CloseIcon />
             </TouchableOpacity>
-            <Text style={styles.secondModalHeading}>Food Corner</Text>
-            <View style={styles.incAndDecSec}>
-              <TouchableOpacity style={styles.increaseBtn}>
-                <Text style={styles.minusTxt}>-</Text>
-              </TouchableOpacity>
-              <Text style={styles.itemNumberTxt}>{itemNumber} кутии</Text>
-              <TouchableOpacity style={styles.decreaseBtn}>
-                <Text style={styles.minusTxt}>+</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={[styles.totalPaymentSec, {marginTop: 20}]}>
-              <Text style={styles.totalPaymentLabel}>Обща сума</Text>
-              <Text style={styles.totalPayment}>14.00лв</Text>
-            </View>
-            <View style={styles.totalPaymentSec}>
-              <Text style={styles.saveTxt}>Ти спестяваш</Text>
-              <Text style={styles.saveTxt}>10.00лв</Text>
-            </View>
+            <Text style={[styles.modalHeading, {color: '#CF4F4F'}]}>
+              Отмяна на поръчка
+            </Text>
             <TouchableOpacity
               style={styles.cashPaymentSec}
               onPress={() => setCashPayment(!cashPayment)}>
-              <CashPaymentIcon />
-              <Text style={styles.cashPaymentTxt}>плащане в брой</Text>
               <View style={styles.cashPaymentCheck}>
                 {cashPayment ? (
                   <View style={styles.cashPaymentCheckFilled}></View>
                 ) : null}
               </View>
+              <Text style={styles.cashPaymentTxt}>
+                Локацията беше затворена
+              </Text>
             </TouchableOpacity>
-            <View style={styles.voucherSec}>
-              <TextInput
-                placeholder="Ваучер или промо код"
-                style={styles.voucherInput}
-              />
-              <TouchableOpacity style={styles.voucherBtn}>
-                <Text style={styles.voucherBtnTxt}>Приложи</Text>
+            <TouchableOpacity
+              style={styles.cashPaymentSec}
+              onPress={() => setSecondRadioBtn(!secondRadioBtn)}>
+              <View style={styles.cashPaymentCheck}>
+                {secondRadioBtn ? (
+                  <View style={styles.cashPaymentCheckFilled}></View>
+                ) : null}
+              </View>
+              <Text style={styles.cashPaymentTxt}>Лошо отношение</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.cashPaymentSec}
+              onPress={() => setThirdRaddioBtn(!thirdRaddioBtn)}>
+              <View style={styles.cashPaymentCheck}>
+                {thirdRaddioBtn ? (
+                  <View style={styles.cashPaymentCheckFilled}></View>
+                ) : null}
+              </View>
+              <Text style={styles.cashPaymentTxt}>Не ми хареса кутията</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.cashPaymentSec}
+              onPress={() => setFifthRadioBtn(!fourthRadioBtn)}>
+              <View style={styles.cashPaymentCheck}>
+                {fourthRadioBtn ? (
+                  <View style={styles.cashPaymentCheckFilled}></View>
+                ) : null}
+              </View>
+              <Text style={styles.cashPaymentTxt}>
+                Няма да успея да я взема
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.cashPaymentSec}
+              onPress={() => setFifthRadioBtn(!fifthRadioBtn)}>
+              <View style={styles.cashPaymentCheck}>
+                {fifthRadioBtn ? (
+                  <View style={styles.cashPaymentCheckFilled}></View>
+                ) : null}
+              </View>
+              <Text style={styles.cashPaymentTxt}>Промених си мнението</Text>
+            </TouchableOpacity>
+            <View style={styles.firstModalBtns}>
+              <TouchableOpacity
+                style={styles.backBtn}
+                onPress={() => {
+                  setSecondModal(false);
+                  setCancelOrderSatus(true);
+                }}>
+                <Text style={styles.backBtnTxt}>Назад</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.cancelBtn}
+                onPress={() => setModalVisible(false)}>
+                <Text style={styles.cancelBtnTxt}>Отмени</Text>
               </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                setSecondModal(false);
-                setFourthModal(true);
-              }}>
-              <Text style={styles.buttonTxt}>Завърши поръчката</Text>
-            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -349,7 +384,6 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
         </View>
       </Modal>
 
-      {/* NO REGISTER MODAL */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -361,25 +395,31 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
           <View style={styles.modalView}>
             <TouchableOpacity
               style={styles.closeBtn}
-              onPress={() => setFourthModal(false)}>
-              <CloseIcon />
-            </TouchableOpacity>
-            <MoscatIcon />
-            <Text style={[styles.modalHeading, {marginTop: 10}]}>
-              Регистрирай се!
-            </Text>
-            <Text style={styles.desTxt}>
-              За да направиш поръчка през Foodobox, трябва първо да създадеш
-              персонален профил.
-            </Text>
-            <TouchableOpacity
-              style={styles.button}
               onPress={() => {
                 setFourthModal(false);
-                navigation.navigate('SignUpScreen');
+                setFifthModal(true);
               }}>
-              <Text style={styles.buttonTxt}>Създай профил</Text>
+              <CloseIcon />
             </TouchableOpacity>
+            <JumpingIcon />
+            <Text
+              style={[styles.modalHeading, {marginTop: 10, color: '#79C54A'}]}>
+              Благодарим ти, че спаси храна с FoodOBox!
+            </Text>
+            <Text style={styles.desTxt}>
+              Мнението ти е важно за нас. Как оценяваш тази поръчка?
+            </Text>
+            <Rating
+              type="custom"
+              readonly={false}
+              ratingColor="#79C54A"
+              startingValue={0}
+              ratingBackgroundColor="#fff"
+              ratingTextColor="#000"
+              ratingCount={5}
+              imageSize={25}
+              style={{paddingVertical: 0, width: '100%', marginTop: 20}}
+            />
           </View>
         </View>
       </Modal>
@@ -399,17 +439,20 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
               onPress={() => setFifthModal(false)}>
               <CloseIcon />
             </TouchableOpacity>
-            <Text style={[styles.modalHeading, {marginTop: 5, fontSize: 12}]}>
+            <Text
+              style={[styles.modalHeading, {marginTop: 10, color: '#79C54A'}]}>
+              Разкажи ни малко повече
+            </Text>
+            <Text style={[styles.modalHeading, {marginTop: 20, fontSize: 12}]}>
               Качество на храната
             </Text>
             <Rating
               type="custom"
-              readonly
               ratingColor="#79C54A"
-              startingValue={3}
+              startingValue={0}
               ratingBackgroundColor="#fff"
               ratingCount={5}
-              imageSize={15}
+              imageSize={25}
               style={{paddingVertical: 0, width: '100%', marginTop: 5}}
             />
             <Text style={[styles.modalHeading, {marginTop: 20, fontSize: 12}]}>
@@ -417,26 +460,24 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
             </Text>
             <Rating
               type="custom"
-              readonly
               ratingColor="#79C54A"
-              startingValue={3}
+              startingValue={0}
               ratingBackgroundColor="#fff"
               ratingCount={5}
-              imageSize={15}
-              style={{paddingVertical: 0, width: '100%', marginTop: 5}}
+              imageSize={25}
+              style={{paddingVertical: 0, width: '100%', marginTop: 10}}
             />
             <Text style={[styles.modalHeading, {marginTop: 20, fontSize: 12}]}>
               Количество на храната
             </Text>
             <Rating
               type="custom"
-              readonly
               ratingColor="#79C54A"
-              startingValue={3}
+              startingValue={0}
               ratingBackgroundColor="#fff"
               ratingCount={5}
-              imageSize={15}
-              style={{paddingVertical: 0, width: '100%', marginTop: 5}}
+              imageSize={25}
+              style={{paddingVertical: 0, width: '100%', marginTop: 10}}
             />
             <Text style={[styles.modalHeading, {marginTop: 20, fontSize: 12}]}>
               Бързина на обслужване
@@ -445,12 +486,88 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
               type="custom"
               readonly
               ratingColor="#79C54A"
-              startingValue={3}
+              startingValue={0}
               ratingBackgroundColor="#fff"
               ratingCount={5}
-              imageSize={15}
-              style={{paddingVertical: 0, width: '100%', marginTop: 5}}
+              imageSize={25}
+              style={{paddingVertical: 0, width: '100%', marginTop: 10}}
             />
+
+            <View style={styles.firstModalBtns}>
+              <TouchableOpacity
+                style={styles.cancelBtn}
+                onPress={() => setFifthModal(false)}>
+                <Text style={styles.cancelBtnTxt}>Назад</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.backBtn}
+                onPress={() => {
+                  setFifthModal(false);
+                  setSeventhModal(true);
+                }}>
+                <Text style={styles.backBtnTxt}>Оцени</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* CANCEl ORDER INFORMATION MODAL */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={sixthModal}
+        onRequestClose={() => {
+          setSixthModal(!sixthModal);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <TouchableOpacity
+              style={styles.closeBtn}
+              onPress={() => setSixthModal(false)}>
+              <CloseIcon />
+            </TouchableOpacity>
+            <Text style={[styles.modalHeading, {color: '#CF4F4F'}]}>
+              Изтекъл срок за отмяна
+            </Text>
+            <Text style={styles.desTxt}>
+              Според общите условия, имаш право да отмениш поръчка не по-малко
+              от 90 минути преди края на прозореца за вземане, за да има време
+              друг клиент да спаси храната.
+            </Text>
+          </View>
+        </View>
+      </Modal>
+
+      {/* SEVENTH MODAL */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={seventhModal}
+        onRequestClose={() => {
+          setSeventhModal(!seventhModal);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <TouchableOpacity
+              style={styles.closeBtn}
+              onPress={() => {
+                setSeventhModal(false);
+              }}>
+              <CloseIcon />
+            </TouchableOpacity>
+            <ExcitedIcon />
+            <Text
+              style={[styles.modalHeading, {marginTop: 10, color: '#79C54A'}]}>
+              Благодарим за{'\n'} обратната връзка!
+            </Text>
+            <Text style={styles.desTxt}>
+              Мнението ти е важно за нас. Как оценяваш тази поръчка?
+            </Text>
+            <TouchableOpacity style={styles.button}>
+              <CameraIcon />
+              <Text style={styles.buttonTxt}> Снимай кутията</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -614,8 +731,9 @@ const styles = StyleSheet.create({
     height: 48,
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
+    width: '80%',
     marginTop: 20,
+    flexDirection: 'row',
   },
   buttonTxt: {
     color: '#fff',
@@ -728,20 +846,16 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   cashPaymentSec: {
-    backgroundColor: '#F5F5F5',
-    width: '100%',
+    width: '70%',
     alignItems: 'center',
     flexDirection: 'row',
-    height: 40,
-    paddingHorizontal: 10,
     borderRadius: 8,
-    marginTop: 20,
+    marginTop: 15,
   },
   cashPaymentTxt: {
-    fontSize: 11,
-    color: '#000000',
+    fontSize: 14,
+    color: '#182550',
     marginLeft: 10,
-    flex: 1,
   },
   cashPaymentCheck: {
     width: 16,
@@ -808,6 +922,47 @@ const styles = StyleSheet.create({
     color: '#182550',
     fontSize: 12,
     marginTop: 5,
+  },
+  firstModalBtns: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 20,
+    width: '100%',
+  },
+  backBtn: {
+    height: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 0.5,
+    borderRadius: 8,
+    borderColor: '#182550',
+    width: '47%',
+  },
+  backBtnTxt: {
+    fontSize: 16,
+    color: '#182550',
+  },
+  cancelBtn: {
+    height: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+    width: '47%',
+  },
+  cancelBtnTxt: {
+    fontSize: 16,
+    color: '#CF4F4F',
+  },
+  cancelTheOrderBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cancelTheOrderBtnTxt: {
+    fontSize: 16,
+    color: '#A6A6A6',
+    marginRight: 5,
   },
 });
 

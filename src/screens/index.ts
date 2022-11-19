@@ -16,6 +16,8 @@ import LovedOnes from './LovedOnes';
 import ProfileScreen from './ProfileScreen';
 import ProductDetail from './ProductDetail';
 import OrderDetailScreen from './OrderDetailScreen';
+import StartScreen from './StartScreen';
+import LatestLOcation from './LatestLOcation';
 export {
   Home,
   Offer,
@@ -34,6 +36,8 @@ export {
   LovedOnes,
   ProfileScreen,
   ProductDetail,
-  OrderDetailScreen
+  OrderDetailScreen,
+  StartScreen,
+  LatestLOcation
 };
 

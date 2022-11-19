@@ -38,16 +38,15 @@ const BottomTabs = (props: any) => {
         ) : null}
       </TouchableOpacity>
       <TouchableOpacity
-        //   onPress={() => props.navigation.navigate('Objects')}
-
+        onPress={() => props.navigation.navigate('StartScreen')}
         style={[
-          props.screenName === 'Dashboard'
+          props.screenName === 'StartScreen'
             ? styles.activeTab
             : styles.inactiveTab,
         ]}>
         <DashboardIcon />
-        {props.screenName === 'Dashboard' ? (
-          <Text style={styles.activeTabTxt}>обекти</Text>
+        {props.screenName === 'StartScreen' ? (
+          <Text style={styles.activeTabTxt}>начало</Text>
         ) : null}
       </TouchableOpacity>
       <TouchableOpacity
