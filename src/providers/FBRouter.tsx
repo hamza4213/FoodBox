@@ -38,6 +38,7 @@ import {
   Setting,
   FAQ,
   FilterScreen,
+  SaveOrderScreen,
 } from '../screens';
 
 const Drawer = createDrawerNavigator();
@@ -82,7 +83,7 @@ const FBRouter = () => {
             headerShown: false,
             animationEnabled: false,
           }}
-          initialRouteName={'Objects'}>
+          initialRouteName={'SelectLanguageScreen'}>
           {/* <AuthStack.Screen name="SignInScreen" component={SignInScreen} />
           <AuthStack.Screen name="SignUpScreen" component={SignUpScreen} /> */}
           <AuthStack.Screen
@@ -107,6 +108,10 @@ const FBRouter = () => {
           <AuthStack.Screen name="Setting" component={Setting} />
           <AuthStack.Screen name="FAQ" component={FAQ} />
           <AuthStack.Screen name="FilterScreen" component={FilterScreen} />
+          <AuthStack.Screen
+            name="SaveOrderScreen"
+            component={SaveOrderScreen}
+          />
         </AuthStack.Navigator>
       </NavigationContainer>
     );

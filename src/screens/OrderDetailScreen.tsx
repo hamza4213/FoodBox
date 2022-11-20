@@ -10,6 +10,7 @@ import {
   Modal,
 } from 'react-native';
 import {Rating} from 'react-native-ratings';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import ClockIcon from './../../assets/images/clockOutline.svg';
 import GiftIcon from './../../assets/images/gift.svg';
 import DollarIcon from './../../assets/images/dollar.svg';
@@ -41,6 +42,12 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
   const [cancelOrderSatus, setCancelOrderSatus] = useState(false);
 
   const foodPhotos = [1, 2, 3, 4, 5, 6];
+
+  const openCamera = async () => {
+    const result = await launchCamera({mediaType: 'photo', cameraType: 'back'});
+    console.log(result);
+    navigation.navigate('SaveOrderScreen', result.assets[0]);
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.listsMain}>
@@ -552,7 +559,9 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
             <Text style={styles.desTxt}>
               Мнението ти е важно за нас. Как оценяваш тази поръчка?
             </Text>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => openCamera()}>
               <CameraIcon />
               <Text style={styles.buttonTxt}> Снимай кутията</Text>
             </TouchableOpacity>

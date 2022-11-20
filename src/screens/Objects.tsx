@@ -25,7 +25,7 @@ interface ObjectsProps {
 }
 
 const Objects = ({navigation}: ObjectsProps) => {
-  const [activeTab, setActiveTab] = useState('списък');
+  const [activeTab, setActiveTab] = useState('карта');
   const [activeFilter, setActiveFilter] = useState('около мен');
   const [selectedRestaurant, setSelectedRestaurant] = useState<
     RestaurantHomeListItem | undefined
@@ -59,7 +59,7 @@ const Objects = ({navigation}: ObjectsProps) => {
           </Text>
         </TouchableOpacity>
       </View>
-      {activeTab === 'карта' ? (
+      {activeTab === 'списък' ? (
         <View style={{flex: 1, marginTop: 3}}>
           <View style={styles.filterSec}>
             <ScrollView
@@ -89,7 +89,7 @@ const Objects = ({navigation}: ObjectsProps) => {
           </View>
         </View>
       ) : null}
-      {activeTab === 'списък' ? (
+      {activeTab === 'карта' ? (
         <View style={styles.listsMain}>
           <View style={styles.listSecMain}>
             <View style={styles.searchInput}>
@@ -179,14 +179,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 20,
+    position: 'absolute',
+    zIndex: 1,
+    bottom: 100,
+    backgroundColor: '#fff',
+    width: '60%',
+    alignSelf: 'center',
+    borderRadius: 10,
   },
   activeTab: {
     width: '50%',
     backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 33,
+    height: 37,
     elevation: 5,
     borderRadius: 6,
   },
@@ -194,6 +200,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '50%',
+    height: 37,
   },
   tabTxt: {
     fontSize: 14,
@@ -222,12 +229,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     position: 'absolute',
     zIndex: 1,
-    bottom: 95,
+    top: 10,
   },
   filterSec: {
     position: 'absolute',
     zIndex: 1,
-    top: 10,
+    top: 60,
   },
   filterBtn: {
     width: 34,

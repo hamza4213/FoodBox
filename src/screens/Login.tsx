@@ -35,7 +35,7 @@ const LoginScreen = ({navigation}: LoginProps) => {
       </TouchableOpacity>
       <View style={styles.loginMain}>
         <ScrollView
-          contentContainerStyle={{paddingHorizontal: '5%'}}
+          contentContainerStyle={{paddingHorizontal: '5%', paddingBottom: 40}}
           showsVerticalScrollIndicator={false}>
           <View style={styles.inputView}>
             <Text style={styles.inputLabel}>Имейл</Text>
@@ -272,6 +272,7 @@ const styles = StyleSheet.create({
   },
   bottomBtn: {
     alignSelf: 'center',
+    marginTop: 10,
   },
   registerTxt: {
     color: '#CF4F4F',

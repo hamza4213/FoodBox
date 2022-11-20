@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
 import {images} from '../constants';
+import FLagIcon from './../../assets/flags/ro.svg';
+
 const {height, width} = Dimensions.get('window');
 
 const data = [
@@ -41,8 +43,10 @@ const SelectLanguageScreen = (props: any) => {
         placeholder="София-град"
         searchPlaceholder="Search..."
         value={value}
+        renderRightIcon={() => <FLagIcon />}
         onChange={item => {
           setValue(item.value);
+          props.navigation.navigate('LoginScreen');
         }}
       />
     </SafeAreaView>

@@ -21,6 +21,7 @@ import LatestLOcation from './LatestLOcation';
 import Setting from './Setting';
 import FAQ from './FAQ';
 import FilterScreen from './FilterScreen';
+import SaveOrderScreen from './SavedOrder';
 export {
   Home,
   Offer,
@@ -44,6 +45,7 @@ export {
   LatestLOcation,
   Setting,
   FAQ,
-  FilterScreen
+  FilterScreen,
+  SaveOrderScreen
 };
 

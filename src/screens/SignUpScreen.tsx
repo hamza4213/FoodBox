@@ -85,7 +85,9 @@ const SignUpScreen = ({navigation}: SignUpProps) => {
             onPress={() => setModalVisible(!modalVisible)}>
             <Text style={styles.forgotBtnTxt}>Забравена парола?</Text>
           </TouchableOpacity> */}
-          <TouchableOpacity style={styles.loginBtn}>
+          <TouchableOpacity
+            style={styles.loginBtn}
+            onPress={() => navigation.navigate('Objects')}>
             <Text style={styles.loginBtnTxt}>Регистрирай се</Text>
           </TouchableOpacity>
           <View style={styles.registerSec}>
