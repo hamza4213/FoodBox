@@ -35,6 +35,9 @@ import {
   OrderDetailScreen,
   StartScreen,
   LatestLOcation,
+  Setting,
+  FAQ,
+  FilterScreen,
 } from '../screens';
 
 const Drawer = createDrawerNavigator();
@@ -101,6 +104,9 @@ const FBRouter = () => {
           />
           <AuthStack.Screen name="StartScreen" component={StartScreen} />
           <AuthStack.Screen name="LatestLOcation" component={LatestLOcation} />
+          <AuthStack.Screen name="Setting" component={Setting} />
+          <AuthStack.Screen name="FAQ" component={FAQ} />
+          <AuthStack.Screen name="FilterScreen" component={FilterScreen} />
         </AuthStack.Navigator>
       </NavigationContainer>
     );

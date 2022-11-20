@@ -132,7 +132,9 @@ const Orders = ({navigation}: OrdersProps) => {
                       </View>
                       <Text style={styles.pickUpTime}>{val.pickUpTime}</Text>
                     </View>
-                    <TouchableOpacity style={styles.rightBtn}>
+                    <TouchableOpacity
+                      style={styles.rightBtn}
+                      onPress={() => navigation.navigate('OrderDetailScreen')}>
                       <RightIcon />
                     </TouchableOpacity>
                   </View>

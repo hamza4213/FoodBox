@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   View,
@@ -12,6 +12,8 @@ import ProfileIcon from './../../assets/images/profile.svg';
 import TrashIcon from './../../assets/images/trash.svg';
 import BoxIcon from './../../assets/images/BOX-open.svg';
 import SmokeIcon from './../../assets/images/smoke.svg';
+import CompleteGift from './../../assets/images/completeGift.svg';
+import PendingGift from './../../assets/images/pendingGift.svg';
 import BottomTabs from '../components/BottomTabs';
 
 interface ProfileProps {
@@ -20,11 +22,38 @@ interface ProfileProps {
 }
 
 const ProfileScreen = ({navigation}: ProfileProps) => {
+  const [boxes, setBoxes] = useState([
+    {
+      des: 'Брой спасени кутии',
+      number: '6',
+      opened: true,
+      icon: <BoxIcon />,
+    },
+    {
+      des: 'Количество спасена храна',
+      number: '4 кг',
+      opened: false,
+      icon: <TrashIcon />,
+    },
+    {
+      des: 'Спестени СО2 емисии',
+      number: '35 кг',
+      opened: false,
+      icon: <SmokeIcon />,
+    },
+    {
+      des: 'Спестени пари за храна',
+      number: '6',
+      opened: false,
+      icon: <BoxIcon />,
+    },
+  ]);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTxt}>Профил</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Setting')}>
           <SettingIcon />
         </TouchableOpacity>
       </View>
@@ -41,29 +70,56 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
                 paddingHorizontal: '5%',
                 paddingVertical: 10,
               }}>
-              <TouchableOpacity style={styles.box}>
-                <BoxIcon />
-                <Text style={styles.boxTxt1}>Брой спасени кутии</Text>
-                <Text style={styles.boxTxt2}>6</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.box}>
-                <TrashIcon />
-                <Text style={styles.boxTxt1}>Количество спасена храна</Text>
-                <Text style={styles.boxTxt2}>4 кг</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.box}>
-                <SmokeIcon />
-                <Text style={styles.boxTxt1}>Спестени СО2 емисии</Text>
-                <Text style={styles.boxTxt2}>35 кг</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.box}>
-                <BoxIcon />
-                <Text style={styles.boxTxt1}>Спестени пари за храна</Text>
-                <Text style={styles.boxTxt2}>6</Text>
-              </TouchableOpacity>
+              {boxes.map((val, i) => {
+                return (
+                  <TouchableOpacity style={styles.box} key={i}>
+                    {val.icon}
+                    <Text style={styles.boxTxt1}>{val.des}</Text>
+                    <Text style={styles.boxTxt2}>{val.number}</Text>
+                  </TouchableOpacity>
+                );
+              })}
             </ScrollView>
             <Text style={styles.levelTxt}>Достигнато ниво</Text>
             <Text style={styles.level}>Ангажиран милениъл</Text>
+            <View style={styles.giftsIcon}>
+              {boxes.map((val, i) => {
+                return (
+                  <TouchableOpacity
+                    key={i}
+                    style={[
+                      val.opened ? styles.completeIcon : styles.pendingIcon,
+                    ]}>
+                    {val.opened ? <PendingGift /> : <CompleteGift />}
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+            <View style={styles.progressSec}>
+              <View style={styles.progress}>
+                <View
+                  style={[
+                    styles.progressFilled,
+                    {width: '100%', backgroundColor: '#79C54A'},
+                  ]}></View>
+              </View>
+              <View style={styles.progress}>
+                <View
+                  style={[
+                    styles.progressFilled,
+                    {width: '25%', backgroundColor: '#79C54A'},
+                  ]}></View>
+              </View>
+              <View style={styles.progress}>
+                <View style={styles.progressFilled}></View>
+              </View>
+              <View style={styles.progress}>
+                <View style={styles.progressFilled}></View>
+              </View>
+              <View style={styles.progress}>
+                <View style={styles.progressFilled}></View>
+              </View>
+            </View>
             <Text style={styles.openBoxTxt}>
               Спаси още 4 кутии, за да отключиш наградите, които{'\n'}те очакват
               на следващото ниво!
@@ -180,6 +236,52 @@ const styles = StyleSheet.create({
   contactBtnTxt: {
     color: '#182550',
     fontSize: 12,
+  },
+  giftsIcon: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '60%',
+    alignSelf: 'center',
+    marginTop: 20,
+  },
+  completeIcon: {
+    backgroundColor: '#79C54A',
+    width: 20,
+    height: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20 / 2,
+    borderWidth: 1,
+    borderColor: '#A6A6A6',
+  },
+  pendingIcon: {
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: '#A6A6A6',
+    width: 15,
+    height: 15,
+    borderRadius: 15 / 2,
+  },
+  progressSec: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '70%',
+    alignSelf: 'center',
+    marginTop: 15,
+  },
+  progress: {
+    width: '19%',
+    backgroundColor: '#F5F5F5',
+    height: 5,
+  },
+  progressFilled: {
+    // backgroundColor: '#79C54A',
+    height: 5,
+    borderRadius: 10,
+    // width: '25%',
   },
 });
 

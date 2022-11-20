@@ -96,7 +96,9 @@ const Objects = ({navigation}: ObjectsProps) => {
               <SearchIcon />
               <TextInput placeholder="Търси" style={styles.input} />
             </View>
-            <TouchableOpacity style={styles.listSearchBtn}>
+            <TouchableOpacity
+              style={styles.listSearchBtn}
+              onPress={() => navigation.navigate('FilterScreen')}>
               <FilterIcon height={21} width={21} />
             </TouchableOpacity>
           </View>

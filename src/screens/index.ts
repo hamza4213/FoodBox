@@ -18,6 +18,9 @@ import ProductDetail from './ProductDetail';
 import OrderDetailScreen from './OrderDetailScreen';
 import StartScreen from './StartScreen';
 import LatestLOcation from './LatestLOcation';
+import Setting from './Setting';
+import FAQ from './FAQ';
+import FilterScreen from './FilterScreen';
 export {
   Home,
   Offer,
@@ -38,6 +41,9 @@ export {
   ProductDetail,
   OrderDetailScreen,
   StartScreen,
-  LatestLOcation
+  LatestLOcation,
+  Setting,
+  FAQ,
+  FilterScreen
 };
 
