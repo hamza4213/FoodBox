@@ -48,6 +48,7 @@ const ClusteredMapView = ({zoomOnRestaurant}:{zoomOnRestaurant?: RestaurantHomeL
 
   const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
   const restaurants = useSelector((state: FBRootState) => state.restaurantState.forMap);
+  console.log('restaurants', zoomOnRestaurant);
   
   const zoomToLocation = useCallback((params: { location: FBGeoLocation, zoomLevel: ZoomLevel }) => {
     if (map.current) {
@@ -210,8 +211,8 @@ const ClusteredMapView = ({zoomOnRestaurant}:{zoomOnRestaurant?: RestaurantHomeL
         }}
       >
         {
-          restaurants.map(restaurant => {
-            const box: FBBox = restaurant.products[0];
+          zoomOnRestaurant.map(restaurant => {
+            const box: FBBox = restaurant.boxes[0];
             const canCheckout = RestaurantService.canCheckout(box);
 
             return (

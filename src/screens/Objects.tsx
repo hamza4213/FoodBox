@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   View,
@@ -11,28 +11,70 @@ import {
 } from 'react-native';
 import BottomTabs from '../components/BottomTabs';
 import ClusteredMapView from '../components/Home/clusteredMapView';
-import {RestaurantHomeListItem} from '../models/Restaurant';
+import {RestaurantHomeListItem, RestaurantMapper} from '../models/Restaurant';
 import ArrowIcon from './../../assets/images/arrow.svg';
 import FilterIcon from './../../assets/images/filterIcon.svg';
 import SearchIcon from './../../assets/images/search.svg';
 import RefreshIcon from './../../assets/images/refresh.svg';
 import HeartIcon from './../../assets/images/heart.svg';
 import BoxIcon from './../../assets/images/box.svg';
+import AsyncStorage from '@react-native-community/async-storage';
+import axiosClient from '../network/axiosClient';
+import { useSelector } from 'react-redux';
+import { FBRootState } from '../redux/store';
+import { API_ENDPOINT_RESTAURANT_PHOTOS } from '../network/Server';
 
 interface ObjectsProps {
   route: any;
   navigation: any;
 }
+interface getRestaurantsWithProductResponse {
+  success: boolean,
+  restaurants: object[]
+}
 
 const Objects = ({navigation}: ObjectsProps) => {
+
   const [activeTab, setActiveTab] = useState('карта');
   const [activeFilter, setActiveFilter] = useState('около мен');
   const [selectedRestaurant, setSelectedRestaurant] = useState<
     RestaurantHomeListItem | undefined
   >(undefined);
+  const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
+  const [restaurants, setRestaurants] = useState()
 
   const filters = ['около мен', 'активни сега', 'любими', 'печива и сладкиши'];
   const productsList = [1, 2, 3, 4, 5, 6];
+
+  const getRestaurants = async () => {
+    const url = '/user/restaurants?getProducts=true';
+    const userToken = await AsyncStorage.getItem('AUTH_DATA_KEY');
+
+    
+    const response: getRestaurantsWithProductResponse = await axiosClient.get(url, {
+      headers: {
+        'x-access-token': userToken,
+      },
+    });
+    try {
+      let restaurantList = []
+       response.restaurants.map((r: any) =>{
+        restaurantList.push(RestaurantMapper.fromApi(r))
+       });
+       setRestaurants(restaurantList)
+       
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
+    
+  }
+  useEffect(()=>{
+    console.log('inside Objects');
+    
+    getRestaurants();
+  },[])
+  
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.tabs}>
@@ -68,16 +110,16 @@ const Objects = ({navigation}: ObjectsProps) => {
               <TouchableOpacity style={styles.filterBtn}>
                 <FilterIcon />
               </TouchableOpacity>
-              {filters.map((val, i) => {
+              {restaurants.map((val, i) => {
                 return (
                   <TouchableOpacity key={i} style={styles.filterTab}>
-                    <Text style={styles.filterTabTxt}>{val}</Text>
+                    <Text style={styles.filterTabTxt}>{val.name}</Text>
                   </TouchableOpacity>
                 );
               })}
             </ScrollView>
           </View>
-          <ClusteredMapView zoomOnRestaurant={selectedRestaurant} />
+          <ClusteredMapView zoomOnRestaurant={restaurants} />
           <View style={styles.selectedCityMain}>
             <TouchableOpacity style={styles.selectedCityBtn}>
               <ArrowIcon />
@@ -110,37 +152,44 @@ const Objects = ({navigation}: ObjectsProps) => {
                 <RefreshIcon width={12} height={12} />
                 <Text style={styles.resulTxt}> поднови резултатите</Text>
               </TouchableOpacity>
-              {productsList.map((val, i) => {
+              {restaurants?.map((val, i) => {
                 return (
-                  <View style={styles.listProduct} key={i}>
+                  <TouchableOpacity style={styles.listProduct} key={i} onPress={()=> navigation.navigate('Offer', {restaurant: val, userLocation: userLocation, box: val.boxes[0]})} >
                     <TouchableOpacity style={styles.discountBtn}>
-                      <Text style={styles.discountBtnTxt}>-40%</Text>
+                      <Text style={styles.discountBtnTxt}>-{val?.boxes[0]?.discount}%</Text>
                     </TouchableOpacity>
                     <ImageBackground
                       style={styles.listImageBackground}
                       borderTopLeftRadius={16}
                       borderTopRightRadius={16}
-                      source={require('./../../assets/images/productImage1.png')}>
+                      source={{uri : API_ENDPOINT_RESTAURANT_PHOTOS + val.thumbnailCoverImage}}
+                      >
+                        {/* // require('./../../assets/images/productImage1.png') */}
+
                       <View style={styles.listTopSec}>
                         <TouchableOpacity style={styles.favouritesIcon}>
                           <HeartIcon width={15} height={14} />
                         </TouchableOpacity>
-                        <Text style={styles.productName}>Food Corner</Text>
+                        <Text style={styles.productName}>{val.name}</Text>
                       </View>
                       <View style={styles.productItems}>
+                          {val.boxes.map((box)=>{
+                            return(
                         <View style={styles.productItemsBox}>
-                          <Text style={styles.productItemsBoxTxt}>
-                            палачинки
+                              <Text style={styles.productItemsBoxTxt}>
+                            {box.summary}
                           </Text>
                         </View>
-                        <View style={styles.productItemsBox}>
+                              )
+                          })}
+                        {/* <View style={styles.productItemsBox}>
                           <Text style={styles.productItemsBoxTxt}>
                             сандвичи
                           </Text>
                         </View>
                         <View style={styles.productItemsBox}>
                           <Text style={styles.productItemsBoxTxt}>кафе</Text>
-                        </View>
+                        </View> */}
                       </View>
                       <View style={styles.priceSec}>
                         <Text style={styles.oldPriceTxt}>12.50лв</Text>
@@ -158,7 +207,7 @@ const Objects = ({navigation}: ObjectsProps) => {
                         </Text>
                       </View>
                     </View>
-                  </View>
+                  </TouchableOpacity>
                 );
               })}
             </ScrollView>

@@ -28,6 +28,8 @@ const RestaurantList = ({
   const restaurants = useSelector((state: FBRootState) => state.restaurantState.forList);
   const userLocationPermissions = useSelector((state: FBRootState) => state.userState.locationPermission);
 
+  console.log("restaurants", restaurants);
+  
   const renderRestaurantItem = (item: ListRenderItemInfo<RestaurantHomeListItem>) => {
     return <RestaurantListItem
       restaurant={item.item}

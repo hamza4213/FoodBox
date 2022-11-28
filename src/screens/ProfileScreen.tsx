@@ -124,7 +124,7 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
               Спаси още 4 кутии, за да отключиш наградите, които{'\n'}те очакват
               на следващото ниво!
             </Text>
-            <TouchableOpacity style={styles.exitBtn}>
+            <TouchableOpacity style={styles.exitBtn} onPress={()=>     navigation.navigate('SelectLanguageScreen')} >
               <Text style={styles.exitBtnTxt}>Изход</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.contactBtn, {marginTop: 25}]}>

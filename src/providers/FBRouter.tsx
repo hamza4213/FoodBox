@@ -39,7 +39,9 @@ import {
   FAQ,
   FilterScreen,
   SaveOrderScreen,
+  Home,
 } from '../screens';
+import ListOrders from '../screens/ListOrders';
 
 const Drawer = createDrawerNavigator();
 const AuthStack = createStackNavigator();
@@ -98,7 +100,17 @@ const FBRouter = () => {
           <AuthStack.Screen name="LovedOnes" component={LovedOnes} />
           <AuthStack.Screen name="ProfileScreen" component={ProfileScreen} />
           <AuthStack.Screen name="Orders" component={Orders} />
+          <AuthStack.Screen name="ListOrders" component={ListOrders} />
           <AuthStack.Screen name="ProductDetail" component={ProductDetail} />
+          <AuthStack.Screen name="Offer" component={Offer} />
+          <AuthStack.Screen name="PaymentMethod" component={PaymentMethod} />
+          <AuthStack.Screen name="OrderError" component={OrderError} />
+          <AuthStack.Screen name="OrderFinalized" component={OrderFinalized} />
+
+
+          
+
+
           <AuthStack.Screen
             name="OrderDetailScreen"
             component={OrderDetailScreen}

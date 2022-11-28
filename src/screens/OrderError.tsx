@@ -31,7 +31,7 @@ const OrderError = (props: OrderErrorProps) => {
           <TouchableOpacity
             style={styles.back}
             onPress={() => {
-              props.navigation.navigate('HomeTabs');
+              props.navigation.navigate('Objects');
             }}>
             <Text style={{color: '#fff', fontWeight: '500'}}>
               {translateText(intl,'back')}
