@@ -9,6 +9,7 @@ import {
   TextInput,
   ScrollView,
   Modal,
+  Platform,
 } from 'react-native';
 import AppleIcon from './../../assets/images/apple.svg';
 import FacebookIcon from './../../assets/images/facebook.svg';
@@ -16,16 +17,230 @@ import GoogleIcon from './../../assets/images/google.svg';
 import CloseIcon from './../../assets/images/close.svg';
 import MailIcon from './../../assets/images/mail.svg';
 import {images} from '../constants';
-
+import Login from './Authorization/Login';
+import { NotAuthenticatedUserRepository } from '../repositories/UserRepository';
+import { useSelector } from 'react-redux';
+import { FBRootState } from '../redux/store';
+import { useAuth } from '../providers/AuthProvider';
+import { isFBAppError, isFBBackendError, isFBGenericError } from '../network/axiosClient';
+import { translateText } from '../lang/translate';
+import { showToast, showToastError } from '../common/FBToast';
+import { useIntl } from 'react-intl';
+import { useFbLoading } from '../providers/FBLoaderProvider';
+import { analyticsSocialLogin } from '../analytics';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import appleAuth from '@invertase/react-native-apple-authentication';
+import {AccessToken, LoginManager} from 'react-native-fbsdk-next';
 interface LoginProps {
   route: any;
   navigation: any;
 }
 
+console.log('Login', Login);
+
 const LoginScreen = ({navigation}: LoginProps) => {
+  const {signIn} = useAuth();
+  const intl = useIntl();
+
   const [modalVisible, setModalVisible] = useState(false);
   const [secondModalVisible, setSecondModalVisible] = useState(false);
+  const userLocale = useSelector((state: FBRootState) => state.userState.locale);
+  const [email, setEmail] = useState('accounts@sftdx.com');
+  const [password, setPassword] = useState('Qwerty12!');
+  const [forgotPwdEmail, setForgotPwdEmail] = useState(null)
+  const {showLoading, hideLoading} = useFbLoading();
 
+
+  const handleLogin = async () => {
+    console.log('Inside', email, password);
+    
+    try {
+      const userRepo = new NotAuthenticatedUserRepository();
+      const res = await userRepo.login({email: email, password: password, locale: userLocale});
+      console.log('res', res);
+      await signIn(res);
+    navigation.navigate('Objects');
+    } catch (error: any) {
+      if (isFBAppError(error) || isFBGenericError(error)) {
+        showToastError(translateText(intl, error.key));
+      } else if (isFBBackendError(error)) {
+        showToastError(error.message);
+      } else {
+        showToastError(translateText(intl, 'genericerror'));
+      }
+    }
+  }
+
+  const handleForgotPassword = async () => {
+    console.log(forgotPwdEmail);
+    if (!forgotPwdEmail) {
+      return;
+    }
+
+    showLoading('login');
+
+    try {
+      const userRepo = new NotAuthenticatedUserRepository();
+      await userRepo.resetPassword({email: forgotPwdEmail, locale: userLocale});
+      console.log('success', userRepo);
+      
+      showToast(translateText(intl, 'resetpassword.success'));
+    } catch (error) {
+      if (isFBAppError(error) || isFBGenericError(error)) {
+        showToastError(translateText(intl, error.key));
+      } else if (isFBBackendError(error)) {
+        showToastError(error.message);
+      } else {
+        showToastError(translateText(intl, 'genericerror'));
+      }
+    }
+
+    hideLoading('login');
+    
+  }
+  const handleGuestLogin = async () => {
+    console.log('inside guest login');
+    
+  }
+  const googleLogin = async () => {
+    showLoading('login');
+    analyticsSocialLogin({type: 'google', step: 'initiated'});
+    try {
+      const result = await GoogleSignin.signIn();
+      let tt = await GoogleSignin.getTokens();
+
+      const isAuthorized = !!tt.accessToken;
+      analyticsSocialLogin({
+        type: 'google',
+        step: 'external_completed',
+        data: {isAuthorized, isCancelled: false},
+      });
+
+      if (tt.accessToken) {
+        let email = result.user.email;
+        let googleToken = tt.accessToken;
+        let lastName = result.user.familyName;
+        let firstName = result.user.givenName;
+
+        const userRepo = new NotAuthenticatedUserRepository();
+        const res = await userRepo.loginSocial({email, googleToken, lastName, firstName, locale: userLocale});
+        await signIn(res);
+        navigation.navigate('Objects');
+      } else {
+        showToastError(translateText(intl, 'login.social_refused'));
+        analyticsSocialLogin({type: 'google', step: 'refused'});
+      }
+    } catch (error) {
+      if (isFBAppError(error) || isFBGenericError(error)) {
+        showToastError(translateText(intl, error.key));
+      } else if (isFBBackendError(error)) {
+        showToastError(error.message);
+      } else {
+        analyticsSocialLogin({type: 'google', step: 'failed'});
+        showToastError(translateText(intl, 'backenderror.user_login_social_error'));
+      }
+    }
+    hideLoading('login');
+  };
+  const onFacebookLogin = async () => {
+    showLoading('login');
+    analyticsSocialLogin({type: 'fb', step: 'initiated'});
+    try {
+      if (Platform.OS === 'android') {
+        LoginManager.setLoginBehavior('native_with_fallback');
+      }
+
+      LoginManager.logOut();
+      const loginResult = await LoginManager.logInWithPermissions(['email', 'public_profile']);
+
+      if (loginResult.isCancelled) {
+        analyticsSocialLogin({type: 'fb', step: 'completed', data: {isAuthorized: false, isCancelled: true}});
+        showToastError(translateText(intl, 'login.social_refused'));
+      } else {
+        const fbAccessToken = await AccessToken.getCurrentAccessToken();
+        const isAuthorized = !!fbAccessToken;
+        analyticsSocialLogin({type: 'fb', step: 'external_completed', data: {isAuthorized, isCancelled: false}});
+
+        if (fbAccessToken) {
+          const response = await fetch(
+            `https://graph.facebook.com/${fbAccessToken.userID}?fields=id,first_name,last_name,email,name&access_token=` +
+            fbAccessToken.accessToken,
+          );
+          const accountInfo: { first_name: string, last_name: string, name: string, email: string } = await response.json();
+          let email = accountInfo.email;
+          let firstName = accountInfo.first_name;
+          let lastName = accountInfo.last_name;
+          let fbToken = fbAccessToken.accessToken;
+
+          const userRepo = new NotAuthenticatedUserRepository();
+          const res = await userRepo.loginSocial({email, firstName, lastName, fbToken, locale: userLocale});
+          await signIn(res);
+        } else {
+          showToastError(translateText(intl, 'login.social_refused'));
+          analyticsSocialLogin({type: 'fb', step: 'refused'});
+        }
+      }
+    } catch (error) {
+      if (isFBAppError(error) || isFBGenericError(error)) {
+        showToastError(translateText(intl, error.key));
+      } else if (isFBBackendError(error)) {
+        showToastError(error.message);
+      } else {
+        analyticsSocialLogin({type: 'fb', step: 'failed'});
+        showToastError(translateText(intl, 'backenderror.user_login_social_error'));
+      }
+    }
+
+    hideLoading('login');
+  };
+
+  const onAppleLogin = async () => {
+    showLoading('login');
+
+    analyticsSocialLogin({type: 'apple', step: 'initiated'});
+    try {
+      // performs login request
+
+      const appleAuthRequestResponse = await appleAuth.performRequest({
+        requestedOperation: appleAuth.Operation.LOGIN,
+        requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+      });
+
+      const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
+
+      const isAuthorized = credentialState === appleAuth.State.AUTHORIZED;
+      analyticsSocialLogin({
+        type: 'apple',
+        step: 'external_completed',
+        data: {isAuthorized: isAuthorized, isCancelled: false},
+      });
+
+      if (isAuthorized) {
+        const appleUid = appleAuthRequestResponse.user;
+        const appleAuthCode = appleAuthRequestResponse.authorizationCode!;
+        const lastName = appleAuthRequestResponse.fullName?.givenName;
+        const firstName = appleAuthRequestResponse.fullName?.familyName;
+        const name = firstName + ' ' + lastName;
+
+        const userRepo = new NotAuthenticatedUserRepository();
+        const res = await userRepo.loginApple({appleUid, appleAuthCode, name, locale: userLocale});
+        await signIn(res);
+      } else {
+        showToastError(translateText(intl, 'login.social_refused'));
+        analyticsSocialLogin({type: 'apple', step: 'refused'});
+      }
+    } catch (error) {
+      if (isFBAppError(error) || isFBGenericError(error)) {
+        showToastError(translateText(intl, error.key));
+      } else if (isFBBackendError(error)) {
+        showToastError(error.message);
+      } else {
+        analyticsSocialLogin({type: 'apple', step: 'failed'});
+        showToastError(translateText(intl, 'backenderror.user_login_social_error'));
+      }
+    }
+    hideLoading('login');
+  };
   return (
     <SafeAreaView style={styles.container}>
       <Image source={images.app_logo} style={styles.logo} />
@@ -43,6 +258,7 @@ const LoginScreen = ({navigation}: LoginProps) => {
               placeholder="alexandra.j@gmail.com"
               style={styles.input}
               placeholderTextColor="#182550"
+              onChange={(email) => setEmail(email.nativeEvent.text)}
             />
           </View>
           <View style={styles.inputView}>
@@ -52,6 +268,7 @@ const LoginScreen = ({navigation}: LoginProps) => {
               style={styles.input}
               placeholderTextColor="#182550"
               secureTextEntry={true}
+              onChange={(password) => setPassword(password.nativeEvent.text)}
             />
           </View>
           <TouchableOpacity
@@ -61,8 +278,13 @@ const LoginScreen = ({navigation}: LoginProps) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.loginBtn}
-            onPress={() => navigation.navigate('Objects')}>
-            <Text style={styles.loginBtnTxt}>Вход</Text>
+            onPress={() => {
+              // doLogin({name:'', password:''});
+              // navigation.navigate('Objects');
+              handleLogin();
+              
+              }}>
+            <Text style={styles.loginBtnTxt}>Login</Text>
           </TouchableOpacity>
           <View style={styles.registerSec}>
             <Text style={styles.registerSecTxt}>Нямаш акаунт?</Text>
@@ -74,21 +296,24 @@ const LoginScreen = ({navigation}: LoginProps) => {
           </View>
           <Text style={styles.continueTxt}>или продължи с</Text>
           <TouchableOpacity
+          onPress={onFacebookLogin}
             style={[styles.facebookBtn, {backgroundColor: '#2C4698'}]}>
             <FacebookIcon />
             <Text style={styles.fbTxt}>Вход с Facebook</Text>
           </TouchableOpacity>
           <TouchableOpacity
+          onPress={googleLogin}
             style={[styles.facebookBtn, {backgroundColor: '#882525'}]}>
             <GoogleIcon />
             <Text style={styles.fbTxt}>Вход с Google</Text>
           </TouchableOpacity>
           <TouchableOpacity
+          onPress={onAppleLogin}
             style={[styles.facebookBtn, {backgroundColor: '#000000'}]}>
             <AppleIcon />
             <Text style={styles.fbTxt}>Вход с Apple</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.bottomBtn}>
+          <TouchableOpacity style={styles.bottomBtn} onPress={handleGuestLogin} >
             <Text style={styles.registerTxt}>Продължи без регистрация</Text>
           </TouchableOpacity>
         </ScrollView>
@@ -120,11 +345,13 @@ const LoginScreen = ({navigation}: LoginProps) => {
                 placeholder=""
                 style={styles.modalInput}
                 placeholderTextColor="#182550"
+                onChange={(email)=>setForgotPwdEmail(email.nativeEvent.text)}
               />
             </View>
             <TouchableOpacity
               style={styles.button}
               onPress={() => {
+                handleForgotPassword();
                 setModalVisible(false);
                 setSecondModalVisible(true);
               }}>
