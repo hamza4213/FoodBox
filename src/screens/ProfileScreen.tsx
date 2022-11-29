@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   View,
@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Linking,
 } from 'react-native';
 import SettingIcon from './../../assets/images/setting.svg';
 import ProfileIcon from './../../assets/images/profile.svg';
@@ -15,6 +16,17 @@ import SmokeIcon from './../../assets/images/smoke.svg';
 import CompleteGift from './../../assets/images/completeGift.svg';
 import PendingGift from './../../assets/images/pendingGift.svg';
 import BottomTabs from '../components/BottomTabs';
+import { AUTH_DATA_KEY, useAuth } from '../providers/AuthProvider';
+import { useSelector } from 'react-redux';
+import { FBRootState } from '../redux/store';
+import { FBUser } from '../models/User';
+import AsyncStorage from '@react-native-community/async-storage';
+import { AuthData } from '../models/AuthData';
+import { UserRepository } from '../repositories/UserRepository';
+import { restaurantInitialState } from '../redux/restaurant/reducer';
+import { ordersInitialState } from '../redux/order/reducer';
+import { userInitialState } from '../redux/user/reducer';
+import { CONTACT_US_FACTORY, TERMS_AND_CONDITIONS_FACTORY } from '../network/Server';
 
 interface ProfileProps {
   route: any;
@@ -22,6 +34,14 @@ interface ProfileProps {
 }
 
 const ProfileScreen = ({navigation}: ProfileProps) => {
+  const {authData} = useAuth();
+  const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
+  const userLocale = useSelector((state: FBRootState) => state.userState.locale);
+
+  const {signOut} = useAuth();
+
+  console.log("authData", user);
+  
   const [boxes, setBoxes] = useState([
     {
       des: 'Брой спасени кутии',
@@ -49,6 +69,10 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
     },
   ]);
 
+  const handleExit = () => {
+    signOut();
+    navigation.navigate('SelectLanguageScreen')
+  }
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -62,8 +86,8 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
           <View style={styles.profileIconMain}>
             <ProfileIcon />
           </View>
-          <Text style={styles.userNameTxt}>Александра Желева</Text>
-          <View style={{marginTop: 20}}>
+          <Text style={styles.userNameTxt}>{user.firstName}</Text>
+          <View style={{marginTop: 10}}>
             <ScrollView
               horizontal={true}
               contentContainerStyle={{
@@ -124,13 +148,19 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
               Спаси още 4 кутии, за да отключиш наградите, които{'\n'}те очакват
               на следващото ниво!
             </Text>
-            <TouchableOpacity style={styles.exitBtn} onPress={()=>     navigation.navigate('SelectLanguageScreen')} >
+            <TouchableOpacity style={styles.exitBtn} onPress={handleExit} >
               <Text style={styles.exitBtnTxt}>Изход</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.contactBtn, {marginTop: 25}]}>
+            <TouchableOpacity style={[styles.contactBtn, {marginTop: 25}]} onPress={()=> {
+                          const link = CONTACT_US_FACTORY[userLocale];
+                          Linking.openURL(link);              
+            }} >
               <Text style={styles.contactBtnTxt}>Свържи се с нас</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.contactBtn}>
+            <TouchableOpacity style={styles.contactBtn} onPress={()=>{
+                          const link = TERMS_AND_CONDITIONS_FACTORY[userLocale];
+                          Linking.openURL(link);
+            }} >
               <Text style={styles.contactBtnTxt}>Общи условия</Text>
             </TouchableOpacity>
           </View>
