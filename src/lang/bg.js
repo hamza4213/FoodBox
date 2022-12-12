@@ -1,4 +1,6 @@
 export default {
+  'language.title': 'Добре дошъл във Foodobox! Избери език',
+
   'login.title': 'Вход',
   'login.email': 'Имейл',
   'login.password': 'Парола',
