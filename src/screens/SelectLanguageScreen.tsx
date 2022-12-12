@@ -6,22 +6,27 @@ import {
   StyleSheet,
   Image,
   Dimensions,
+  TouchableOpacity,
 } from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
 import {images} from '../constants';
-import FLagIcon from './../../assets/flags/ro.svg';
-
+import RomaniaFlag from './../../assets/flags/ro.svg';
+import EnglishFlag from './../../assets/flags/us.svg';
+import BelgarianFlag from './../../assets/flags/bg.svg';
 const {height, width} = Dimensions.get('window');
-
+interface language {
+  label: string;
+  value: string;
+  icon: () => JSX.Element;
+}
 const data = [
-  {label: 'English', value: 'English'},
-  {label: 'Български', value: 'СБългарски'},
-  {label: 'Română', value: 'Română'},
+  {label: 'English', value: 'English', icon: () => <EnglishFlag />},
+  {label: 'Български', value: 'СБългарски', icon: () => <BelgarianFlag />},
+  {label: 'Română', value: 'Română', icon: () => <RomaniaFlag />},
 ];
 
 const SelectLanguageScreen = (props: any) => {
-  const [selectedLanguage, setSelectedLanguage] = useState();
-  const [value, setValue] = useState('Български');
+  const [selectedLanguage, setSelectedLanguage] = useState<language>();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -42,13 +47,22 @@ const SelectLanguageScreen = (props: any) => {
         valueField="value"
         placeholder="София-град"
         searchPlaceholder="Search..."
-        value={value}
-        renderRightIcon={() => <FLagIcon />}
+        value={selectedLanguage?.value}
+        renderRightIcon={selectedLanguage?.icon}
         onChange={item => {
-          setValue(item.value);
-          props.navigation.navigate('LoginScreen');
+          setSelectedLanguage(item);
         }}
       />
+      <TouchableOpacity
+        disabled={!selectedLanguage}
+        style={styles.nextbtn}
+        onPress={() =>
+          props.navigation.navigate('LoginScreen', {
+            selectedLanguage: selectedLanguage,
+          })
+        }>
+        <Text style={styles.selectedTextStyle}>Next</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -102,6 +116,16 @@ const styles = StyleSheet.create({
   inputSearchStyle: {
     height: 40,
     fontSize: 16,
+  },
+  nextbtn: {
+    marginTop: 80,
+    width: '30%',
+    height: 40,
+    borderRadius: 4,
+    borderWidth: 0.5,
+    borderColor: '#FFFFFF80',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
