@@ -6,14 +6,14 @@ import {
   USER_UPDATE_LOC_PERMISSION,
   USER_UPDATE_LOCALE,
   USER_UPDATE_LOCATION,
-
   USER_UPDATE_PROFILE,
   UserAction,
   UserUpdateProfileAction,
   UserUpdateLocaleAction,
   UserUpdateLocationAction,
   UserUpdateLocPermissionAction,
-  USER_UPDATE_NOTIFICATION_PERMISSION, UserUpdateNotificationPermission,
+  USER_UPDATE_NOTIFICATION_PERMISSION,
+  UserUpdateNotificationPermission,
 } from './actions';
 import {FBUser} from '../../models/User';
 import {FBGeoLocation} from '../../models/FBGeoLocation';
@@ -21,17 +21,17 @@ import {FBGeoLocation} from '../../models/FBGeoLocation';
 export enum FBLocale {
   EN = 'en',
   BG = 'bg',
-  RO = 'ro'
+  RO = 'ro',
 }
 
 export enum UserPermissionAnswer {
   NO,
-  YES
+  YES,
 }
 
 export enum FB_CITIES {
   BUL_SOFIA,
-  BUL_VARNA
+  BUL_VARNA,
 }
 
 export interface UserState {
@@ -46,7 +46,7 @@ export interface UserState {
   locale: FBLocale;
 }
 
-export const FB_CITIES_TO_LOCATION_MAP: { [key in FB_CITIES]: FBGeoLocation } = {
+export const FB_CITIES_TO_LOCATION_MAP: {[key in FB_CITIES]: FBGeoLocation} = {
   [FB_CITIES.BUL_SOFIA]: {
     latitude: 42.697572,
     longitude: 23.321806,
@@ -57,7 +57,8 @@ export const FB_CITIES_TO_LOCATION_MAP: { [key in FB_CITIES]: FBGeoLocation } = 
   },
 };
 
-export const DEFAULT_USER_LOCATION = FB_CITIES_TO_LOCATION_MAP[FB_CITIES.BUL_VARNA];
+export const DEFAULT_USER_LOCATION =
+  FB_CITIES_TO_LOCATION_MAP[FB_CITIES.BUL_VARNA];
 
 export const userInitialState: UserState = {
   user: null,
@@ -68,46 +69,63 @@ export const userInitialState: UserState = {
   notificationPermission: {
     userAnswer: UserPermissionAnswer.NO,
   },
-  locale: FBLocale.EN,
+  locale: FBLocale.BG,
 };
 
-
-const handleUserUnsetUserAction = (state: UserState, _data: UserUnsetUserAction['data']): UserState => {
+const handleUserUnsetUserAction = (
+  state: UserState,
+  _data: UserUnsetUserAction['data'],
+): UserState => {
   return {
     ...state,
     user: null,
   };
 };
 
-const handleUserSetUserAction = (state: UserState, data: UserSetUserAction['data']): UserState => {
+const handleUserSetUserAction = (
+  state: UserState,
+  data: UserSetUserAction['data'],
+): UserState => {
   return {
     ...state,
     user: data.user,
   };
 };
 
-const handleUserUpdateProfileAction = (state: UserState, data: UserUpdateProfileAction['data']): UserState => {
+const handleUserUpdateProfileAction = (
+  state: UserState,
+  data: UserUpdateProfileAction['data'],
+): UserState => {
   return {
     ...state,
     user: data.user,
   };
 };
 
-const handleUserUpdateLocaleAction = (state: UserState, data: UserUpdateLocaleAction['data']): UserState => {
+const handleUserUpdateLocaleAction = (
+  state: UserState,
+  data: UserUpdateLocaleAction['data'],
+): UserState => {
   return {
     ...state,
     locale: data.locale,
   };
 };
 
-const handleUserUpdateLocationAction = (state: UserState, data: UserUpdateLocationAction['data']): UserState => {
+const handleUserUpdateLocationAction = (
+  state: UserState,
+  data: UserUpdateLocationAction['data'],
+): UserState => {
   return {
     ...state,
     userLocation: data.userLocation,
   };
 };
 
-const handleUserUpdateLocPermissionAction = (state: UserState, data: UserUpdateLocPermissionAction['data']): UserState => {
+const handleUserUpdateLocPermissionAction = (
+  state: UserState,
+  data: UserUpdateLocPermissionAction['data'],
+): UserState => {
   state.locationPermission = {
     ...state.locationPermission,
     ...data,
@@ -118,7 +136,10 @@ const handleUserUpdateLocPermissionAction = (state: UserState, data: UserUpdateL
   };
 };
 
-const handleUserUpdateNotificationPermissionAction = (state: UserState, data: UserUpdateNotificationPermission['data']): UserState => {
+const handleUserUpdateNotificationPermissionAction = (
+  state: UserState,
+  data: UserUpdateNotificationPermission['data'],
+): UserState => {
   state.notificationPermission = {
     ...state.notificationPermission,
     ...data,
@@ -152,6 +173,5 @@ const userReducer = (
       return state;
   }
 };
-
 
 export default userReducer;

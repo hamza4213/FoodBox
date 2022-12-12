@@ -1,12 +1,15 @@
 export default {
+  'language.title': 'Welcome to Foodobox! Select language',
   'login.title': 'Welcome',
   'login.email': 'Email',
   'login.password': 'Password',
   'login.forgot_password': 'Forgot your password?',
   'login.login': 'Login',
-  'login.sign_up_with_social_media': 'Or login with socials',
-  'login.login_facebook': 'Continue with Facebook',
-  'login.login_google': 'Continue with Google',
+  'login.sign_up_with_social_media': 'or continue with socials',
+  'login.login_facebook': 'Sign in with Facebook',
+  'login.login_google': 'Sign in with Google',
+  'login.login_apple': 'Sign in with Apple',
+  'login.without_registration': 'Continue without registration',
   'login.not_have_account': "Don't have an account?",
   'login.sign_up': 'Sign up with email.',
   'login.forgotten_email_hint':

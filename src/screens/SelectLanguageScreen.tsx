@@ -13,26 +13,50 @@ import {images} from '../constants';
 import RomaniaFlag from './../../assets/flags/ro.svg';
 import EnglishFlag from './../../assets/flags/us.svg';
 import BelgarianFlag from './../../assets/flags/bg.svg';
+import {translateText} from '../lang/translate';
+import {useIntl} from 'react-intl';
+import {useDispatch} from 'react-redux';
+import {userUpdateLocaleAction} from '../redux/user/actions';
+import {FBLocale} from '../redux/user/reducer';
 const {height, width} = Dimensions.get('window');
 interface language {
   label: string;
   value: string;
+  locale: string;
   icon: () => JSX.Element;
 }
 const data = [
-  {label: 'English', value: 'English', icon: () => <EnglishFlag />},
-  {label: 'Български', value: 'СБългарски', icon: () => <BelgarianFlag />},
-  {label: 'Română', value: 'Română', icon: () => <RomaniaFlag />},
+  {
+    label: 'English',
+    value: 'English',
+    locale: 'EN',
+    icon: () => <EnglishFlag />,
+  },
+  {
+    label: 'Български',
+    value: 'СБългарски',
+    locale: 'BG',
+    icon: () => <BelgarianFlag />,
+  },
+  {label: 'Română', value: 'Română', locale: 'RO', icon: () => <RomaniaFlag />},
 ];
 
 const SelectLanguageScreen = (props: any) => {
-  const [selectedLanguage, setSelectedLanguage] = useState<language>();
+  const [selectedLanguage, setSelectedLanguage] = useState<language>(data[0]);
+  const intl = useIntl();
+  const dispatch = useDispatch();
+  const HandleLanguageSelect = React.useCallback((item: language) => {
+    setSelectedLanguage(item);
+    // console.log(item.locale);
+    dispatch(userUpdateLocaleAction({locale: FBLocale[item.locale]}));
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
       <Image source={images.app_logo} style={styles.logo} />
       <Text style={styles.languageTxt}>
-        Добре дошъл във Foodobox! Избери език:
+        {/* Добре дошъл във Foodobox! Избери език: */}
+        {translateText(intl, 'language.title')}
       </Text>
       <Dropdown
         style={styles.dropdown}
@@ -50,7 +74,8 @@ const SelectLanguageScreen = (props: any) => {
         value={selectedLanguage?.value}
         renderRightIcon={selectedLanguage?.icon}
         onChange={item => {
-          setSelectedLanguage(item);
+          HandleLanguageSelect(item);
+          // setSelectedLanguage(item);
         }}
       />
       <TouchableOpacity

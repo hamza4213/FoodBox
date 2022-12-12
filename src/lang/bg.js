@@ -1,12 +1,16 @@
 export default {
+  'language.title': 'Добре дошъл във Foodobox! Избери език',
+
   'login.title': 'Вход',
   'login.email': 'Имейл',
   'login.password': 'Парола',
   'login.forgot_password': 'Забравена парола?',
   'login.login': 'Вход',
   'login.sign_up_with_social_media': 'или влез чрез социалните мрежи',
-  'login.login_facebook': 'Вход с Facebook',
-  'login.login_google': 'Вход с Google',
+  'login.login_facebook': 'Влезте с Facebook',
+  'login.login_google': 'Влезте с Google',
+  'login.login_apple': 'Влезте с Apple',
+  'login.without_registration': 'Продължете без регистрация',
   'login.not_have_account': 'Нямаш акаунт? ',
   'login.sign_up': 'Регистрирай се',
   'login.forgotten_email_hint':

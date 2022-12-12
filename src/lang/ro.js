@@ -1,4 +1,5 @@
 export default {
+  'language.title': 'Bun venit la Foodobox! Selecteaza limba',
   'login.title': 'Intră',
   'login.email': 'E-mail',
   'login.password': 'Parola',
@@ -8,6 +9,8 @@ export default {
     'Sau intră cu ajutorul rețelelor de socializare',
   'login.login_facebook': 'Intră cu Facebook',
   'login.login_google': 'Intră cu Google',
+  'login.login_apple': 'Intră cu Apple',
+  'login.without_registration': 'Continuați fără înregistrare',
   'login.not_have_account': 'Nu ai account?',
   'login.sign_up': 'Înregistrează-te',
   'login.forgotten_email_hint':

@@ -304,7 +304,9 @@ const LoginScreen = ({navigation, route}: LoginProps) => {
           contentContainerStyle={{paddingHorizontal: '5%', paddingBottom: 40}}
           showsVerticalScrollIndicator={false}>
           <View style={styles.inputView}>
-            <Text style={styles.inputLabel}>Имейл</Text>
+            <Text style={styles.inputLabel}>
+              {translateText(intl, 'login.email')}
+            </Text>
             <TextInput
               placeholder="alexandra.j@gmail.com"
               style={styles.input}
@@ -313,7 +315,9 @@ const LoginScreen = ({navigation, route}: LoginProps) => {
             />
           </View>
           <View style={styles.inputView}>
-            <Text style={styles.inputLabel}>Парола</Text>
+            <Text style={styles.inputLabel}>
+              {translateText(intl, 'login.password')}
+            </Text>
             <TextInput
               placeholder="*************"
               style={styles.input}
@@ -325,7 +329,9 @@ const LoginScreen = ({navigation, route}: LoginProps) => {
           <TouchableOpacity
             style={styles.forgotBtn}
             onPress={() => setModalVisible(!modalVisible)}>
-            <Text style={styles.forgotBtnTxt}>Забравена парола?</Text>
+            <Text style={styles.forgotBtnTxt}>
+              {translateText(intl, 'login.forgot_password')}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.loginBtn}
@@ -334,37 +340,53 @@ const LoginScreen = ({navigation, route}: LoginProps) => {
               // navigation.navigate('Objects');
               handleLogin();
             }}>
-            <Text style={styles.loginBtnTxt}>Login</Text>
+            <Text style={styles.loginBtnTxt}>
+              {translateText(intl, 'login.login')}
+            </Text>
           </TouchableOpacity>
           <View style={styles.registerSec}>
-            <Text style={styles.registerSecTxt}>Нямаш акаунт?</Text>
+            <Text style={styles.registerSecTxt}>
+              {translateText(intl, 'login.not_have_account')}
+            </Text>
             <TouchableOpacity
               style={styles.registerBtn}
               onPress={() => navigation.navigate('SignUpScreen')}>
-              <Text style={styles.registerBtnTxt}>Регистрирай се</Text>
+              <Text style={styles.registerBtnTxt}>
+                {translateText(intl, 'signup.title')}
+              </Text>
             </TouchableOpacity>
           </View>
-          <Text style={styles.continueTxt}>или продължи с</Text>
+          <Text style={styles.continueTxt}>
+            {translateText(intl, 'login.sign_up_with_social_media')}
+          </Text>
           <TouchableOpacity
             onPress={onFacebookLogin}
             style={[styles.facebookBtn, {backgroundColor: '#2C4698'}]}>
             <FacebookIcon />
-            <Text style={styles.fbTxt}>Вход с Facebook</Text>
+            <Text style={styles.fbTxt}>
+              {translateText(intl, 'login.login_facebook')}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={googleLogin}
             style={[styles.facebookBtn, {backgroundColor: '#882525'}]}>
             <GoogleIcon />
-            <Text style={styles.fbTxt}>Вход с Google</Text>
+            <Text style={styles.fbTxt}>
+              {translateText(intl, 'login.login_google')}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={onAppleLogin}
             style={[styles.facebookBtn, {backgroundColor: '#000000'}]}>
             <AppleIcon />
-            <Text style={styles.fbTxt}>Вход с Apple</Text>
+            <Text style={styles.fbTxt}>
+              {translateText(intl, 'login.login_apple')}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.bottomBtn} onPress={handleGuestLogin}>
-            <Text style={styles.registerTxt}>Продължи без регистрация</Text>
+            <Text style={styles.registerTxt}>
+              {translateText(intl, 'login.without_registration')}
+            </Text>
           </TouchableOpacity>
         </ScrollView>
       </View>
