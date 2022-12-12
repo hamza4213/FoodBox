@@ -11,14 +11,18 @@ import {
 import Logo from './../../assets/images/logo.svg';
 import FilledEmailLogo from './../../assets/images/emailFilled.svg';
 import {images} from '../constants';
-import { useFbLoading } from '../providers/FBLoaderProvider';
-import { NotAuthenticatedUserRepository } from '../repositories/UserRepository';
-import { isFBAppError, isFBBackendError, isFBGenericError } from '../network/axiosClient';
-import { translateText } from '../lang/translate';
-import { showToastError } from '../common/FBToast';
-import { useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
-import { FBRootState } from '../redux/store';
+import {useFbLoading} from '../providers/FBLoaderProvider';
+import {NotAuthenticatedUserRepository} from '../repositories/UserRepository';
+import {
+  isFBAppError,
+  isFBBackendError,
+  isFBGenericError,
+} from '../network/axiosClient';
+import {translateText} from '../lang/translate';
+import {showToastError} from '../common/FBToast';
+import {useIntl} from 'react-intl';
+import {useSelector} from 'react-redux';
+import {FBRootState} from '../redux/store';
 
 interface SignUpProps {
   route: any;
@@ -28,21 +32,25 @@ interface SignUpProps {
 const SignUpScreen = ({navigation}: SignUpProps) => {
   const [check, setCheck] = useState(false);
   const {showLoading, hideLoading} = useFbLoading();
-  const [isRegistrationCompleteDialogVisible, setIsRegistrationCompleteDialogVisible] = useState(false);
+  const [
+    isRegistrationCompleteDialogVisible,
+    setIsRegistrationCompleteDialogVisible,
+  ] = useState(false);
   const intl = useIntl();
-  const userLocale = useSelector((state: FBRootState) => state.userState.locale);
+  const userLocale = useSelector(
+    (state: FBRootState) => state.userState.locale,
+  );
   const [email, setEmail] = useState();
   const [firstName, setFirstName] = useState();
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
-
 
   const handleSignup = async () => {
     console.log('Inside firstName', firstName);
     console.log('Inside email', email);
     console.log('Inside pwd', password);
     console.log('Inside cpwd', confirmPassword);
-    
+
     showLoading('sign_up');
 
     try {
@@ -86,7 +94,7 @@ const SignUpScreen = ({navigation}: SignUpProps) => {
               placeholder="Александра Желева"
               style={styles.input}
               placeholderTextColor="#182550"
-              onChange={(email) => setEmail(email.nativeEvent.text)}
+              onChange={fname => setFirstName(fname.nativeEvent.text)}
             />
           </View>
           <View style={styles.inputView}>
@@ -95,7 +103,7 @@ const SignUpScreen = ({navigation}: SignUpProps) => {
               placeholder="alexandra.j@gmail.com"
               style={styles.input}
               placeholderTextColor="#182550"
-              onChange={(fname)=> setFirstName(fname.nativeEvent.text)}
+              onChange={email => setEmail(email.nativeEvent.text)}
             />
           </View>
           <View style={styles.inputView}>
@@ -105,8 +113,7 @@ const SignUpScreen = ({navigation}: SignUpProps) => {
               style={styles.input}
               placeholderTextColor="#182550"
               secureTextEntry={true}
-              onChange={(pwd)=> setPassword(pwd.nativeEvent.text)}
-
+              onChange={pwd => setPassword(pwd.nativeEvent.text)}
             />
           </View>
           <View style={styles.inputView}>
@@ -116,8 +123,7 @@ const SignUpScreen = ({navigation}: SignUpProps) => {
               style={styles.input}
               placeholderTextColor="#182550"
               secureTextEntry={true}
-              onChange={(pwd)=> setConfirmPassword(pwd.nativeEvent.text)}
-
+              onChange={pwd => setConfirmPassword(pwd.nativeEvent.text)}
             />
           </View>
           <View style={styles.conditionSec}>
@@ -140,9 +146,7 @@ const SignUpScreen = ({navigation}: SignUpProps) => {
             onPress={() => setModalVisible(!modalVisible)}>
             <Text style={styles.forgotBtnTxt}>Забравена парола?</Text>
           </TouchableOpacity> */}
-          <TouchableOpacity
-            style={styles.loginBtn}
-            onPress={handleSignup}>
+          <TouchableOpacity style={styles.loginBtn} onPress={handleSignup}>
             <Text style={styles.loginBtnTxt}>Регистрирай се</Text>
           </TouchableOpacity>
           <View style={styles.registerSec}>

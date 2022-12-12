@@ -48,6 +48,7 @@ const AuthStack = createStackNavigator();
 
 const FBRouter = () => {
   const {authData, authLoading, signOut} = useAuth();
+  console.log('authDta at container', authData);
   const intl = useIntl();
   const [showSPlashScreen, setShowSPlashScreen] = useState(true);
 
@@ -88,42 +89,62 @@ const FBRouter = () => {
           initialRouteName={'SelectLanguageScreen'}>
           {/* <AuthStack.Screen name="SignInScreen" component={SignInScreen} />
           <AuthStack.Screen name="SignUpScreen" component={SignUpScreen} /> */}
-          <AuthStack.Screen
-            name="SelectLanguageScreen"
-            component={SelectLanguageScreen}
-          />
-          <AuthStack.Screen name="LoginScreen" component={LoginScreen} />
-          <AuthStack.Screen name="SignUpScreen" component={SignUpScreen} />
-          <AuthStack.Screen name="GeneralTerms" component={GeneralTerms} />
-          <AuthStack.Screen name="ChooseCity" component={ChooseCity} />
-          <AuthStack.Screen name="Objects" component={Objects} />
-          <AuthStack.Screen name="LovedOnes" component={LovedOnes} />
-          <AuthStack.Screen name="ProfileScreen" component={ProfileScreen} />
-          <AuthStack.Screen name="Orders" component={Orders} />
-          <AuthStack.Screen name="ListOrders" component={ListOrders} />
-          <AuthStack.Screen name="ProductDetail" component={ProductDetail} />
-          <AuthStack.Screen name="Offer" component={Offer} />
-          <AuthStack.Screen name="PaymentMethod" component={PaymentMethod} />
-          <AuthStack.Screen name="OrderError" component={OrderError} />
-          <AuthStack.Screen name="OrderFinalized" component={OrderFinalized} />
+          {!authData ? (
+            <AuthStack.Group>
+              <AuthStack.Screen
+                name="SelectLanguageScreen"
+                component={SelectLanguageScreen}
+              />
+              <AuthStack.Screen name="LoginScreen" component={LoginScreen} />
+              <AuthStack.Screen name="SignUpScreen" component={SignUpScreen} />
+              <AuthStack.Screen name="GeneralTerms" component={GeneralTerms} />
+              <AuthStack.Screen name="ChooseCity" component={ChooseCity} />
+            </AuthStack.Group>
+          ) : (
+            <AuthStack.Group>
+              <AuthStack.Screen name="Objects" component={Objects} />
+              <AuthStack.Screen name="LovedOnes" component={LovedOnes} />
+              <AuthStack.Screen name="GeneralTerms" component={GeneralTerms} />
+              <AuthStack.Screen name="ChooseCity" component={ChooseCity} />
+              <AuthStack.Screen
+                name="ProfileScreen"
+                component={ProfileScreen}
+              />
+              <AuthStack.Screen name="Orders" component={Orders} />
+              <AuthStack.Screen name="ListOrders" component={ListOrders} />
+              <AuthStack.Screen
+                name="ProductDetail"
+                component={ProductDetail}
+              />
+              <AuthStack.Screen name="Offer" component={Offer} />
+              <AuthStack.Screen
+                name="PaymentMethod"
+                component={PaymentMethod}
+              />
+              <AuthStack.Screen name="OrderError" component={OrderError} />
+              <AuthStack.Screen
+                name="OrderFinalized"
+                component={OrderFinalized}
+              />
 
-
-          
-
-
-          <AuthStack.Screen
-            name="OrderDetailScreen"
-            component={OrderDetailScreen}
-          />
-          <AuthStack.Screen name="StartScreen" component={StartScreen} />
-          <AuthStack.Screen name="LatestLOcation" component={LatestLOcation} />
-          <AuthStack.Screen name="Setting" component={Setting} />
-          <AuthStack.Screen name="FAQ" component={FAQ} />
-          <AuthStack.Screen name="FilterScreen" component={FilterScreen} />
-          <AuthStack.Screen
-            name="SaveOrderScreen"
-            component={SaveOrderScreen}
-          />
+              <AuthStack.Screen
+                name="OrderDetailScreen"
+                component={OrderDetailScreen}
+              />
+              <AuthStack.Screen name="StartScreen" component={StartScreen} />
+              <AuthStack.Screen
+                name="LatestLOcation"
+                component={LatestLOcation}
+              />
+              <AuthStack.Screen name="Setting" component={Setting} />
+              <AuthStack.Screen name="FAQ" component={FAQ} />
+              <AuthStack.Screen name="FilterScreen" component={FilterScreen} />
+              <AuthStack.Screen
+                name="SaveOrderScreen"
+                component={SaveOrderScreen}
+              />
+            </AuthStack.Group>
+          )}
         </AuthStack.Navigator>
       </NavigationContainer>
     );
