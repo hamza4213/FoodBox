@@ -35,6 +35,8 @@ import {analyticsSocialLogin} from '../analytics';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import appleAuth from '@invertase/react-native-apple-authentication';
 import {AccessToken, LoginManager} from 'react-native-fbsdk-next';
+import {Formik} from 'formik';
+import * as yup from 'yup';
 interface LoginProps {
   route: any;
   navigation: any;
@@ -43,6 +45,10 @@ interface LoginProps {
 console.log('Login', Login);
 
 const LoginScreen = ({navigation, route}: LoginProps) => {
+  let LoginSchema = yup.object().shape({
+    email: yup.string().email().required('Email required'),
+    password: yup.string().required('Password is required'),
+  });
   const {signIn} = useAuth();
   const intl = useIntl();
   const {selectedLanguage} = route.params;
@@ -56,7 +62,8 @@ const LoginScreen = ({navigation, route}: LoginProps) => {
   const [forgotPwdEmail, setForgotPwdEmail] = useState(null);
   const {showLoading, hideLoading} = useFbLoading();
 
-  const handleLogin = async () => {
+  const handleLogin = async values => {
+    const {email, password} = values;
     console.log('Inside', email, password);
 
     try {
@@ -291,179 +298,209 @@ const LoginScreen = ({navigation, route}: LoginProps) => {
   };
   const Icon = selectedLanguage?.icon;
   return (
-    <SafeAreaView style={styles.container}>
-      <Image source={images.app_logo} style={styles.logo} />
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={styles.languageBtn}>
-        <Text style={styles.languageBtnTxt}>{selectedLanguage?.value}</Text>
-        <Icon />
-      </TouchableOpacity>
-      <View style={styles.loginMain}>
-        <ScrollView
-          contentContainerStyle={{paddingHorizontal: '5%', paddingBottom: 40}}
-          showsVerticalScrollIndicator={false}>
-          <View style={styles.inputView}>
-            <Text style={styles.inputLabel}>
-              {translateText(intl, 'login.email')}
-            </Text>
-            <TextInput
-              placeholder="alexandra.j@gmail.com"
-              style={styles.input}
-              placeholderTextColor="#182550"
-              onChange={email => setEmail(email.nativeEvent.text)}
-            />
-          </View>
-          <View style={styles.inputView}>
-            <Text style={styles.inputLabel}>
-              {translateText(intl, 'login.password')}
-            </Text>
-            <TextInput
-              placeholder="*************"
-              style={styles.input}
-              placeholderTextColor="#182550"
-              secureTextEntry={true}
-              onChange={password => setPassword(password.nativeEvent.text)}
-            />
-          </View>
+    <Formik
+      initialValues={{
+        email: '',
+        password: '',
+        showErrors: false,
+      }}
+      validationSchema={LoginSchema}
+      onSubmit={async values => {
+        console.log('values', values);
+        handleLogin(values);
+      }}>
+      {({handleChange, handleSubmit, values, setValues, errors}) => (
+        <SafeAreaView style={styles.container}>
+          <Image source={images.app_logo} style={styles.logo} />
           <TouchableOpacity
-            style={styles.forgotBtn}
-            onPress={() => setModalVisible(!modalVisible)}>
-            <Text style={styles.forgotBtnTxt}>
-              {translateText(intl, 'login.forgot_password')}
-            </Text>
+            onPress={() => navigation.goBack()}
+            style={styles.languageBtn}>
+            <Text style={styles.languageBtnTxt}>{selectedLanguage?.value}</Text>
+            <Icon />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.loginBtn}
-            onPress={() => {
-              // doLogin({name:'', password:''});
-              // navigation.navigate('Objects');
-              handleLogin();
+          <View style={styles.loginMain}>
+            <ScrollView
+              contentContainerStyle={{
+                paddingHorizontal: '5%',
+                paddingBottom: 40,
+              }}
+              showsVerticalScrollIndicator={false}>
+              <View style={styles.inputView}>
+                <Text style={styles.inputLabel}>
+                  {translateText(intl, 'login.email')}
+                </Text>
+                <TextInput
+                  placeholder="alexandra.j@gmail.com"
+                  style={styles.input}
+                  placeholderTextColor="#182550"
+                  onChangeText={handleChange('email')}
+                  // onChange={email => setEmail(email.nativeEvent.text)}
+                />
+                {values?.showErrors && errors?.email && (
+                  <Text style={styles.warnText}>*{errors?.email}*</Text>
+                )}
+              </View>
+              <View style={styles.inputView}>
+                <Text style={styles.inputLabel}>
+                  {translateText(intl, 'login.password')}
+                </Text>
+                <TextInput
+                  placeholder="*************"
+                  style={styles.input}
+                  placeholderTextColor="#182550"
+                  secureTextEntry={true}
+                  onChangeText={handleChange('password')}
+                  // onChange={password => setPassword(password.nativeEvent.text)}
+                />
+                {values?.showErrors && errors?.password && (
+                  <Text style={styles.warnText}>*{errors?.password}*</Text>
+                )}
+              </View>
+              <TouchableOpacity
+                style={styles.forgotBtn}
+                onPress={() => setModalVisible(!modalVisible)}>
+                <Text style={styles.forgotBtnTxt}>
+                  {translateText(intl, 'login.forgot_password')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.loginBtn}
+                onPress={() => {
+                  setValues({...values, showErrors: true});
+                  handleSubmit();
+                  // doLogin({name:'', password:''});
+                  // navigation.navigate('Objects');
+                }}>
+                <Text style={styles.loginBtnTxt}>
+                  {translateText(intl, 'login.login')}
+                </Text>
+              </TouchableOpacity>
+              <View style={styles.registerSec}>
+                <Text style={styles.registerSecTxt}>
+                  {translateText(intl, 'login.not_have_account')}
+                </Text>
+                <TouchableOpacity
+                  style={styles.registerBtn}
+                  onPress={() => navigation.navigate('SignUpScreen')}>
+                  <Text style={styles.registerBtnTxt}>
+                    {translateText(intl, 'signup.title')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.continueTxt}>
+                {translateText(intl, 'login.sign_up_with_social_media')}
+              </Text>
+              <TouchableOpacity
+                onPress={onFacebookLogin}
+                style={[styles.facebookBtn, {backgroundColor: '#2C4698'}]}>
+                <FacebookIcon />
+                <Text style={styles.fbTxt}>
+                  {translateText(intl, 'login.login_facebook')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={googleLogin}
+                style={[styles.facebookBtn, {backgroundColor: '#882525'}]}>
+                <GoogleIcon />
+                <Text style={styles.fbTxt}>
+                  {translateText(intl, 'login.login_google')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={onAppleLogin}
+                style={[styles.facebookBtn, {backgroundColor: '#000000'}]}>
+                <AppleIcon />
+                <Text style={styles.fbTxt}>
+                  {translateText(intl, 'login.login_apple')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.bottomBtn}
+                onPress={handleGuestLogin}>
+                <Text style={styles.registerTxt}>
+                  {translateText(intl, 'login.without_registration')}
+                </Text>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
+
+          {/* MODAL */}
+
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(!modalVisible);
             }}>
-            <Text style={styles.loginBtnTxt}>
-              {translateText(intl, 'login.login')}
-            </Text>
-          </TouchableOpacity>
-          <View style={styles.registerSec}>
-            <Text style={styles.registerSecTxt}>
-              {translateText(intl, 'login.not_have_account')}
-            </Text>
-            <TouchableOpacity
-              style={styles.registerBtn}
-              onPress={() => navigation.navigate('SignUpScreen')}>
-              <Text style={styles.registerBtnTxt}>
-                {translateText(intl, 'signup.title')}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.continueTxt}>
-            {translateText(intl, 'login.sign_up_with_social_media')}
-          </Text>
-          <TouchableOpacity
-            onPress={onFacebookLogin}
-            style={[styles.facebookBtn, {backgroundColor: '#2C4698'}]}>
-            <FacebookIcon />
-            <Text style={styles.fbTxt}>
-              {translateText(intl, 'login.login_facebook')}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={googleLogin}
-            style={[styles.facebookBtn, {backgroundColor: '#882525'}]}>
-            <GoogleIcon />
-            <Text style={styles.fbTxt}>
-              {translateText(intl, 'login.login_google')}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={onAppleLogin}
-            style={[styles.facebookBtn, {backgroundColor: '#000000'}]}>
-            <AppleIcon />
-            <Text style={styles.fbTxt}>
-              {translateText(intl, 'login.login_apple')}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.bottomBtn} onPress={handleGuestLogin}>
-            <Text style={styles.registerTxt}>
-              {translateText(intl, 'login.without_registration')}
-            </Text>
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
-
-      {/* MODAL */}
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <TouchableOpacity
-              style={styles.closeBtn}
-              onPress={() => setModalVisible(false)}>
-              <CloseIcon />
-            </TouchableOpacity>
-            <Text style={styles.modalHeading}>
-              {translateText(intl, 'login.forgot_title')}
-            </Text>
-            <Text style={styles.emailSendTxt}>
-              {translateText(intl, 'login.forgotten_email_hint')}
-            </Text>
-            <View style={styles.modalInputView}>
-              <Text style={styles.inputLabel}>
-                {translateText(intl, 'login.email')}
-              </Text>
-              <TextInput
-                placeholder=""
-                style={styles.modalInput}
-                placeholderTextColor="#182550"
-                onChange={email => setForgotPwdEmail(email.nativeEvent.text)}
-              />
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <TouchableOpacity
+                  style={styles.closeBtn}
+                  onPress={() => setModalVisible(false)}>
+                  <CloseIcon />
+                </TouchableOpacity>
+                <Text style={styles.modalHeading}>
+                  {translateText(intl, 'login.forgot_title')}
+                </Text>
+                <Text style={styles.emailSendTxt}>
+                  {translateText(intl, 'login.forgotten_email_hint')}
+                </Text>
+                <View style={styles.modalInputView}>
+                  <Text style={styles.inputLabel}>
+                    {translateText(intl, 'login.email')}
+                  </Text>
+                  <TextInput
+                    placeholder=""
+                    style={styles.modalInput}
+                    placeholderTextColor="#182550"
+                    onChange={email =>
+                      setForgotPwdEmail(email.nativeEvent.text)
+                    }
+                  />
+                </View>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => {
+                    handleForgotPassword();
+                    setModalVisible(false);
+                    setSecondModalVisible(true);
+                  }}>
+                  <Text style={styles.buttonTxt}>
+                    {translateText(intl, 'login.new_password')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                handleForgotPassword();
-                setModalVisible(false);
-                setSecondModalVisible(true);
-              }}>
-              <Text style={styles.buttonTxt}>
-                {translateText(intl, 'login.new_password')}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+          </Modal>
 
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={secondModalVisible}
-        onRequestClose={() => {
-          setSecondModalVisible(!secondModalVisible);
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <TouchableOpacity
-              style={styles.closeBtn}
-              onPress={() => setSecondModalVisible(false)}>
-              <CloseIcon />
-            </TouchableOpacity>
-            <Text style={styles.modalHeading}>Нова парола</Text>
-            <View style={{marginTop: 30, marginBottom: 10}}>
-              <MailIcon />
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={secondModalVisible}
+            onRequestClose={() => {
+              setSecondModalVisible(!secondModalVisible);
+            }}>
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <TouchableOpacity
+                  style={styles.closeBtn}
+                  onPress={() => setSecondModalVisible(false)}>
+                  <CloseIcon />
+                </TouchableOpacity>
+                <Text style={styles.modalHeading}>Нова парола</Text>
+                <View style={{marginTop: 30, marginBottom: 10}}>
+                  <MailIcon />
+                </View>
+                <Text style={styles.emailSendTxt}>
+                  Изпратихме ти съобщение с линк за промяна на паролата.
+                </Text>
+              </View>
             </View>
-            <Text style={styles.emailSendTxt}>
-              Изпратихме ти съобщение с линк за промяна на паролата.
-            </Text>
-          </View>
-        </View>
-      </Modal>
-    </SafeAreaView>
+          </Modal>
+        </SafeAreaView>
+      )}
+    </Formik>
   );
 };
 
@@ -583,7 +620,9 @@ const styles = StyleSheet.create({
     color: '#CF4F4F',
     fontSize: 16,
   },
-
+  warnText: {
+    color: '#CF4F4F',
+  },
   centeredView: {
     flex: 1,
     justifyContent: 'center',

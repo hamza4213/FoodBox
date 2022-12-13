@@ -80,7 +80,7 @@ const SignUpScreen = ({navigation}: SignUpProps) => {
         message:
           'We have sent you a verifification email. Please verify your email and login.',
         type: 'success',
-        duration: 4000,
+        duration: 5000,
       });
       navigation.goBack();
       setIsRegistrationCompleteDialogVisible(true);
