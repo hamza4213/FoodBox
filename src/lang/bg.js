@@ -252,6 +252,8 @@ export default {
   'drawer.contact': 'Контактна форма',
   'drawer.logout': 'Изход',
 
+  'nav.profile': 'Профил',
+
   'tab.home': 'Оферти',
   'tab.filter': 'Филтър',
   'tab.orders': 'Поръчки',

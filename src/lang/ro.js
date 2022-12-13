@@ -231,6 +231,9 @@ export default {
   'drawer.faq': 'Întrebări frecvent adresate(FAQ)',
   'drawer.contact': 'Formular de contact',
   'drawer.logout': 'Ieșire',
+
+  'nav.profile': 'Profil',
+
   'tab.home': 'Oferte',
   'tab.filter': 'Filtru',
   'tab.orders': 'Comenzi',
