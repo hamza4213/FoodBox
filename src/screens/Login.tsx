@@ -64,8 +64,6 @@ const LoginScreen = ({navigation, route}: LoginProps) => {
 
   const handleLogin = async values => {
     const {email, password} = values;
-    console.log('Inside', email, password);
-
     try {
       const userRepo = new NotAuthenticatedUserRepository();
       const res = await userRepo.login({

@@ -64,9 +64,6 @@ const SignUpScreen = ({navigation}: SignUpProps) => {
   const handleSignup = async (values: any) => {
     showLoading('sign_up');
     const {email, firstName, password} = values;
-    console.log('email: ' + email);
-    console.log('firstname: ' + firstName);
-    console.log('password: ' + password);
     try {
       const userRepo = new NotAuthenticatedUserRepository();
       await userRepo.register({
@@ -121,7 +118,6 @@ const SignUpScreen = ({navigation}: SignUpProps) => {
       }}
       validationSchema={SignupSchema}
       onSubmit={async values => {
-        console.log('values', values);
         handleSignup(values);
       }}>
       {({handleChange, handleSubmit, values, setValues, errors}) => (
