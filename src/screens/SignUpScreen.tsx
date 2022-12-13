@@ -24,7 +24,10 @@ import {useIntl} from 'react-intl';
 import {useSelector} from 'react-redux';
 import {FBRootState} from '../redux/store';
 import {openComposer} from 'react-native-email-link';
-
+import {useAuth} from '../providers/AuthProvider';
+import {showMessage, hideMessage} from 'react-native-flash-message';
+import {Formik} from 'formik';
+import * as yup from 'yup';
 interface SignUpProps {
   route: any;
   navigation: any;
@@ -32,6 +35,7 @@ interface SignUpProps {
 
 const SignUpScreen = ({navigation}: SignUpProps) => {
   const [check, setCheck] = useState(false);
+  const {signIn} = useAuth();
   const {showLoading, hideLoading} = useFbLoading();
   const [
     isRegistrationCompleteDialogVisible,
@@ -45,7 +49,6 @@ const SignUpScreen = ({navigation}: SignUpProps) => {
   const [firstName, setFirstName] = useState();
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
-
   const handleSendEmailSupport = React.useCallback(() => {
     try {
       openComposer({
@@ -58,14 +61,9 @@ const SignUpScreen = ({navigation}: SignUpProps) => {
     }
   }, []);
 
-  const handleSignup = async () => {
-    console.log('Inside firstName', firstName);
-    console.log('Inside email', email);
-    console.log('Inside pwd', password);
-    console.log('Inside cpwd', confirmPassword);
-
+  const handleSignup = async (values: any) => {
     showLoading('sign_up');
-
+    const {email, firstName, password} = values;
     try {
       const userRepo = new NotAuthenticatedUserRepository();
       await userRepo.register({
@@ -75,9 +73,15 @@ const SignUpScreen = ({navigation}: SignUpProps) => {
         password: password,
         locale: userLocale,
       });
-
+      showMessage({
+        message:
+          'We have sent you a verifification email. Please verify your email and login.',
+        type: 'success',
+        duration: 5000,
+      });
+      navigation.goBack();
       setIsRegistrationCompleteDialogVisible(true);
-      navigation.navigate('Objects');
+      // navigation.navigate('Objects');
     } catch (error: any) {
       if (isFBAppError(error) || isFBGenericError(error)) {
         showToastError(translateText(intl, error.key));
@@ -90,121 +94,190 @@ const SignUpScreen = ({navigation}: SignUpProps) => {
 
     hideLoading('sign_up');
   };
+  let SignupSchema = yup.object().shape({
+    firstName: yup.string().required('Name is required'),
+    email: yup.string().email().required('Email required'),
+    password: yup.string().required('Password is required').min(4),
+    passwordConfirmation: yup
+      .string()
+      .oneOf([yup.ref('password'), null], 'Passwords must match'),
+    agrredToTermsAndConditions: yup
+      .bool()
+      .oneOf([true], 'Field must be checked'),
+  });
+
   return (
-    <SafeAreaView style={styles.container}>
-      <View
-        style={{justifyContent: 'center', alignItems: 'center', marginTop: 30}}>
-        <Logo width={146} height={52} />
-      </View>
-      <View style={styles.loginMain}>
-        <ScrollView
-          contentContainerStyle={{paddingHorizontal: '5%', marginBottom: 100}}
-          showsVerticalScrollIndicator={false}>
-          <Text style={styles.registerHeading}>
-            {translateText(intl, 'signup.title')}
-          </Text>
-          <View style={styles.inputView}>
-            <Text style={styles.inputLabel}>
-              {translateText(intl, 'signup.firstName')}
-            </Text>
-            <TextInput
-              placeholder=""
-              style={styles.input}
-              placeholderTextColor="#182550"
-              onChange={fname => setFirstName(fname.nativeEvent.text)}
-            />
+    <Formik
+      initialValues={{
+        firstName: '',
+        email: '',
+        password: '',
+        passwordConfirmation: '',
+        agrredToTermsAndConditions: false,
+        showErrors: false,
+      }}
+      validationSchema={SignupSchema}
+      onSubmit={async values => {
+        handleSignup(values);
+      }}>
+      {({handleChange, handleSubmit, values, setValues, errors}) => (
+        <SafeAreaView style={styles.container}>
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 30,
+            }}>
+            <Logo width={146} height={52} />
           </View>
-          <View style={styles.inputView}>
-            <Text style={styles.inputLabel}>
-              {translateText(intl, 'signup.email')}
-            </Text>
-            <TextInput
-              placeholder=""
-              style={styles.input}
-              placeholderTextColor="#182550"
-              onChange={email => setEmail(email.nativeEvent.text)}
-            />
-          </View>
-          <View style={styles.inputView}>
-            <Text style={styles.inputLabel}>
-              {translateText(intl, 'signup.password')}
-            </Text>
-            <TextInput
-              placeholder="*************"
-              style={styles.input}
-              placeholderTextColor="#182550"
-              secureTextEntry={true}
-              onChange={pwd => setPassword(pwd.nativeEvent.text)}
-            />
-          </View>
-          <View style={styles.inputView}>
-            <Text style={styles.inputLabel}>
-              {translateText(intl, 'signup.repeat_password')}
-            </Text>
-            <TextInput
-              placeholder="*************"
-              style={styles.input}
-              placeholderTextColor="#182550"
-              secureTextEntry={true}
-              onChange={pwd => setConfirmPassword(pwd.nativeEvent.text)}
-            />
-          </View>
-          <View style={styles.conditionSec}>
-            <TouchableOpacity
-              style={styles.checkBox}
-              onPress={() => setCheck(!check)}>
-              {check ? (
-                <Text style={{color: '#79C54A', fontSize: 10}}>✓</Text>
-              ) : null}
-            </TouchableOpacity>
-            <Text style={styles.agreeTxt}>
-              {translateText(intl, 'signup.agree_with')}
-            </Text>
-            <TouchableOpacity
-              style={styles.conditionBtn}
-              onPress={() => navigation.navigate('GeneralTerms')}>
-              <Text style={styles.conditionBtnTxt}>
-                {translateText(intl, 'signup.conditionals')}
+          <View style={styles.loginMain}>
+            <ScrollView
+              contentContainerStyle={{
+                paddingHorizontal: '5%',
+                marginBottom: 100,
+              }}
+              showsVerticalScrollIndicator={false}>
+              <Text style={styles.registerHeading}>
+                {translateText(intl, 'signup.title')}
               </Text>
-            </TouchableOpacity>
-          </View>
-          {/* <TouchableOpacity
+              <View style={styles.inputView}>
+                <Text style={styles.inputLabel}>
+                  {translateText(intl, 'signup.firstName')}
+                </Text>
+                <TextInput
+                  placeholder=""
+                  style={styles.input}
+                  placeholderTextColor="#182550"
+                  onChangeText={handleChange('firstName')}
+                  // onChange={fname => setFirstName(fname.nativeEvent.text)}
+                />
+                {values?.showErrors && errors?.firstName && (
+                  <Text style={styles.warnText}>*{errors?.firstName}*</Text>
+                )}
+              </View>
+              <View style={styles.inputView}>
+                <Text style={styles.inputLabel}>
+                  {translateText(intl, 'signup.email')}
+                </Text>
+                <TextInput
+                  placeholder=""
+                  style={styles.input}
+                  placeholderTextColor="#182550"
+                  onChangeText={handleChange('email')}
+                  // onChange={email => setEmail(email.nativeEvent.text)}
+                />
+                {values?.showErrors && errors?.email && (
+                  <Text style={styles.warnText}>*{errors?.email}*</Text>
+                )}
+              </View>
+              <View style={styles.inputView}>
+                <Text style={styles.inputLabel}>
+                  {translateText(intl, 'signup.password')}
+                </Text>
+                <TextInput
+                  placeholder="*************"
+                  style={styles.input}
+                  placeholderTextColor="#182550"
+                  secureTextEntry={true}
+                  onChangeText={handleChange('password')}
+                  // onChange={pwd => setPassword(pwd.nativeEvent.text)}
+                />
+                {values?.showErrors && errors?.password && (
+                  <Text style={styles.warnText}>*{errors?.password}*</Text>
+                )}
+              </View>
+              <View style={styles.inputView}>
+                <Text style={styles.inputLabel}>
+                  {translateText(intl, 'signup.repeat_password')}
+                </Text>
+                <TextInput
+                  placeholder="*************"
+                  style={styles.input}
+                  placeholderTextColor="#182550"
+                  secureTextEntry={true}
+                  onChangeText={handleChange('passwordConfirmation')}
+                  // onChange={pwd => setConfirmPassword(pwd.nativeEvent.text)}
+                />
+                {values?.showErrors && errors?.passwordConfirmation && (
+                  <Text style={styles.warnText}>
+                    *{errors?.passwordConfirmation}*
+                  </Text>
+                )}
+              </View>
+              <View style={styles.conditionSec}>
+                <TouchableOpacity
+                  style={styles.checkBox}
+                  onPress={() =>
+                    setValues({
+                      ...values,
+                      agrredToTermsAndConditions:
+                        !values.agrredToTermsAndConditions,
+                    })
+                  }>
+                  {values?.agrredToTermsAndConditions ? (
+                    <Text style={{color: '#79C54A', fontSize: 10}}>✓</Text>
+                  ) : null}
+                </TouchableOpacity>
+                <Text style={styles.agreeTxt}>
+                  {translateText(intl, 'signup.agree_with')}
+                </Text>
+                <TouchableOpacity
+                  style={styles.conditionBtn}
+                  onPress={() => navigation.navigate('GeneralTerms')}>
+                  <Text style={styles.conditionBtnTxt}>
+                    {translateText(intl, 'signup.conditionals')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              {values?.showErrors && errors?.agrredToTermsAndConditions && (
+                <Text style={styles.warnText}>
+                  *{errors?.agrredToTermsAndConditions}*
+                </Text>
+              )}
+              {/* <TouchableOpacity
             style={styles.forgotBtn}
             onPress={() => setModalVisible(!modalVisible)}>
             <Text style={styles.forgotBtnTxt}>Забравена парола?</Text>
           </TouchableOpacity> */}
-          <TouchableOpacity style={styles.loginBtn} onPress={handleSignup}>
-            <Text style={styles.loginBtnTxt}>
-              {translateText(intl, 'signup.sign_up')}
-            </Text>
-          </TouchableOpacity>
-          <View style={styles.registerSec}>
-            <Text style={styles.registerSecTxt}>
-              {translateText(intl, 'signup.have_account')}
-            </Text>
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={styles.registerBtn}>
-              <Text style={styles.registerBtnTxt}>
-                {translateText(intl, 'signup.login_profile')}
-              </Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.loginBtn}
+                onPress={() => {
+                  setValues({...values, showErrors: true});
+                  handleSubmit();
+                }}>
+                <Text style={styles.loginBtnTxt}>
+                  {translateText(intl, 'signup.sign_up')}
+                </Text>
+              </TouchableOpacity>
+              <View style={styles.registerSec}>
+                <Text style={styles.registerSecTxt}>
+                  {translateText(intl, 'signup.have_account')}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => navigation.goBack()}
+                  style={styles.registerBtn}>
+                  <Text style={styles.registerBtnTxt}>
+                    {translateText(intl, 'signup.login_profile')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.bottomSec}>
+                <FilledEmailLogo />
+                <View style={styles.helpSec}>
+                  <Text style={styles.helpTxt} />
+                  <Text style={styles.helpTxt}>
+                    {translateText(intl, 'signup.help')}
+                  </Text>
+                </View>
+                <TouchableOpacity onPress={handleSendEmailSupport}>
+                  <Text style={styles.mailTxt}>info@foodobox.com</Text>
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
           </View>
-          <View style={styles.bottomSec}>
-            <FilledEmailLogo />
-            <View style={styles.helpSec}>
-              <Text style={styles.helpTxt} />
-              <Text style={styles.helpTxt}>
-                {translateText(intl, 'signup.help')}
-              </Text>
-            </View>
-            <TouchableOpacity onPress={handleSendEmailSupport}>
-              <Text style={styles.mailTxt}>info@foodobox.com</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-      </View>
-    </SafeAreaView>
+        </SafeAreaView>
+      )}
+    </Formik>
   );
 };
 
@@ -218,6 +291,9 @@ const styles = StyleSheet.create({
     height: 52,
     marginTop: 40,
     alignSelf: 'center',
+  },
+  warnText: {
+    color: '#CF4F4F',
   },
   loginMain: {
     backgroundColor: '#fff',
