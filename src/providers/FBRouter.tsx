@@ -48,7 +48,7 @@ const AuthStack = createStackNavigator();
 
 const FBRouter = () => {
   const {authData, authLoading, signOut} = useAuth();
-  console.log('authDta at container', authData);
+  // console.log('authDta at container', authData);
   const intl = useIntl();
   const [showSPlashScreen, setShowSPlashScreen] = useState(true);
 
