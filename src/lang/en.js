@@ -12,9 +12,10 @@ export default {
   'login.without_registration': 'Continue without registration',
   'login.not_have_account': "Don't have an account?",
   'login.sign_up': 'Sign up with email.',
+  'login.forgot_title': 'Forgotten Password',
   'login.forgotten_email_hint':
     'We will send you a reset password link on the specified email',
-  'login.new_password': 'New password.',
+  'login.new_password': 'New Password',
   'login.social_refused': 'Access denied.',
 
   'formErrors.required': 'Required.',

@@ -13,6 +13,7 @@ export default {
   'login.without_registration': 'Продължете без регистрация',
   'login.not_have_account': 'Нямаш акаунт? ',
   'login.sign_up': 'Регистрирай се',
+  'login.forgot_title': 'Забравена парола',
   'login.forgotten_email_hint':
     'Ще изпратим линк за промяна на паролата на посочения от теб имейл.',
   'login.new_password': 'Нова парола',

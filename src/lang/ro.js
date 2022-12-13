@@ -13,6 +13,7 @@ export default {
   'login.without_registration': 'Continuați fără înregistrare',
   'login.not_have_account': 'Nu ai account?',
   'login.sign_up': 'Înregistrează-te',
+  'login.forgot_title': 'parola uitata',
   'login.forgotten_email_hint':
     ' Vom trimite un link de resetare a parolei la adresa de e-mail pe care o furnizați',
   'login.new_password': 'parolă nouă',

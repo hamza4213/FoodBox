@@ -407,12 +407,16 @@ const LoginScreen = ({navigation, route}: LoginProps) => {
               onPress={() => setModalVisible(false)}>
               <CloseIcon />
             </TouchableOpacity>
-            <Text style={styles.modalHeading}>Забравена парола</Text>
+            <Text style={styles.modalHeading}>
+              {translateText(intl, 'login.forgot_title')}
+            </Text>
             <Text style={styles.emailSendTxt}>
-              Ще изпратим линк за промяна на паролата на посочения от теб имейл.
+              {translateText(intl, 'login.forgotten_email_hint')}
             </Text>
             <View style={styles.modalInputView}>
-              <Text style={styles.inputLabel}>имейл</Text>
+              <Text style={styles.inputLabel}>
+                {translateText(intl, 'login.email')}
+              </Text>
               <TextInput
                 placeholder=""
                 style={styles.modalInput}
@@ -427,7 +431,9 @@ const LoginScreen = ({navigation, route}: LoginProps) => {
                 setModalVisible(false);
                 setSecondModalVisible(true);
               }}>
-              <Text style={styles.buttonTxt}>Нова парола</Text>
+              <Text style={styles.buttonTxt}>
+                {translateText(intl, 'login.new_password')}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
