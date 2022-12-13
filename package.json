@@ -36,6 +36,7 @@
     "appcenter-analytics": "4.4.5",
     "appcenter-crashes": "4.4.5",
     "axios": "^0.27.2",
+    "formik": "^2.2.9",
     "geolib": "^3.3.3",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
@@ -76,7 +77,8 @@
     "react-native-webview": "^11.23.0",
     "react-redux": "^8.0.2",
     "redux": "^4.2.0",
-    "redux-persist": "^6.0.0"
+    "redux-persist": "^6.0.0",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
