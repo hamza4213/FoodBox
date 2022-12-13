@@ -35,6 +35,8 @@ export default {
     "Account created. We have sent you an activation link. Check your email and your SPAM folder. If you don't receive the link soon, contact us at support-customer@foodobox.com",
   'signup.agree_with': 'Agree to the',
   'signup.conditionals': 'terms and conditions',
+  'signup.have_account': 'Do you have an account?',
+  'signup.login_profile': 'Log in to your profile',
 
   'prompts.location': 'Please allow location access to show you nearby offers.',
   'prompts.notification':

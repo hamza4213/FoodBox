@@ -34,6 +34,8 @@ export default {
     'Contul nu a fost activat. Va rugăm sa utilizați linkul pe care vi l-am trimis prin e-mail. E-mailul poate fi in folderul SPAM.In cazul in care nu ai primit linkul, ia legatura cu noi.',
   'signup.agree_with': 'Sunt de acord cu',
   'signup.conditionals': ' condiții generale ale platformei.',
+  'signup.have_account': 'ai cont?',
+  'signup.login_profile': 'Conectați-vă la profilul dvs',
   'prompts.location':
     'Te rugăm să ne oferiți acces la locație.  Pentru a va arată oferte relevante linga tine',
   'prompts.notification':
