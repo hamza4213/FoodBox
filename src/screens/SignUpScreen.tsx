@@ -23,6 +23,7 @@ import {showToastError} from '../common/FBToast';
 import {useIntl} from 'react-intl';
 import {useSelector} from 'react-redux';
 import {FBRootState} from '../redux/store';
+import {openComposer} from 'react-native-email-link';
 
 interface SignUpProps {
   route: any;
@@ -44,6 +45,18 @@ const SignUpScreen = ({navigation}: SignUpProps) => {
   const [firstName, setFirstName] = useState();
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
+
+  const handleSendEmailSupport = React.useCallback(() => {
+    try {
+      openComposer({
+        to: 'info@foodbox.com',
+        subject: 'I have a question',
+        body: 'Hi, can you help me with...',
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   const handleSignup = async () => {
     console.log('Inside firstName', firstName);
@@ -87,27 +100,35 @@ const SignUpScreen = ({navigation}: SignUpProps) => {
         <ScrollView
           contentContainerStyle={{paddingHorizontal: '5%', marginBottom: 100}}
           showsVerticalScrollIndicator={false}>
-          <Text style={styles.registerHeading}>Регистрирай се</Text>
+          <Text style={styles.registerHeading}>
+            {translateText(intl, 'signup.title')}
+          </Text>
           <View style={styles.inputView}>
-            <Text style={styles.inputLabel}>име</Text>
+            <Text style={styles.inputLabel}>
+              {translateText(intl, 'signup.firstName')}
+            </Text>
             <TextInput
-              placeholder="Александра Желева"
+              placeholder=""
               style={styles.input}
               placeholderTextColor="#182550"
               onChange={fname => setFirstName(fname.nativeEvent.text)}
             />
           </View>
           <View style={styles.inputView}>
-            <Text style={styles.inputLabel}>Имейл</Text>
+            <Text style={styles.inputLabel}>
+              {translateText(intl, 'signup.email')}
+            </Text>
             <TextInput
-              placeholder="alexandra.j@gmail.com"
+              placeholder=""
               style={styles.input}
               placeholderTextColor="#182550"
               onChange={email => setEmail(email.nativeEvent.text)}
             />
           </View>
           <View style={styles.inputView}>
-            <Text style={styles.inputLabel}>Парола</Text>
+            <Text style={styles.inputLabel}>
+              {translateText(intl, 'signup.password')}
+            </Text>
             <TextInput
               placeholder="*************"
               style={styles.input}
@@ -117,7 +138,9 @@ const SignUpScreen = ({navigation}: SignUpProps) => {
             />
           </View>
           <View style={styles.inputView}>
-            <Text style={styles.inputLabel}>Повтори Паролата</Text>
+            <Text style={styles.inputLabel}>
+              {translateText(intl, 'signup.repeat_password')}
+            </Text>
             <TextInput
               placeholder="*************"
               style={styles.input}
@@ -134,11 +157,15 @@ const SignUpScreen = ({navigation}: SignUpProps) => {
                 <Text style={{color: '#79C54A', fontSize: 10}}>✓</Text>
               ) : null}
             </TouchableOpacity>
-            <Text style={styles.agreeTxt}>Съгласен съм с</Text>
+            <Text style={styles.agreeTxt}>
+              {translateText(intl, 'signup.agree_with')}
+            </Text>
             <TouchableOpacity
               style={styles.conditionBtn}
               onPress={() => navigation.navigate('GeneralTerms')}>
-              <Text style={styles.conditionBtnTxt}>Общите условия</Text>
+              <Text style={styles.conditionBtnTxt}>
+                {translateText(intl, 'signup.conditionals')}
+              </Text>
             </TouchableOpacity>
           </View>
           {/* <TouchableOpacity
@@ -147,23 +174,33 @@ const SignUpScreen = ({navigation}: SignUpProps) => {
             <Text style={styles.forgotBtnTxt}>Забравена парола?</Text>
           </TouchableOpacity> */}
           <TouchableOpacity style={styles.loginBtn} onPress={handleSignup}>
-            <Text style={styles.loginBtnTxt}>Регистрирай се</Text>
+            <Text style={styles.loginBtnTxt}>
+              {translateText(intl, 'signup.sign_up')}
+            </Text>
           </TouchableOpacity>
           <View style={styles.registerSec}>
-            <Text style={styles.registerSecTxt}>Имаш акаунт?</Text>
-            <TouchableOpacity style={styles.registerBtn}>
-              <Text style={styles.registerBtnTxt}>Влез в своя профил</Text>
+            <Text style={styles.registerSecTxt}>
+              {translateText(intl, 'signup.have_account')}
+            </Text>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={styles.registerBtn}>
+              <Text style={styles.registerBtnTxt}>
+                {translateText(intl, 'signup.login_profile')}
+              </Text>
             </TouchableOpacity>
           </View>
           <View style={styles.bottomSec}>
             <FilledEmailLogo />
             <View style={styles.helpSec}>
-              <Text style={styles.helpTxt}>Помощ? </Text>
-              <TouchableOpacity>
-                <Text style={styles.helpTxt}>Свържи се с нас</Text>
-              </TouchableOpacity>
+              <Text style={styles.helpTxt} />
+              <Text style={styles.helpTxt}>
+                {translateText(intl, 'signup.help')}
+              </Text>
             </View>
-            <Text style={styles.mailTxt}>info@foodobox.com</Text>
+            <TouchableOpacity onPress={handleSendEmailSupport}>
+              <Text style={styles.mailTxt}>info@foodobox.com</Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </View>
