@@ -16,17 +16,22 @@ import SmokeIcon from './../../assets/images/smoke.svg';
 import CompleteGift from './../../assets/images/completeGift.svg';
 import PendingGift from './../../assets/images/pendingGift.svg';
 import BottomTabs from '../components/BottomTabs';
-import { AUTH_DATA_KEY, useAuth } from '../providers/AuthProvider';
-import { useSelector } from 'react-redux';
-import { FBRootState } from '../redux/store';
-import { FBUser } from '../models/User';
+import {AUTH_DATA_KEY, useAuth} from '../providers/AuthProvider';
+import {useSelector} from 'react-redux';
+import {FBRootState} from '../redux/store';
+import {FBUser} from '../models/User';
 import AsyncStorage from '@react-native-community/async-storage';
-import { AuthData } from '../models/AuthData';
-import { UserRepository } from '../repositories/UserRepository';
-import { restaurantInitialState } from '../redux/restaurant/reducer';
-import { ordersInitialState } from '../redux/order/reducer';
-import { userInitialState } from '../redux/user/reducer';
-import { CONTACT_US_FACTORY, TERMS_AND_CONDITIONS_FACTORY } from '../network/Server';
+import {AuthData} from '../models/AuthData';
+import {UserRepository} from '../repositories/UserRepository';
+import {restaurantInitialState} from '../redux/restaurant/reducer';
+import {ordersInitialState} from '../redux/order/reducer';
+import {userInitialState} from '../redux/user/reducer';
+import {
+  CONTACT_US_FACTORY,
+  TERMS_AND_CONDITIONS_FACTORY,
+} from '../network/Server';
+import {translateText} from '../lang/translate';
+import {useIntl} from 'react-intl';
 
 interface ProfileProps {
   route: any;
@@ -35,34 +40,38 @@ interface ProfileProps {
 
 const ProfileScreen = ({navigation}: ProfileProps) => {
   const {authData} = useAuth();
-  const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
-  const userLocale = useSelector((state: FBRootState) => state.userState.locale);
-
+  const user = useSelector(
+    (state: FBRootState) => state.userState.user,
+  ) as FBUser;
+  const userLocale = useSelector(
+    (state: FBRootState) => state.userState.locale,
+  );
+  const intl = useIntl();
   const {signOut} = useAuth();
 
-  console.log("authData", user);
-  
+  console.log('authData', user);
+
   const [boxes, setBoxes] = useState([
     {
-      des: 'Брой спасени кутии',
+      des: translateText(intl, 'profile.no_boxes'),
       number: '6',
       opened: true,
       icon: <BoxIcon />,
     },
     {
-      des: 'Количество спасена храна',
+      des: translateText(intl, 'profile.no_boxes_saved'),
       number: '4 кг',
       opened: false,
       icon: <TrashIcon />,
     },
     {
-      des: 'Спестени СО2 емисии',
+      des: translateText(intl, 'profile.co2_emission'),
       number: '35 кг',
       opened: false,
       icon: <SmokeIcon />,
     },
     {
-      des: 'Спестени пари за храна',
+      des: translateText(intl, 'profile.money_saved'),
       number: '6',
       opened: false,
       icon: <BoxIcon />,
@@ -71,12 +80,14 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
 
   const handleExit = () => {
     signOut();
-    navigation.navigate('SelectLanguageScreen')
-  }
+    navigation.navigate('SelectLanguageScreen');
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTxt}>Профил</Text>
+        <Text style={styles.headerTxt}>
+          {translateText(intl, 'nav.profile')}
+        </Text>
         <TouchableOpacity onPress={() => navigation.navigate('Setting')}>
           <SettingIcon />
         </TouchableOpacity>
@@ -104,8 +115,12 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
                 );
               })}
             </ScrollView>
-            <Text style={styles.levelTxt}>Достигнато ниво</Text>
-            <Text style={styles.level}>Ангажиран милениъл</Text>
+            <Text style={styles.levelTxt}>
+              {translateText(intl, 'profile.level')}
+            </Text>
+            <Text style={styles.level}>
+              {translateText(intl, 'profile.engaged')}
+            </Text>
             <View style={styles.giftsIcon}>
               {boxes.map((val, i) => {
                 return (
@@ -125,43 +140,54 @@ const ProfileScreen = ({navigation}: ProfileProps) => {
                   style={[
                     styles.progressFilled,
                     {width: '100%', backgroundColor: '#79C54A'},
-                  ]}></View>
+                  ]}
+                />
               </View>
               <View style={styles.progress}>
                 <View
                   style={[
                     styles.progressFilled,
                     {width: '25%', backgroundColor: '#79C54A'},
-                  ]}></View>
+                  ]}
+                />
               </View>
               <View style={styles.progress}>
-                <View style={styles.progressFilled}></View>
+                <View style={styles.progressFilled} />
               </View>
               <View style={styles.progress}>
-                <View style={styles.progressFilled}></View>
+                <View style={styles.progressFilled} />
               </View>
               <View style={styles.progress}>
-                <View style={styles.progressFilled}></View>
+                <View style={styles.progressFilled} />
               </View>
             </View>
             <Text style={styles.openBoxTxt}>
-              Спаси още 4 кутии, за да отключиш наградите, които{'\n'}те очакват
-              на следващото ниво!
+              {translateText(intl, 'profile.level_message')}
             </Text>
-            <TouchableOpacity style={styles.exitBtn} onPress={handleExit} >
-              <Text style={styles.exitBtnTxt}>Изход</Text>
+            <TouchableOpacity style={styles.exitBtn} onPress={handleExit}>
+              <Text style={styles.exitBtnTxt}>
+                {translateText(intl, 'profile.exit')}
+              </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.contactBtn, {marginTop: 25}]} onPress={()=> {
-                          const link = CONTACT_US_FACTORY[userLocale];
-                          Linking.openURL(link);              
-            }} >
-              <Text style={styles.contactBtnTxt}>Свържи се с нас</Text>
+            <TouchableOpacity
+              style={[styles.contactBtn, {marginTop: 25}]}
+              onPress={() => {
+                const link = CONTACT_US_FACTORY[userLocale];
+                Linking.openURL(link);
+              }}>
+              <Text style={styles.contactBtnTxt}>
+                {translateText(intl, 'profile.contact')}
+              </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.contactBtn} onPress={()=>{
-                          const link = TERMS_AND_CONDITIONS_FACTORY[userLocale];
-                          Linking.openURL(link);
-            }} >
-              <Text style={styles.contactBtnTxt}>Общи условия</Text>
+            <TouchableOpacity
+              style={styles.contactBtn}
+              onPress={() => {
+                const link = TERMS_AND_CONDITIONS_FACTORY[userLocale];
+                Linking.openURL(link);
+              }}>
+              <Text style={styles.contactBtnTxt}>
+                {translateText(intl, 'profile.general_terms')}
+              </Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

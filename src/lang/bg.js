@@ -257,6 +257,18 @@ export default {
   'tab.orders': 'Поръчки',
   'tab.menu': 'Меню',
 
+  'profile.level': 'Достигнато ниво',
+  'profile.engaged': 'Milenial angajat',
+  'profile.level_message':
+    "Спасете още 4 кутии, за да отключите наградите,{'\n'}които ви очакват на следващото ниво!",
+  'profile.exit': 'Изход',
+  'profile.contact': 'Свържете се с нас',
+  'profile.general_terms': 'Общи условия',
+  'profile.no_boxes': 'Брой спасени кутии',
+  'profile.no_boxes_saved': 'Количество спасена храна',
+  'profile.co2_emission': 'Спестени СО2 емисии',
+  'profile.money_saved': 'Спестени пари за храна',
+
   'permission.request.location.title': 'Достъп до локацията',
   'permission.request.location.message':
     'Моля, дай ни достъп до локацията ти, за да ти предлагаме оферти близо до теб.',

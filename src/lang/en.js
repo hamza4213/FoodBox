@@ -243,10 +243,22 @@ export default {
   'drawer.contact': 'Contact us',
   'drawer.logout': 'Log out',
 
+  'nav.profile': 'Profile',
   'tab.home': 'Offers',
   'tab.filter': 'Filters',
   'tab.orders': 'My Orders',
   'tab.menu': 'Menu',
+  'profile.level': 'Level reached',
+  'profile.engaged': 'Engaged Millennial',
+  'profile.level_message':
+    "Rescue 4 more boxes to unlock the rewards{'\n'}that await you to the next level!",
+  'profile.exit': 'Exit',
+  'profile.contact': 'Contact us',
+  'profile.general_terms': 'General Terms',
+  'profile.no_boxes': 'Number of boxes saved',
+  'profile.no_boxes_saved': 'Amount of food saved',
+  'profile.co2_emission': 'CO2 emissions saved',
+  'profile.money_saved': 'Money saved on food',
 
   'permission.request.location.title': 'Location Permission Request',
   'permission.request.location.message':

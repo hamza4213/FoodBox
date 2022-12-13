@@ -235,6 +235,19 @@ export default {
   'tab.filter': 'Filtru',
   'tab.orders': 'Comenzi',
   'tab.menu': 'Menu',
+
+  'profile.level': 'Nivel atins',
+  'profile.engaged': 'Milenial angajat',
+  'profile.level_message':
+    "Salvați încă 4 cutii pentru a debloca recompensele{'\n'}care vă așteaptă la nivelul următor!",
+  'profile.exit': 'Ieșire',
+  'profile.contact': 'Contactaţi-ne',
+  'profile.general_terms': 'Termeni generali',
+  'profile.no_boxes': 'Numărul de cutii salvate',
+  'profile.no_boxes_saved': 'Cantitatea de mâncare salvată',
+  'profile.co2_emission': 'Economii de CO2',
+  'profile.money_saved': 'Bani economisiți pe mâncare',
+
   'permission.request.location.title': 'Permis la locație.',
   'permission.request.location.message':
     'Te rugăm să ne oferiți acces la locația Dvs, astfel încât să putem oferi ofertele relevante.',
