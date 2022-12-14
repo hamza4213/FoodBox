@@ -8,6 +8,7 @@ import {
   ScrollView,
   TextInput,
   ImageBackground,
+  ActivityIndicator,
 } from 'react-native';
 import BottomTabs from '../components/BottomTabs';
 import ClusteredMapView from '../components/Home/clusteredMapView';
@@ -20,61 +21,78 @@ import HeartIcon from './../../assets/images/heart.svg';
 import BoxIcon from './../../assets/images/box.svg';
 import AsyncStorage from '@react-native-community/async-storage';
 import axiosClient from '../network/axiosClient';
-import { useSelector } from 'react-redux';
-import { FBRootState } from '../redux/store';
-import { API_ENDPOINT_RESTAURANT_PHOTOS } from '../network/Server';
+import {useSelector} from 'react-redux';
+import {FBRootState} from '../redux/store';
+import {API_ENDPOINT_RESTAURANT_PHOTOS} from '../network/Server';
 
 interface ObjectsProps {
   route: any;
   navigation: any;
 }
 interface getRestaurantsWithProductResponse {
-  success: boolean,
-  restaurants: object[]
+  success: boolean;
+  restaurants: object[];
 }
 
 const Objects = ({navigation}: ObjectsProps) => {
-
   const [activeTab, setActiveTab] = useState('карта');
+  const [selectedType, setSelectedType] = useState<string>();
   const [activeFilter, setActiveFilter] = useState('около мен');
   const [selectedRestaurant, setSelectedRestaurant] = useState<
     RestaurantHomeListItem | undefined
   >(undefined);
-  const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
-  const [restaurants, setRestaurants] = useState()
-
+  const userLocation = useSelector(
+    (state: FBRootState) => state.userState.userLocation,
+  );
+  const [restaurants, setRestaurants] = useState([]);
+  const [resturantsarray, setResturantsarray] = useState([]);
   const filters = ['около мен', 'активни сега', 'любими', 'печива и сладкиши'];
   const productsList = [1, 2, 3, 4, 5, 6];
-
+  const [loading, setLoading] = useState(false);
   const getRestaurants = async () => {
-    const url = '/user/restaurants?getProducts=true';
-    const userToken = await AsyncStorage.getItem('AUTH_DATA_KEY');
-
-    
-    const response: getRestaurantsWithProductResponse = await axiosClient.get(url, {
-      headers: {
-        'x-access-token': userToken,
-      },
-    });
     try {
-      let restaurantList = []
-       response.restaurants.map((r: any) =>{
-        restaurantList.push(RestaurantMapper.fromApi(r))
-       });
-       setRestaurants(restaurantList)
-       
+      console.log('inside Objects');
+      setLoading(true);
+      const url = '/user/restaurants?getProducts=true';
+      const userToken = await AsyncStorage.getItem('AUTH_DATA_KEY');
+
+      const response: getRestaurantsWithProductResponse = await axiosClient.get(
+        url,
+        {
+          headers: {
+            'x-access-token': userToken,
+          },
+        },
+      );
+      let restaurantList = [];
+      response.restaurants.map((r: any) => {
+        restaurantList.push(RestaurantMapper.fromApi(r));
+      });
+      setRestaurants(restaurantList);
+      setResturantsarray(restaurantList);
+      setLoading(false);
     } catch (e) {
       console.log(e);
       throw e;
     }
-    
-  }
-  useEffect(()=>{
-    console.log('inside Objects');
-    
+  };
+  useEffect(() => {
     getRestaurants();
-  },[])
-  
+  }, []);
+  const Search = (text: string) => {
+    if (text) {
+      const newData = restaurants.filter(function (item) {
+        const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setRestaurants(newData);
+    } else {
+      setLoading(true);
+      setRestaurants(resturantsarray);
+      setLoading(false);
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.tabs}>
@@ -107,19 +125,39 @@ const Objects = ({navigation}: ObjectsProps) => {
             <ScrollView
               horizontal={true}
               contentContainerStyle={{paddingHorizontal: 10}}>
-              <TouchableOpacity style={styles.filterBtn}>
+              <TouchableOpacity
+                onPress={() => setSelectedType()}
+                style={styles.filterBtn}>
                 <FilterIcon />
               </TouchableOpacity>
               {restaurants.map((val, i) => {
                 return (
-                  <TouchableOpacity key={i} style={styles.filterTab}>
-                    <Text style={styles.filterTabTxt}>{val.name}</Text>
+                  <TouchableOpacity
+                    onPress={() => setSelectedType(val.name)}
+                    key={i}
+                    style={[
+                      styles.filterTab,
+                      {
+                        backgroundColor:
+                          selectedType === val.name ? '#79C54A' : '#fff',
+                      },
+                    ]}>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        color: selectedType === val.name ? '#fff' : '#000',
+                      }}>
+                      {val.name}
+                    </Text>
                   </TouchableOpacity>
                 );
               })}
             </ScrollView>
           </View>
-          <ClusteredMapView zoomOnRestaurant={restaurants} />
+          <ClusteredMapView
+            zoomOnRestaurant={restaurants}
+            selectedType={selectedType}
+          />
           <View style={styles.selectedCityMain}>
             <TouchableOpacity style={styles.selectedCityBtn}>
               <ArrowIcon />
@@ -136,7 +174,13 @@ const Objects = ({navigation}: ObjectsProps) => {
           <View style={styles.listSecMain}>
             <View style={styles.searchInput}>
               <SearchIcon />
-              <TextInput placeholder="Търси" style={styles.input} />
+              <TextInput
+                returnKeyType="search"
+                placeholder="Търси"
+                style={styles.input}
+                // onChangeText={text => Search(text)}
+                onSubmitEditing={e => Search(e.nativeEvent.text)}
+              />
             </View>
             <TouchableOpacity
               style={styles.listSearchBtn}
@@ -152,19 +196,43 @@ const Objects = ({navigation}: ObjectsProps) => {
                 <RefreshIcon width={12} height={12} />
                 <Text style={styles.resulTxt}> поднови резултатите</Text>
               </TouchableOpacity>
+              {loading && (
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <ActivityIndicator size="large" color="#79C54A" />
+                </View>
+              )}
               {restaurants?.map((val, i) => {
                 return (
-                  <TouchableOpacity style={styles.listProduct} key={i} onPress={()=> navigation.navigate('Offer', {restaurant: val, userLocation: userLocation, box: val.boxes[0]})} >
+                  <TouchableOpacity
+                    style={styles.listProduct}
+                    key={i}
+                    onPress={() =>
+                      navigation.navigate('Offer', {
+                        restaurant: val,
+                        userLocation: userLocation,
+                        box: val.boxes[0],
+                      })
+                    }>
                     <TouchableOpacity style={styles.discountBtn}>
-                      <Text style={styles.discountBtnTxt}>-{val?.boxes[0]?.discount}%</Text>
+                      <Text style={styles.discountBtnTxt}>
+                        -{val?.boxes[0]?.discount}%
+                      </Text>
                     </TouchableOpacity>
                     <ImageBackground
                       style={styles.listImageBackground}
                       borderTopLeftRadius={16}
                       borderTopRightRadius={16}
-                      source={{uri : API_ENDPOINT_RESTAURANT_PHOTOS + val.thumbnailCoverImage}}
-                      >
-                        {/* // require('./../../assets/images/productImage1.png') */}
+                      source={{
+                        uri:
+                          API_ENDPOINT_RESTAURANT_PHOTOS +
+                          val.thumbnailCoverImage,
+                      }}>
+                      {/* // require('./../../assets/images/productImage1.png') */}
 
                       <View style={styles.listTopSec}>
                         <TouchableOpacity style={styles.favouritesIcon}>
@@ -173,15 +241,15 @@ const Objects = ({navigation}: ObjectsProps) => {
                         <Text style={styles.productName}>{val.name}</Text>
                       </View>
                       <View style={styles.productItems}>
-                          {val.boxes.map((box)=>{
-                            return(
-                        <View style={styles.productItemsBox}>
+                        {val.boxes.map((box, i) => {
+                          return (
+                            <View style={styles.productItemsBox} key={i}>
                               <Text style={styles.productItemsBoxTxt}>
-                            {box.summary}
-                          </Text>
-                        </View>
-                              )
-                          })}
+                                {box.summary}
+                              </Text>
+                            </View>
+                          );
+                        })}
                         {/* <View style={styles.productItemsBox}>
                           <Text style={styles.productItemsBoxTxt}>
                             сандвичи
@@ -296,7 +364,6 @@ const styles = StyleSheet.create({
   filterTab: {
     height: 30,
     borderRadius: 30,
-    backgroundColor: '#fff',
     borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
