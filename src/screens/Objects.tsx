@@ -241,9 +241,9 @@ const Objects = ({navigation}: ObjectsProps) => {
                         <Text style={styles.productName}>{val.name}</Text>
                       </View>
                       <View style={styles.productItems}>
-                        {val.boxes.map((box, i) => {
+                        {val.boxes.map((box: any, index: any) => {
                           return (
-                            <View style={styles.productItemsBox} key={i}>
+                            <View key={index} style={styles.productItemsBox}>
                               <Text style={styles.productItemsBoxTxt}>
                                 {box.summary}
                               </Text>
@@ -259,10 +259,18 @@ const Objects = ({navigation}: ObjectsProps) => {
                           <Text style={styles.productItemsBoxTxt}>кафе</Text>
                         </View> */}
                       </View>
-                      <View style={styles.priceSec}>
-                        <Text style={styles.oldPriceTxt}>12.50лв</Text>
-                        <Text style={styles.newPriceTxt}>7.00лв</Text>
-                      </View>
+                      {val.boxes?.map((box: any, index: any) => {
+                        return (
+                          <View style={styles.priceSec}>
+                            <Text key={index} style={styles.oldPriceTxt}>
+                              12.50лв
+                            </Text>
+                            <Text key={index} style={styles.newPriceTxt}>
+                              {box.price}лв
+                            </Text>
+                          </View>
+                        );
+                      })}
                     </ImageBackground>
                     <View style={styles.listProductBottomSec}>
                       <Text style={styles.timeTxt}>
@@ -421,7 +429,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   listImageBackground: {
-    height: 100,
+    height: 130,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
     paddingHorizontal: 10,
@@ -429,8 +437,8 @@ const styles = StyleSheet.create({
   },
   listProduct: {
     backgroundColor: '#FFFFFF',
-    // height: 113,
-    elevation: 10,
+    height: 175,
+    elevation: 5,
     borderRadius: 16,
     marginTop: 35,
   },
@@ -479,7 +487,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '40%',
     alignSelf: 'center',
-    marginTop: 10,
+    marginTop: 20,
   },
   oldPriceTxt: {
     color: '#CCCCCC',
@@ -502,16 +510,18 @@ const styles = StyleSheet.create({
   timeSec: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 8,
   },
   timeTxt: {
     color: '#182550',
     fontWeight: '700',
-    fontSize: 10,
+    fontSize: 12,
+    marginTop: 8,
   },
   timeToOpenTxt: {
     color: '#182550',
     fontWeight: '700',
-    fontSize: 10,
+    fontSize: 12,
     marginLeft: 5,
   },
   discountBtn: {
