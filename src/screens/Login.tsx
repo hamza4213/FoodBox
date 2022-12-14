@@ -73,7 +73,7 @@ const LoginScreen = ({navigation, route}: LoginProps) => {
       });
       console.log('res', res);
       await signIn(res);
-      navigation.navigate('Objects');
+      // navigation.navigate('Objects');
     } catch (error: any) {
       if (isFBAppError(error) || isFBGenericError(error)) {
         showToastError(translateText(intl, error.key));

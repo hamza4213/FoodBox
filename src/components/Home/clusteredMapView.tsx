@@ -284,7 +284,7 @@ const ClusteredMapView = ({
 
           return (
             <Marker
-              key={i}
+              key={restaurant.id}
               identifier={`${restaurant.listIndex}`}
               coordinate={{
                 latitude: restaurant.latitude,

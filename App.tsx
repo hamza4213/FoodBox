@@ -5,6 +5,7 @@ import {
   AlertButton,
   BackHandler,
   Linking,
+  LogBox,
   Platform,
   StatusBar,
 } from 'react-native';
@@ -131,7 +132,7 @@ let FBApp = () => {
 
     checkVersion();
   }, [appState]);
-
+  LogBox.ignoreAllLogs();
   return (
     <IntlProvider
       messages={messages[selectedLocale]}

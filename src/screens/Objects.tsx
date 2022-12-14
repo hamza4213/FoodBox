@@ -35,7 +35,7 @@ interface getRestaurantsWithProductResponse {
 }
 
 const Objects = ({navigation}: ObjectsProps) => {
-  const [activeTab, setActiveTab] = useState('карта');
+  const [activeTab, setActiveTab] = useState('списък');
   const [selectedType, setSelectedType] = useState<string>();
   const [activeFilter, setActiveFilter] = useState('около мен');
   const [selectedRestaurant, setSelectedRestaurant] = useState<
@@ -65,7 +65,10 @@ const Objects = ({navigation}: ObjectsProps) => {
         },
       );
       let restaurantList = [];
-      response.restaurants.map((r: any) => {
+      response.restaurants.map((r: any, i: any) => {
+        if (i === 0 || i == 7) {
+          console.log(r);
+        }
         restaurantList.push(RestaurantMapper.fromApi(r));
       });
       setRestaurants(restaurantList);
@@ -97,17 +100,6 @@ const Objects = ({navigation}: ObjectsProps) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.tabs}>
         <TouchableOpacity
-          onPress={() => setActiveTab('карта')}
-          style={[activeTab === 'карта' ? styles.activeTab : styles.tab]}>
-          <Text
-            style={[
-              styles.tabTxt,
-              activeTab === 'карта' ? {color: '#182550'} : {color: '#A6A6A6'},
-            ]}>
-            карта
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
           onPress={() => setActiveTab('списък')}
           style={[activeTab === 'списък' ? styles.activeTab : styles.tab]}>
           <Text
@@ -118,8 +110,19 @@ const Objects = ({navigation}: ObjectsProps) => {
             списък
           </Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setActiveTab('карта')}
+          style={[activeTab === 'карта' ? styles.activeTab : styles.tab]}>
+          <Text
+            style={[
+              styles.tabTxt,
+              activeTab === 'карта' ? {color: '#182550'} : {color: '#A6A6A6'},
+            ]}>
+            карта
+          </Text>
+        </TouchableOpacity>
       </View>
-      {activeTab === 'списък' ? (
+      {activeTab === 'карта' ? (
         <View style={{flex: 1, marginTop: 3}}>
           <View style={styles.filterSec}>
             <ScrollView
@@ -134,7 +137,6 @@ const Objects = ({navigation}: ObjectsProps) => {
                 return (
                   <TouchableOpacity
                     onPress={() => setSelectedType(val.name)}
-                    key={i}
                     style={[
                       styles.filterTab,
                       {
@@ -169,7 +171,7 @@ const Objects = ({navigation}: ObjectsProps) => {
           </View>
         </View>
       ) : null}
-      {activeTab === 'карта' ? (
+      {activeTab === 'списък' ? (
         <View style={styles.listsMain}>
           <View style={styles.listSecMain}>
             <View style={styles.searchInput}>
@@ -192,7 +194,7 @@ const Objects = ({navigation}: ObjectsProps) => {
             <ScrollView
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{paddingBottom: 50}}>
-              <TouchableOpacity style={styles.results}>
+              <TouchableOpacity onPress={getRestaurants} style={styles.results}>
                 <RefreshIcon width={12} height={12} />
                 <Text style={styles.resulTxt}> поднови резултатите</Text>
               </TouchableOpacity>
@@ -210,7 +212,6 @@ const Objects = ({navigation}: ObjectsProps) => {
                 return (
                   <TouchableOpacity
                     style={styles.listProduct}
-                    key={i}
                     onPress={() =>
                       navigation.navigate('Offer', {
                         restaurant: val,
@@ -243,7 +244,7 @@ const Objects = ({navigation}: ObjectsProps) => {
                       <View style={styles.productItems}>
                         {val.boxes.map((box: any, index: any) => {
                           return (
-                            <View key={index} style={styles.productItemsBox}>
+                            <View style={styles.productItemsBox}>
                               <Text style={styles.productItemsBoxTxt}>
                                 {box.summary}
                               </Text>
@@ -262,10 +263,8 @@ const Objects = ({navigation}: ObjectsProps) => {
                       {val.boxes?.map((box: any, index: any) => {
                         return (
                           <View style={styles.priceSec}>
-                            <Text key={index} style={styles.oldPriceTxt}>
-                              12.50лв
-                            </Text>
-                            <Text key={index} style={styles.newPriceTxt}>
+                            <Text style={styles.oldPriceTxt}>12.50лв</Text>
+                            <Text style={styles.newPriceTxt}>
                               {box.price}лв
                             </Text>
                           </View>
