@@ -21,6 +21,8 @@ import CofeeIcon from './../../assets/images/cofee.svg';
 import OthersIcon from './../../assets/images/others.svg';
 import VegIcon from './../../assets/images/vegan.svg';
 import VegetarianIcon from './../../assets/images/vegetarian.svg';
+import {translateText} from '../lang/translate';
+import {useIntl} from 'react-intl';
 
 interface FilterScreenProps {
   route: any;
@@ -32,6 +34,8 @@ const FilterScreen = ({navigation}: FilterScreenProps) => {
   const [toTime, setToTime] = useState(new Date());
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
+  const intl = useIntl();
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -42,61 +46,86 @@ const FilterScreen = ({navigation}: FilterScreenProps) => {
           style={styles.closeIcon}>
           <CloseIcon />
         </TouchableOpacity>
-        <Text style={styles.heading}>Сортирай по</Text>
+        <Text style={styles.heading}>{translateText(intl, 'sort.by')}</Text>
         <View style={styles.sortBySec}>
           <TouchableOpacity style={styles.sortByBtn}>
             <SelectedCityIcon />
-            <Text style={styles.sortByBtnTxt}>най-близо</Text>
+            <Text style={styles.sortByBtnTxt}>
+              {translateText(intl, 'sort.btnText1')}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.sortByBtn}>
             <DollarIcon />
-            <Text style={styles.sortByBtnTxt}>цена</Text>
+            <Text style={styles.sortByBtnTxt}>
+              {' '}
+              {translateText(intl, 'sort.btnText2')}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.sortByBtn}>
             <ClockIcon />
-            <Text style={styles.sortByBtnTxt}>активни сега</Text>
+            <Text style={styles.sortByBtnTxt}>
+              {translateText(intl, 'sort.btnText3')}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.sortByBtn}>
             <InformationIcon />
-            <Text style={styles.sortByBtnTxt}>изтичащи скоро</Text>
+            <Text style={styles.sortByBtnTxt}>
+              {translateText(intl, 'sort.btnText4')}
+            </Text>
           </TouchableOpacity>
         </View>
-        <Text style={[styles.heading, {marginTop: 30}]}>Тип заведение</Text>
+        <Text style={[styles.heading, {marginTop: 30}]}>
+          {translateText(intl, 'heading.1')}
+        </Text>
         <View style={styles.filterSec}>
           <TouchableOpacity style={styles.cakeBox}>
             <CakeIcon />
-            <Text style={styles.cakeBoxTxt}>печива и сладкиши</Text>
+            <Text style={styles.cakeBoxTxt}>
+              {translateText(intl, 'type.food1')}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.cakeBox}>
             <AppleIcon />
-            <Text style={styles.cakeBoxTxt}>хранителни продукти</Text>
+            <Text style={styles.cakeBoxTxt}>
+              {translateText(intl, 'type.food2')}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.cakeBox}>
             <CofeeIcon />
-            <Text style={styles.cakeBoxTxt}>ястия</Text>
+            <Text style={styles.cakeBoxTxt}>
+              {translateText(intl, 'type.food3')}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.cakeBox}>
             <OthersIcon />
-            <Text style={styles.cakeBoxTxt}>други</Text>
+            <Text style={styles.cakeBoxTxt}>
+              {translateText(intl, 'type.food4')}
+            </Text>
           </TouchableOpacity>
         </View>
 
         <Text style={[styles.heading, {marginTop: 30}]}>
-          диетични предпочитания
+          {translateText(intl, 'diet.prefer1')}
         </Text>
         <View style={styles.filterSec}>
           <TouchableOpacity style={styles.cakeBox}>
             <VegIcon />
-            <Text style={styles.cakeBoxTxt}>веган</Text>
+            <Text style={styles.cakeBoxTxt}>
+              {translateText(intl, 'diet.1')}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.cakeBox}>
             <VegetarianIcon />
-            <Text style={styles.cakeBoxTxt}>веган</Text>
+            <Text style={styles.cakeBoxTxt}>
+              {translateText(intl, 'diet.2')}
+            </Text>
           </TouchableOpacity>
         </View>
         <View style={styles.timeSec}>
           <View style={styles.fromTimeSec}>
-            <Text style={styles.fromTimeLabel}>вземи от</Text>
+            <Text style={styles.fromTimeLabel}>
+              {translateText(intl, 'time.from')}
+            </Text>
             <TouchableOpacity
               style={styles.fromTimeBtn}
               onPress={() => setOpen(true)}>
@@ -106,7 +135,9 @@ const FilterScreen = ({navigation}: FilterScreenProps) => {
             </TouchableOpacity>
           </View>
           <View style={[styles.fromTimeSec, {marginLeft: 20}]}>
-            <Text style={styles.fromTimeLabel}>до</Text>
+            <Text style={styles.fromTimeLabel}>
+              {translateText(intl, 'time.to')}
+            </Text>
             <TouchableOpacity
               style={styles.fromTimeBtn}
               onPress={() => setOpen2(true)}>
@@ -149,12 +180,16 @@ const FilterScreen = ({navigation}: FilterScreenProps) => {
         <TouchableOpacity
           style={styles.cancelBtn}
           onPress={() => navigation.navigate('Objects')}>
-          <Text style={styles.cancelBtnTxt}>Изчисти</Text>
+          <Text style={styles.cancelBtnTxt}>
+            {translateText(intl, 'clean.up')}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.doneBtn}
           onPress={() => navigation.navigate('Objects')}>
-          <Text style={styles.doneBtnTxt}>Приложи</Text>
+          <Text style={styles.doneBtnTxt}>
+            {translateText(intl, 'btn.apply')}
+          </Text>
         </TouchableOpacity>
       </View>
       <StatusBar
