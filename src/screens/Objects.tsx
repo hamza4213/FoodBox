@@ -9,6 +9,7 @@ import {
   TextInput,
   ImageBackground,
   ActivityIndicator,
+  TabBarIOSItem,
 } from 'react-native';
 import BottomTabs from '../components/BottomTabs';
 import ClusteredMapView from '../components/Home/clusteredMapView';
@@ -24,7 +25,7 @@ import axiosClient from '../network/axiosClient';
 import {useSelector} from 'react-redux';
 import {FBRootState} from '../redux/store';
 import {API_ENDPOINT_RESTAURANT_PHOTOS} from '../network/Server';
-
+import moment from 'moment';
 interface ObjectsProps {
   route: any;
   navigation: any;
@@ -246,7 +247,7 @@ const Objects = ({navigation}: ObjectsProps) => {
                           return (
                             <View style={styles.productItemsBox}>
                               <Text style={styles.productItemsBoxTxt}>
-                                {box.summary}
+                                {box.foodType}
                               </Text>
                             </View>
                           );
@@ -271,17 +272,23 @@ const Objects = ({navigation}: ObjectsProps) => {
                         );
                       })}
                     </ImageBackground>
-                    <View style={styles.listProductBottomSec}>
-                      <Text style={styles.timeTxt}>
-                        Вземи от 14:00ч. до 19:00ч.
-                      </Text>
-                      <View style={styles.timeSec}>
-                        <BoxIcon />
-                        <Text style={styles.timeToOpenTxt}>
-                          Остават 2 кутии
-                        </Text>
-                      </View>
-                    </View>
+                    {val.boxes.map((item: any, index: any) => {
+                      return (
+                        <View key={index} style={styles.listProductBottomSec}>
+                          <Text style={styles.timeTxt}>
+                            {`Вземи от ${moment(item.pickUpFrom).format(
+                              'HH:mm',
+                            )}ч. до ${moment(item.pickUpTo).format('HH:mm')}ч.`}
+                          </Text>
+                          <View style={styles.timeSec}>
+                            <BoxIcon />
+                            <Text style={styles.timeToOpenTxt}>
+                              {item.isOpen ? 'Остават 2 кутии' : 'Closed'}
+                            </Text>
+                          </View>
+                        </View>
+                      );
+                    })}
                   </TouchableOpacity>
                 );
               })}
