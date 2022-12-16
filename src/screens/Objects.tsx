@@ -26,6 +26,8 @@ import {useSelector} from 'react-redux';
 import {FBRootState} from '../redux/store';
 import {API_ENDPOINT_RESTAURANT_PHOTOS} from '../network/Server';
 import moment from 'moment';
+import {translateText} from '../lang/translate';
+import {useIntl} from 'react-intl';
 interface ObjectsProps {
   route: any;
   navigation: any;
@@ -36,7 +38,11 @@ interface getRestaurantsWithProductResponse {
 }
 
 const Objects = ({navigation}: ObjectsProps) => {
-  const [activeTab, setActiveTab] = useState('списък');
+  const intl = useIntl();
+
+  const [activeTab, setActiveTab] = useState(
+    translateText(intl, 'active.tab1'),
+  );
   const [selectedType, setSelectedType] = useState<string>();
   const [activeFilter, setActiveFilter] = useState('около мен');
   const [selectedRestaurant, setSelectedRestaurant] = useState<
@@ -97,33 +103,46 @@ const Objects = ({navigation}: ObjectsProps) => {
       setLoading(false);
     }
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.tabs}>
         <TouchableOpacity
-          onPress={() => setActiveTab('списък')}
-          style={[activeTab === 'списък' ? styles.activeTab : styles.tab]}>
+          onPress={() => setActiveTab(translateText(intl, 'active.tab1'))}
+          style={[
+            activeTab === translateText(intl, 'active.tab1')
+              ? styles.activeTab
+              : styles.tab,
+          ]}>
           <Text
             style={[
               styles.tabTxt,
-              activeTab === 'списък' ? {color: '#182550'} : {color: '#A6A6A6'},
+              activeTab === translateText(intl, 'active.tab1')
+                ? {color: '#182550'}
+                : {color: '#A6A6A6'},
             ]}>
-            списък
+            {translateText(intl, 'active.tab1')}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => setActiveTab('карта')}
-          style={[activeTab === 'карта' ? styles.activeTab : styles.tab]}>
+          onPress={() => setActiveTab(translateText(intl, 'active.tab2'))}
+          style={[
+            activeTab === translateText(intl, 'active.tab2')
+              ? styles.activeTab
+              : styles.tab,
+          ]}>
           <Text
             style={[
               styles.tabTxt,
-              activeTab === 'карта' ? {color: '#182550'} : {color: '#A6A6A6'},
+              activeTab === translateText(intl, 'active.tab2')
+                ? {color: '#182550'}
+                : {color: '#A6A6A6'},
             ]}>
-            карта
+            {translateText(intl, 'active.tab2')}
           </Text>
         </TouchableOpacity>
       </View>
-      {activeTab === 'карта' ? (
+      {activeTab === translateText(intl, 'active.tab2') ? (
         <View style={{flex: 1, marginTop: 3}}>
           <View style={styles.filterSec}>
             <ScrollView
@@ -172,14 +191,14 @@ const Objects = ({navigation}: ObjectsProps) => {
           </View>
         </View>
       ) : null}
-      {activeTab === 'списък' ? (
+      {activeTab === translateText(intl, 'active.tab1') ? (
         <View style={styles.listsMain}>
           <View style={styles.listSecMain}>
             <View style={styles.searchInput}>
               <SearchIcon />
               <TextInput
                 returnKeyType="search"
-                placeholder="Търси"
+                placeholder={translateText(intl, 'search.restaurant')}
                 style={styles.input}
                 // onChangeText={text => Search(text)}
                 onSubmitEditing={e => Search(e.nativeEvent.text)}
@@ -197,7 +216,10 @@ const Objects = ({navigation}: ObjectsProps) => {
               contentContainerStyle={{paddingBottom: 50}}>
               <TouchableOpacity onPress={getRestaurants} style={styles.results}>
                 <RefreshIcon width={12} height={12} />
-                <Text style={styles.resulTxt}> поднови резултатите</Text>
+                <Text style={styles.resulTxt}>
+                  {' '}
+                  {translateText(intl, 'refresh.restaurant')}
+                </Text>
               </TouchableOpacity>
               {loading && (
                 <View
@@ -264,9 +286,13 @@ const Objects = ({navigation}: ObjectsProps) => {
                       {val.boxes?.map((box: any, index: any) => {
                         return (
                           <View style={styles.priceSec}>
-                            <Text style={styles.oldPriceTxt}>12.50лв</Text>
+                            <Text style={styles.oldPriceTxt}>
+                              12.50
+                              {translateText(intl, 'price.currency')}
+                            </Text>
                             <Text style={styles.newPriceTxt}>
-                              {box.price}лв
+                              {box.price}
+                              {translateText(intl, 'price.currency')}
                             </Text>
                           </View>
                         );
@@ -276,14 +302,27 @@ const Objects = ({navigation}: ObjectsProps) => {
                       return (
                         <View key={index} style={styles.listProductBottomSec}>
                           <Text style={styles.timeTxt}>
-                            {`Вземи от ${moment(item.pickUpFrom).format(
-                              'HH:mm',
-                            )}ч. до ${moment(item.pickUpTo).format('HH:mm')}ч.`}
+                            {`${translateText(intl, 'get.from')} ${moment(
+                              item.pickUpFrom,
+                            ).format('HH:mm')}${translateText(
+                              intl,
+                              'time.h',
+                            )}. ${translateText(intl, 'time.to')} ${moment(
+                              item.pickUpTo,
+                            ).format('HH:mm')}${translateText(
+                              intl,
+                              'time.h',
+                            )}.`}
                           </Text>
                           <View style={styles.timeSec}>
                             <BoxIcon />
                             <Text style={styles.timeToOpenTxt}>
-                              {item.isOpen ? 'Остават 2 кутии' : 'Closed'}
+                              {item.isOpen
+                                ? `${translateText(
+                                    intl,
+                                    'open.from',
+                                  )} 2 ${translateText(intl, 'open.till')}`
+                                : 'Closed'}
                             </Text>
                           </View>
                         </View>
