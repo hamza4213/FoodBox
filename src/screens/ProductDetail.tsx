@@ -26,6 +26,8 @@ import CloseIcon from './../../assets/images/close.svg';
 import CashPaymentIcon from './../../assets/images/cashPayment.svg';
 import JumpingIcon from './../../assets/images/jumpingMascot.svg';
 import MoscatIcon from './../../assets/images/showingMascot.svg';
+import {translateText} from '../lang/translate';
+import {useIntl} from 'react-intl';
 
 interface ProductDetailProps {
   route: any;
@@ -33,6 +35,7 @@ interface ProductDetailProps {
 }
 
 const ProductDetail = ({navigation}: ProductDetailProps) => {
+  const intl = useIntl();
   const [activeTab, setActiveTab] = useState('Съдържание');
   const [modalVisible, setModalVisible] = useState(false);
   const [secondModal, setSecondModal] = useState(false);
@@ -55,7 +58,9 @@ const ProductDetail = ({navigation}: ProductDetailProps) => {
             style={styles.backBtn}
             onPress={() => navigation.goBack()}>
             <BackIcon />
-            <Text style={styles.backBtnTxt}>Назад</Text>
+            <Text style={styles.backBtnTxt}>
+              {translateText(intl, 'back.btn')}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.favouritesIcon}>
             <HeartIcon width={15} height={14} />
@@ -63,7 +68,9 @@ const ProductDetail = ({navigation}: ProductDetailProps) => {
         </View>
         <Text style={styles.productName}>Food Corner</Text>
         <View style={styles.timerBtn}>
-          <Text style={styles.timerBtnTxt1}>Офертата започва след</Text>
+          <Text style={styles.timerBtnTxt1}>
+            {translateText(intl, 'offer.start')}
+          </Text>
           <Text style={styles.timerBtnTxt2}> 04:46:07</Text>
         </View>
       </ImageBackground>
@@ -76,13 +83,19 @@ const ProductDetail = ({navigation}: ProductDetailProps) => {
             <View>
               <View style={styles.productItems}>
                 <View style={styles.productItemsBox}>
-                  <Text style={styles.productItemsBoxTxt}>палачинки</Text>
+                  <Text style={styles.productItemsBoxTxt}>
+                    {translateText(intl, 'box.text1')}
+                  </Text>
                 </View>
                 <View style={styles.productItemsBox}>
-                  <Text style={styles.productItemsBoxTxt}>сандвичи</Text>
+                  <Text style={styles.productItemsBoxTxt}>
+                    {translateText(intl, 'box.text2')}
+                  </Text>
                 </View>
                 <View style={styles.productItemsBox}>
-                  <Text style={styles.productItemsBoxTxt}>кафе</Text>
+                  <Text style={styles.productItemsBoxTxt}>
+                    {translateText(intl, 'box.text3')}
+                  </Text>
                 </View>
               </View>
               <TouchableOpacity
@@ -99,7 +112,10 @@ const ProductDetail = ({navigation}: ProductDetailProps) => {
                   style={{paddingVertical: 0}}
                 />
                 <Text style={styles.ratingTxt}>4.5 / 5.0</Text>
-                <Text style={styles.totalRatingTxt}> (35 оценки)</Text>
+                <Text style={styles.totalRatingTxt}>
+                  {' '}
+                  (35 {translateText(intl, 'star.rating')})
+                </Text>
               </TouchableOpacity>
             </View>
             <TouchableOpacity style={styles.discountBtn}>
@@ -108,7 +124,10 @@ const ProductDetail = ({navigation}: ProductDetailProps) => {
           </View>
           <View style={styles.boxSec}>
             <BoxIcon />
-            <Text style={styles.boxSecTxt}>Остават 2 кутии</Text>
+            <Text style={styles.boxSecTxt}>
+              {translateText(intl, 'open.from')} 2{' '}
+              {translateText(intl, 'open.till')}
+            </Text>
           </View>
           <View style={[styles.clockSec, {marginTop: 30}]}>
             <ClockIcon />
