@@ -268,4 +268,43 @@ export default {
   'allergens.12': 'Dioxid de sulf',
   'allergens.13': 'Lactate',
   'allergens.14': 'Gluten',
+
+  //filter screen translations
+  'sort.by': 'Filtrează după',
+  'sort.btnText1': 'cel mai apropiat',
+  'sort.btnText2': 'Preț',
+  'sort.btnText3': 'activ acum',
+  'sort.btnText4': 'expirând în curând',
+  'heading.1': 'Tipul de stabilire',
+  'type.food1': 'produse de patiserie si dulciuri',
+  'type.food2': 'Alimente',
+  'type.food3': 'bucate',
+  'type.food4': 'alții',
+  'diet.prefer1': 'preferințe alimentare',
+  'diet.1': 'Vegetarian',
+  'diet.2': 'Vegetarian',
+  'time.from': 'ia de',
+  'time.to': 'la',
+  'clean.up': 'Curăță',
+  'btn.apply': 'aplica',
+
+  // ObjectScreen
+
+  'active.tab1': 'listă',
+  'active.tab2': 'Card',
+  'search.restaurant': 'Căutare',
+  'refresh.restaurant': 'relua rezultatele',
+  'price.currency': 'BGN',
+  'get.from': 'Ia de la',
+  'time.h': 'h',
+  'open.from': 'Ei rămân',
+  'open.till': 'cutii',
+
+  // ProductDetailsScreen
+  'back.btn': 'Înapoi',
+  'offer.start': 'Oferta incepe dupa',
+  'box.text1': 'clătite',
+  'box.text2': 'sandvișuri',
+  'box.text3': 'cafea',
+  'star.rating': 'note',
 };

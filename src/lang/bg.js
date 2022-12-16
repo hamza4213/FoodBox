@@ -289,4 +289,43 @@ export default {
   'allergens.12': 'Серен диоксид',
   'allergens.13': 'Млечни продукти',
   'allergens.14': 'Глутен',
+
+  //filter screen translations
+  'sort.by': 'Сортирай по',
+  'sort.btnText1': 'най-близо',
+  'sort.btnText2': 'цена',
+  'sort.btnText3': 'активни сега',
+  'sort.btnText4': 'изтичащи скоро',
+  'heading.1': 'Тип заведение',
+  'type.food1': 'печива и сладкиши',
+  'type.food2': 'хранителни продукти',
+  'type.food3': 'ястия',
+  'type.food4': 'други',
+  'diet.prefer1': 'диетични предпочитания',
+  'diet.1': 'веган',
+  'diet.2': 'веган',
+  'time.from': 'вземи от',
+  'time.to': 'до',
+  'clean.up': 'Изчисти',
+  'btn.apply': 'Приложи',
+
+  // ObjectScreen
+
+  'active.tab1': 'списък',
+  'active.tab2': 'карта',
+  'search.restaurant': 'Търси',
+  'refresh.restaurant': 'поднови резултатите',
+  'price.currency': 'лв',
+  'get.from': 'Вземи от',
+  'time.h': 'ч',
+  'open.from': 'Остават',
+  'open.till': 'кутии',
+
+  // ProductDetailsScreen
+  'back.btn': 'Назад',
+  'offer.start': 'Офертата започва след',
+  'box.text1': 'палачинки',
+  'box.text2': 'сандвичи',
+  'box.text3': 'кафе',
+  'star.rating': 'оценки',
 };

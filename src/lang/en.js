@@ -278,4 +278,43 @@ export default {
   'allergens.12': 'Sulfur Dioxide',
   'allergens.13': 'Dairy Products',
   'allergens.14': 'Gluten',
+
+  //filter screen translations
+  'sort.by': 'Sort by',
+  'sort.btnText1': 'closest',
+  'sort.btnText2': 'price',
+  'sort.btnText3': 'active now',
+  'sort.btnText4': 'expiring soon',
+  'heading.1': 'Type of establishment',
+  'type.food1': 'Pastries and Sweets',
+  'type.food2': 'Food',
+  'type.food3': 'Dishes',
+  'type.food4': 'Others',
+  'diet.prefer1': 'Dietary preferences',
+  'diet.1': 'Vegan',
+  'diet.2': 'Vegan',
+  'time.from': 'Take from',
+  'time.to': 'to',
+  'clean.up': 'Clean up',
+  'btn.apply': 'Apply',
+
+  // ObjectScreen
+
+  'active.tab1': 'List',
+  'active.tab2': 'Card',
+  'search.restaurant': 'Search',
+  'refresh.restaurant': 'Refresh',
+  'price.currency': 'BGN',
+  'get.from': 'Get from',
+  'time.h': 'h',
+  'open.from': 'Remain open',
+  'open.till': 'sharp',
+
+  // ProductDetailsScreen
+  'back.btn': 'Back',
+  'offer.start': 'The offer starts after',
+  'box.text1': 'pancakes',
+  'box.text2': 'sandwiches',
+  'box.text3': 'coffee',
+  'star.rating': 'rating',
 };
