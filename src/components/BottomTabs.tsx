@@ -11,8 +11,11 @@ import OrdersIcon from './../../assets/images/orders.svg';
 import HeartIcon from './../../assets/images/heart.svg';
 import DashboardIcon from './../../assets/images/dashboard.svg';
 import UserIcon from './../../assets/images/user.svg';
+import {translateText} from '../lang/translate';
+import {useIntl} from 'react-intl';
 
 const BottomTabs = (props: any) => {
+  const intl = useIntl();
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -24,7 +27,9 @@ const BottomTabs = (props: any) => {
         ]}>
         <ObjectIcon />
         {props.screenName === 'Objects' ? (
-          <Text style={styles.activeTabTxt}>обекти</Text>
+          <Text style={styles.activeTabTxt}>
+            {translateText(intl, 'tab.objects')}
+          </Text>
         ) : null}
       </TouchableOpacity>
       <TouchableOpacity
@@ -34,7 +39,9 @@ const BottomTabs = (props: any) => {
         ]}>
         <OrdersIcon />
         {props.screenName === 'Orders' ? (
-          <Text style={styles.activeTabTxt}>поръчки</Text>
+          <Text style={styles.activeTabTxt}>
+            {translateText(intl, 'tab.orders')}
+          </Text>
         ) : null}
       </TouchableOpacity>
       <TouchableOpacity
@@ -46,7 +53,9 @@ const BottomTabs = (props: any) => {
         ]}>
         <DashboardIcon />
         {props.screenName === 'StartScreen' ? (
-          <Text style={styles.activeTabTxt}>начало</Text>
+          <Text style={styles.activeTabTxt}>
+            {translateText(intl, 'tab.start')}
+          </Text>
         ) : null}
       </TouchableOpacity>
       <TouchableOpacity
@@ -58,7 +67,9 @@ const BottomTabs = (props: any) => {
         ]}>
         <HeartIcon />
         {props.screenName === 'LovedOnes' ? (
-          <Text style={styles.activeTabTxt}>любими</Text>
+          <Text style={styles.activeTabTxt}>
+            {translateText(intl, 'tab.lovedOnes')}
+          </Text>
         ) : null}
       </TouchableOpacity>
       <TouchableOpacity
@@ -70,7 +81,9 @@ const BottomTabs = (props: any) => {
         ]}>
         <UserIcon />
         {props.screenName === 'ProfileScreen' ? (
-          <Text style={styles.activeTabTxt}>профил</Text>
+          <Text style={styles.activeTabTxt}>
+            {translateText(intl, 'nav.profile')}
+          </Text>
         ) : null}
       </TouchableOpacity>
     </View>
