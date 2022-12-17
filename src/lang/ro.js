@@ -307,4 +307,88 @@ export default {
   'box.text2': 'sandvișuri',
   'box.text3': 'cafea',
   'star.rating': 'note',
+  'clock.time': 'Ghişeu Preluări',
+  'contect.num': 'Numar de telefon de contact',
+  'address.location': 'Abordare',
+  'address.text1': 'Sf',
+  'address.text2': 'Dunărea Albă',
+  'address.text3': 'Sofia',
+  'address.text4': 'Bulgaria',
+  'active.content': 'Conţinut',
+  'active.allergens': 'Alergeni',
+  'active.pictures': 'Poze',
+  'content.lines1':
+    'În surpriza FoodObox veți găsi cel mai adesea prăjituri delicioase eclere, baklava turcească, kadaif, tulumbi sau dulciuri',
+  'content.lines2':
+    'Dacă nu totul este pe gustul tău, împărtășește cu familia taprietenii tai. Mâncarea comună este mai dulce!',
+
+  'allergens.food1': 'ouă',
+  'allergens.food2': 'Lactate',
+  'allergens.food3': 'Nuci',
+  'allergens.food4': 'Gluten',
+  'allergens.food5': 'Arahide',
+  'allergens.food6': 'Susan',
+  'price.initial': 'pretul initial',
+  'modal.heading': 'Cutie cu pizza si salata de la',
+  'address.shop': 'Adresa unității',
+  'see.location': 'Vezi locația',
+  'time.pickup': 'Timp de ridicare',
+  'continue.order': 'Continuați cu comanda',
+  'price.total': 'Total',
+  'price.save': 'Salvați',
+  'cash.payment': 'plată în numerar',
+  'input.placeholder': 'Voucher sau cod promoțional',
+
+  //Start screen translations
+  'sofia.city': 'Orașul Sofia',
+  'r.radius': 'Rază',
+  'kilometer.k': 'km',
+  'latest.location': 'Cele mai recente locații',
+  'see.all': 'Vezi toate',
+
+  //Setting Screen translations
+  'setting.text': 'Settings',
+  'personal.data': 'date personale',
+  'chang.password': 'Schimbaţi parola',
+  'delete.profile': 'Ștergeți profilul dvs',
+  'application.setting': 'a aplicației',
+  'notification.setting': 'Notificări',
+  'contact.us': 'Contactaţi-ne',
+  'changePassword.modal.heading': 'Schimbarea parolei',
+  'password.cancel': 'Anulare',
+
+  //Frequently Asked Questions screen translations
+  'faq.heading': 'întrebări frecvente',
+  'faq.title1': 'Ce este o cutie surpriză FoodObox?',
+  'faq.content1':
+    '„În FoodObox-surpriză veți găsi o gustare delicioasă rămasă. Veți afla conținutul exact al cutiei atunci când mergeți să o ridicați de la fața locului. Descrierea din aplicația mobilă vă va oferi îndrumări la ce să vă așteptați, iar filtrele vă vor ghida mai departe. \nConectează-te la aplicație pentru a găsi site-urile din apropiere. Păstrați-vă cutia și ridicați-o de la fereastra de ridicare specificată. Plata pe loc la restaurant. Zâmbește pentru că ai dat mâncării o a doua viață.',
+
+  'faq.title2':
+    '„Ce ar trebui să fac dacă sunt alergic la oricare dintre produsele din cutie?”,',
+  'faq.title3': 'De ce nu pot vedea site-uri din zona/orașul meu?',
+  'faq.title4': 'Aplicația are un abonament lunar/anual?',
+  'faq.title5': 'Cum pot salva o „cutie surpriză”?',
+  'faq.title6': 'Pot plăti cu cardul în aplicație?',
+  'faq.title7': 'Există livrare?',
+  'faq.title8': 'Este posibil ca altcineva să îmi ridice comanda?',
+  'faq.title9': 'Cum îmi pot anula comanda?',
+
+  //Term and conditions screen translations
+  'terms.heading': 'termeni generali',
+  'terms.definitions': 'DEFINIȚII',
+  'terms.paragraph1': `Fuodobox - „Fudobox 2021 EOOD”, EIK 2065757546, cu adresa sediului social: Sofia, 1000, str. Neofit Rilski 57, etaj 2, reprezentată de managerul Jane Dimitrova Dimitrova, deține și administrează Site-ul.`,
+  'terms.paragraph2':
+    'Cumpărători – persoane fizice care doresc să utilizeze Serviciile furnizate prin Aplicația mobilă și care au un Profil în Aplicația mobilă. Cumpărătorii pot fi persoane fizice competente din punct de vedere juridic cu vârsta de 14 ani sau peste. Minorii nu au voie să utilizeze Serviciile oferite prin Aplicația mobilă. Persoanele care nu îndeplinesc cerințele pentru un Cumpărător nu au dreptul de a utiliza Serviciile furnizate în Aplicația mobilă.',
+  'terms.paragraph3':
+    'Aplicație mobilă – aplicația mobilă Foodobox deținută de Foodobox. Aplicația mobilă este concepută pentru dispozitivele mobile care utilizează sistemul de operare Android și este disponibilă pentru descărcare gratuită pe Google Play Store (Android) și App Store (iOS). Aplicația mobilă furnizează Cumpărătorilor informații despre Serviciile Fuodobox, constând în a oferi Cumpărătorilor posibilitatea de a căuta și rezerva în scopul achiziționării de Produse oferite de Vânzători, cu condiția ca Cumpărătorii să respecte prezentele Termeni și Condiții Generale, actualele Legislația bulgară și europeană, la toate practicile comerciale general acceptate în țară, precum și la cerințele suplimentare specificate de Fuodobox pentru Serviciile specifice.',
+  'terms.paragraph4':
+    'Vânzători – persoane juridice care desfășoară activități legate de vânzarea și livrarea de Produse în unități comerciale precum restaurante, restaurante fast-food, patiserii, brutării, magazine alimentare și lanțuri și altele. Vânzătorii au posibilitatea prin Aplicația Mobile de a oferi Cumpărătorilor care au un Profil în Aplicația Mobile, băuturi în exces și produse alimentare perisabile, inclusiv cele cu termen de expirare și/sau cu ambalaj deteriorat și/sau cu defecte cosmetice.',
+  'terms.paragraph5':
+    'Profil – profilul personal al Cumpărătorului în Aplicația mobilă, care permite Cumpărătorului să utilizeze Serviciile oferite prin Aplicația mobilă și care conține informații despre Cumpărător și istoricul unor acțiuni ale acestuia în Aplicația mobilă (rezervări, coduri generate , etc.)',
+
+  //Botton navigation tabs translations
+  'tab.objects': 'obiecte',
+
+  'tab.start': 'incepand',
+  'tab.lovedOnes': 'cei dragi',
 };
