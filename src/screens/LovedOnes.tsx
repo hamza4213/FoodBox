@@ -41,13 +41,15 @@ import FilterIcon from './../../assets/images/filterIcon.svg';
 import SearchIcon from './../../assets/images/search.svg';
 import HeartIcon from './../../assets/images/filledHeart.svg';
 import BoxIcon from './../../assets/images/box.svg';
-
+import {translateText} from '../lang/translate';
+import {useIntl} from 'react-intl';
 interface LovedOnesProps {
   route: any;
   navigation: any;
 }
 
 const LovedOnes = ({navigation}: LovedOnesProps) => {
+  const intl = useIntl();
   const productsList = [1, 2, 3, 4, 5, 6];
   return (
     <SafeAreaView style={styles.container}>
@@ -55,7 +57,10 @@ const LovedOnes = ({navigation}: LovedOnesProps) => {
         <View style={styles.listSecMain}>
           <View style={styles.searchInput}>
             <SearchIcon />
-            <TextInput placeholder="Търси" style={styles.input} />
+            <TextInput
+              placeholder={translateText(intl, 'search.restaurant')}
+              style={styles.input}
+            />
           </View>
           <TouchableOpacity style={styles.listSearchBtn}>
             <FilterIcon height={21} width={21} />
