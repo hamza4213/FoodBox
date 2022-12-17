@@ -317,4 +317,89 @@ export default {
   'box.text2': 'sandwiches',
   'box.text3': 'coffee',
   'star.rating': 'rating',
+  'clock.time': 'Pickup window',
+  'contect.num': 'Contact phone number',
+  'address.location': 'Address',
+  'address.text1': 'St',
+  'address.text2': 'White Danube',
+  'address.text3': 'Sofia',
+  'address.text4': 'Bulgaria',
+  'active.content': 'Content',
+  'active.allergens': 'Allergens',
+  'active.pictures': 'Pictures',
+  'content.lines1':
+    'In your FoodObox surprise you will most often find delicious cakes,eclairs, Turkish baklava, kadaif, tulumbi or sweets',
+  'content.lines2':
+    'If not everything is to your taste, share with your family and friends. Shared food is sweeter!',
+  'allergens.food1': 'Eggs',
+  'allergens.food2': 'Dairy products',
+  'allergens.food3': 'Nuts',
+  'allergens.food4': 'Gluten',
+  'allergens.food5': 'Peanuts',
+  'allergens.food6': 'Sesame',
+  'price.initial': 'initial price',
+  'modal.heading': 'Box with Pizza and Salad from',
+  'address.shop': 'Address of the Shop',
+  'see.location': 'See the location',
+  'time.pickup': 'Pick up time',
+  'continue.order': 'Continue with the order',
+  'price.total': 'Total',
+  'price.save': 'You save',
+  'cash.payment': 'Cash payment',
+  'input.placeholder': 'Voucher or promo code',
+
+  //Start Screen translations
+  'sofia.city': 'Sofia City',
+  'r.radius': 'Radius',
+  'kilometer.k': 'km',
+  'latest.location': 'Latest location',
+  'see.all': 'See all',
+
+  //Setting Screen translations
+  'setting.text': 'Settings',
+  'personal.data': 'Personal data',
+  'chang.password': 'Change password',
+  'delete.profile': 'Delete your profile',
+  'application.setting': 'of the application',
+  'notification.setting': 'Notifications',
+  'notification.email': 'Receive email notifications',
+  'contact.us': 'Contact us',
+  'changePassword.modal.heading': 'Change password',
+  'password.cancel': 'Cancel',
+
+  //Frequently Asked Questions screen translations
+  'faq.heading': 'Frequently Asked Questions',
+  'faq.title1': 'What is a FoodObox surprise box?',
+  'faq.content1':
+    'In your FoodObox-surprise you will find a delicious snack left over. You will find out the exact contents of the box when you go to pick it up on site. The description in the mobile app will give you guidance on what to expect, and the filters will guide you further. \nLog in to the app to find the sites near you. Keep your box and pick it up at the specified pick-up window. Pay on the spot at the restaurant. Smile because you gave food a second life.',
+  'faq.title2':
+    'What should I do if I am allergic to any of the products in the box?',
+  'faq.title3': "Why can't I see sites in my area/city?",
+  'faq.title4': 'Does the app have a monthly/yearly subscription?',
+  'faq.title5': 'How can I save a "surprise box"?',
+  'faq.title6': 'Can I pay by card in the app?',
+  'faq.title7': 'Is there delivery?',
+  'faq.title8': 'Is it possible for someone else to pick up my order?',
+  'faq.title9': 'How can I cancel my order?',
+
+  //Term and conditions screen translations
+  'terms.heading': 'Term and Conditions',
+  'terms.definitions': 'Definitions',
+  'terms.paragraph1': `Fuodobox - "Fudobox 2021 EOOD", EIK 2065757546, with registered office and management address: Sofia, 1000, 57 Neofit Rilski St., floor 2, apartment 4, represented by the manager Jane Dimitrova Dimitrova, who owns and administers the Site.`,
+  'terms.paragraph2':
+    'Buyers – natural persons who wish to use the Services provided through the Mobile Application and who have a Profile in the Mobile Application. Buyers can be legally competent individuals aged 14 or over. Minors are not permitted to use the Services offered through the Mobile Application. Persons who do not meet the requirements for a Buyer are not entitled to use the Services provided on the Mobile Application.',
+  'terms.paragraph3':
+    'Mobile Application – the Foodobox mobile application owned by Foodobox. The mobile application is designed for mobile devices that use the Android operating system and is available for free download on the Google Play Store (Android) and the App store (iOS). The mobile application provides the Buyers with information about the Fuodobox Services, consisting in providing the Buyers with the opportunity to search and reserve for the purpose of purchasing Products offered by Sellers, provided that the Buyers comply with the present General Terms and Conditions, the current Bulgarian and European legislation , to all commercial practices generally accepted in the country, as well as to the additional requirements specified by Fuodobox for the specific Services.',
+  'terms.paragraph4':
+    'Sellers – legal entities that carry out activities related to the sale and delivery of Products in commercial establishments such as restaurants, fast food restaurants, pastry shops, bakeries, grocery stores and chains and others. Sellers have the opportunity through the Mobile Application to offer to Buyers who have a Profile in the Mobile Application, excess beverages and perishable food products, including those with an expiration date and/or with damaged packaging, and/or with cosmetic defects.',
+  'terms.paragraph5':
+    'Profile – the personal profile of the Buyer in the Mobile Application, which allows the Buyer to use the Services offered through the Mobile Application and which contains information about the Buyer and the history of some of his actions in the Mobile Application (reservations, generated codes, etc.)',
+
+  // LovedOnes screen translations
+  'search.placeholder': '',
+
+  //Botton navigation tabs translations
+  'tab.objects': 'Objects',
+  'tab.start': 'Start',
+  'tab.lovedOnes': 'LovedOnes',
 };
