@@ -14,6 +14,8 @@ import ArrowIcon from './../../assets/images/arrow.svg';
 import HeartIcon from './../../assets/images/heart.svg';
 import BoxIcon from './../../assets/images/box3.svg';
 import RightIcon from './../../assets/images/Chevron-right.svg';
+import {translateText} from '../lang/translate';
+import {useIntl} from 'react-intl';
 
 interface StartProps {
   route: any;
@@ -22,16 +24,22 @@ interface StartProps {
 
 const StartScreen = ({navigation}: StartProps) => {
   const productsList = [1, 2];
+  const intl = useIntl();
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.listsMain}>
         <View style={styles.selectedCityMain}>
           <TouchableOpacity style={styles.selectedCityBtn}>
             <ArrowIcon />
-            <Text style={styles.selectedCityBtnTxt}>София-град</Text>
+            <Text style={styles.selectedCityBtnTxt}>
+              {translateText(intl, 'sofia.city')}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.selectedCityBtn}>
-            <Text style={styles.selectedCityBtnTxt}>Радиус: 2км</Text>
+            <Text style={styles.selectedCityBtnTxt}>
+              {translateText(intl, 'r.radius')}: 2
+              {translateText(intl, 'kilometer.k')}
+            </Text>
           </TouchableOpacity>
         </View>
         <View style={styles.lists}>
@@ -39,11 +47,15 @@ const StartScreen = ({navigation}: StartProps) => {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{paddingBottom: 50}}>
             <View style={styles.header}>
-              <Text style={styles.headerTxt}>Най-нови локации</Text>
+              <Text style={styles.headerTxt}>
+                {translateText(intl, 'latest.location')}
+              </Text>
               <TouchableOpacity
                 style={styles.results}
                 onPress={() => navigation.navigate('LatestLOcation')}>
-                <Text style={styles.resulTxt}>Виж всички </Text>
+                <Text style={styles.resulTxt}>
+                  {translateText(intl, 'see.all')}{' '}
+                </Text>
                 <RightIcon width={9} height={15} />
               </TouchableOpacity>
             </View>
@@ -74,31 +86,39 @@ const StartScreen = ({navigation}: StartProps) => {
                         <View style={styles.productItems}>
                           <View style={styles.productItemsBox}>
                             <Text style={styles.productItemsBoxTxt}>
-                              палачинки
+                              {translateText(intl, 'box.text1')}
                             </Text>
                           </View>
                           <View style={styles.productItemsBox}>
                             <Text style={styles.productItemsBoxTxt}>
-                              сандвичи
+                              {translateText(intl, 'box.text2')}
                             </Text>
                           </View>
                           <View style={styles.productItemsBox}>
-                            <Text style={styles.productItemsBoxTxt}>кафе</Text>
+                            <Text style={styles.productItemsBoxTxt}>
+                              {translateText(intl, 'box.text3')}
+                            </Text>
                           </View>
                         </View>
                         <View style={styles.priceSec}>
-                          <Text style={styles.newPriceTxt}>7.00лв</Text>
+                          <Text style={styles.newPriceTxt}>
+                            7.00{translateText(intl, 'price.currency')}
+                          </Text>
                         </View>
                         <View style={styles.timeSec}>
                           <BoxIcon />
                           <Text style={styles.timeToOpenTxt}>
-                            Остават 2 кутии
+                            {translateText(intl, 'open.from')} 2{' '}
+                            {translateText(intl, 'order.boxes')}
                           </Text>
                         </View>
                       </ImageBackground>
                       <View style={styles.listProductBottomSec}>
                         <Text style={styles.timeTxt}>
-                          Вземи от 14:00ч. до 19:00ч.
+                          {translateText(intl, 'filter.time_range_start')} 14:00
+                          {translateText(intl, 'time.h')}.{' '}
+                          {translateText(intl, 'time.to')} 19:00
+                          {translateText(intl, 'time.h')}.
                         </Text>
                       </View>
                     </View>
@@ -112,7 +132,9 @@ const StartScreen = ({navigation}: StartProps) => {
               <TouchableOpacity
                 style={styles.results}
                 onPress={() => navigation.navigate('LatestLOcation')}>
-                <Text style={styles.resulTxt}>Виж всички </Text>
+                <Text style={styles.resulTxt}>
+                  {translateText(intl, 'see.all')}{' '}
+                </Text>
                 <RightIcon width={9} height={15} />
               </TouchableOpacity>
             </View>
@@ -143,31 +165,39 @@ const StartScreen = ({navigation}: StartProps) => {
                         <View style={styles.productItems}>
                           <View style={styles.productItemsBox}>
                             <Text style={styles.productItemsBoxTxt}>
-                              палачинки
+                              {translateText(intl, 'box.text1')}
                             </Text>
                           </View>
                           <View style={styles.productItemsBox}>
                             <Text style={styles.productItemsBoxTxt}>
-                              сандвичи
+                              {translateText(intl, 'box.text2')}
                             </Text>
                           </View>
                           <View style={styles.productItemsBox}>
-                            <Text style={styles.productItemsBoxTxt}>кафе</Text>
+                            <Text style={styles.productItemsBoxTxt}>
+                              {translateText(intl, 'box.text3')}
+                            </Text>
                           </View>
                         </View>
                         <View style={styles.priceSec}>
-                          <Text style={styles.newPriceTxt}>7.00лв</Text>
+                          <Text style={styles.newPriceTxt}>
+                            7.00{translateText(intl, 'price.currency')}
+                          </Text>
                         </View>
                         <View style={styles.timeSec}>
                           <BoxIcon />
                           <Text style={styles.timeToOpenTxt}>
-                            Остават 2 кутии
+                            {translateText(intl, 'open.from')} 2{' '}
+                            {translateText(intl, 'order.boxes')}
                           </Text>
                         </View>
                       </ImageBackground>
                       <View style={styles.listProductBottomSec}>
                         <Text style={styles.timeTxt}>
-                          Вземи от 14:00ч. до 19:00ч.
+                          {translateText(intl, 'filter.time_range_start')} 14:00
+                          {translateText(intl, 'time.h')}.{' '}
+                          {translateText(intl, 'time.to')} 19:00
+                          {translateText(intl, 'time.h')}.
                         </Text>
                       </View>
                     </View>
@@ -181,7 +211,9 @@ const StartScreen = ({navigation}: StartProps) => {
               <TouchableOpacity
                 style={styles.results}
                 onPress={() => navigation.navigate('LatestLOcation')}>
-                <Text style={styles.resulTxt}>Виж всички </Text>
+                <Text style={styles.resulTxt}>
+                  {translateText(intl, 'see.all')}{' '}
+                </Text>
                 <RightIcon width={9} height={15} />
               </TouchableOpacity>
             </View>
@@ -212,31 +244,39 @@ const StartScreen = ({navigation}: StartProps) => {
                         <View style={styles.productItems}>
                           <View style={styles.productItemsBox}>
                             <Text style={styles.productItemsBoxTxt}>
-                              палачинки
+                              {translateText(intl, 'box.text1')}
                             </Text>
                           </View>
                           <View style={styles.productItemsBox}>
                             <Text style={styles.productItemsBoxTxt}>
-                              сандвичи
+                              {translateText(intl, 'box.text2')}
                             </Text>
                           </View>
                           <View style={styles.productItemsBox}>
-                            <Text style={styles.productItemsBoxTxt}>кафе</Text>
+                            <Text style={styles.productItemsBoxTxt}>
+                              {translateText(intl, 'box.text3')}
+                            </Text>
                           </View>
                         </View>
                         <View style={styles.priceSec}>
-                          <Text style={styles.newPriceTxt}>7.00лв</Text>
+                          <Text style={styles.newPriceTxt}>
+                            7.00{translateText(intl, 'price.currency')}
+                          </Text>
                         </View>
                         <View style={styles.timeSec}>
                           <BoxIcon />
                           <Text style={styles.timeToOpenTxt}>
-                            Остават 2 кутии
+                            {translateText(intl, 'open.from')} 2{' '}
+                            {translateText(intl, 'order.boxes')}
                           </Text>
                         </View>
                       </ImageBackground>
                       <View style={styles.listProductBottomSec}>
                         <Text style={styles.timeTxt}>
-                          Вземи от 14:00ч. до 19:00ч.
+                          {translateText(intl, 'filter.time_range_start')} 14:00
+                          {translateText(intl, 'time.h')}.{' '}
+                          {translateText(intl, 'time.to')} 19:00
+                          {translateText(intl, 'time.h')}.
                         </Text>
                       </View>
                     </View>
