@@ -17,21 +17,24 @@ import EditIcon from './../../assets/images/edit.svg';
 import RightIcon from './../../assets/images/Chevron-right.svg';
 import ShareIcon from './../../assets/images/external-link.svg';
 import CloseIcon from './../../assets/images/close.svg';
-import { useDispatch, useSelector } from 'react-redux';
-import { FBRootState } from '../redux/store';
-import { FBUser } from '../models/User';
-import { CONTACT_US_FACTORY, REGISTER_BUSINESS_FACTOR } from '../network/Server';
-import { translateText } from '../lang/translate';
+import {useDispatch, useSelector} from 'react-redux';
+import {FBRootState} from '../redux/store';
+import {FBUser} from '../models/User';
+import {CONTACT_US_FACTORY, REGISTER_BUSINESS_FACTOR} from '../network/Server';
+import {translateText} from '../lang/translate';
 import QueryString from 'query-string';
-import { showToastError } from '../common/FBToast';
-import { useIntl } from 'react-intl';
-import { useFbLoading } from '../providers/FBLoaderProvider';
-import { UserRepository } from '../repositories/UserRepository';
-import { userUpdateProfileAction } from '../redux/user/actions';
-import { isFBAppError, isFBBackendError, isFBGenericError } from '../network/axiosClient';
-import { useAuth } from '../providers/AuthProvider';
+import {showToastError} from '../common/FBToast';
+import {useIntl} from 'react-intl';
+import {useFbLoading} from '../providers/FBLoaderProvider';
+import {UserRepository} from '../repositories/UserRepository';
+import {userUpdateProfileAction} from '../redux/user/actions';
+import {
+  isFBAppError,
+  isFBBackendError,
+  isFBGenericError,
+} from '../network/axiosClient';
+import {useAuth} from '../providers/AuthProvider';
 import messaging from '@react-native-firebase/messaging';
-
 
 interface SettingProps {
   route: any;
@@ -39,23 +42,29 @@ interface SettingProps {
 }
 const Setting = ({navigation}: SettingProps) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
-  const userLocale = useSelector((state: FBRootState) => state.userState.locale);
+  const user = useSelector(
+    (state: FBRootState) => state.userState.user,
+  ) as FBUser;
+  const userLocale = useSelector(
+    (state: FBRootState) => state.userState.locale,
+  );
   const intl = useIntl();
   const {authData} = useAuth();
-  const [newPassword, setNewPassword] = useState(null)
+  const [newPassword, setNewPassword] = useState(null);
   const {showLoading, hideLoading} = useFbLoading();
   const dispatch = useDispatch();
 
   // const navigation = props.navigation;
   const {signOut} = useAuth();
-  const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
+  const userLocation = useSelector(
+    (state: FBRootState) => state.userState.userLocation,
+  );
   // const styles = stylesCreator();
   const userRepository = new UserRepository({authData: authData!});
-  
+
   useEffect(() => {
     const unsubscriptions: any[] = [];
-    
+
     const getUserNotificationsConsent = async (): Promise<boolean> => {
       const authStatus = await messaging().requestPermission();
       const enabled =
@@ -71,43 +80,48 @@ const Setting = ({navigation}: SettingProps) => {
       if (Platform.OS === 'ios') {
         hasUserConsent = await getUserNotificationsConsent();
       }
-      
+
       if (hasUserConsent) {
         // const installationId = await firebase.installations().getId();
         let fcmToken = await messaging().getToken();
         await userRepository.setFcmToken({fcmToken: fcmToken});
-        
-        const onTokenUpdateUnsubscribe = messaging().onTokenRefresh(async (token)=> {
-          fcmToken = token;
-          await userRepository.setFcmToken({fcmToken: fcmToken});
-        });
-        
+
+        const onTokenUpdateUnsubscribe = messaging().onTokenRefresh(
+          async token => {
+            fcmToken = token;
+            await userRepository.setFcmToken({fcmToken: fcmToken});
+          },
+        );
+
         const initialRemoteMessage = await messaging().getInitialNotification();
         if (initialRemoteMessage) {
           // Notification caused app to open from quit state
           // console.log('setUpNotifications initialRemoteMessage', JSON.stringify(initialRemoteMessage));
         }
-        
-        const onNotificationOpenAppUnsubscribe = messaging().onNotificationOpenedApp(async remoteMessage => {
-          // Notification caused app to open from background state
-          // console.log('setUpNotifications onNotificationOpenedApp remoteMessage', JSON.stringify(remoteMessage));
-        });
 
-        const onMessageUnsubscribe = messaging().onMessage(async remoteMessage => {
-          // notification received when app is focused
-          // console.log('setUpNotifications onMessage', JSON.stringify(remoteMessage));
-        });
-        
+        const onNotificationOpenAppUnsubscribe =
+          messaging().onNotificationOpenedApp(async remoteMessage => {
+            // Notification caused app to open from background state
+            // console.log('setUpNotifications onNotificationOpenedApp remoteMessage', JSON.stringify(remoteMessage));
+          });
+
+        const onMessageUnsubscribe = messaging().onMessage(
+          async remoteMessage => {
+            // notification received when app is focused
+            // console.log('setUpNotifications onMessage', JSON.stringify(remoteMessage));
+          },
+        );
+
         unsubscriptions.push(onNotificationOpenAppUnsubscribe);
         unsubscriptions.push(onMessageUnsubscribe);
         unsubscriptions.push(onTokenUpdateUnsubscribe);
       }
-      
+
       return unsubscriptions;
     };
-    
+
     setUpNotifications();
-    
+
     return () => {
       unsubscriptions.forEach(unsubscription => unsubscription());
     };
@@ -135,29 +149,31 @@ const Setting = ({navigation}: SettingProps) => {
           text: translateText(intl, 'back'),
         },
         {
-        text: translateText(intl, 'continue'),
-        onPress: async () => {
-          
-          let url = 'mailto:support-customer@foodobox.com';
-          const query = QueryString.stringify({
-            subject: translateText(intl, 'profile.delete_email_subject'),
-            body: `${translateText(intl, 'profile.delete_email_text')} ${user.email}`
-          });
-          
-          if (query.length) {
-            url += `?${query}`;
-          }
+          text: translateText(intl, 'continue'),
+          onPress: async () => {
+            let url = 'mailto:support-customer@foodobox.com';
+            const query = QueryString.stringify({
+              subject: translateText(intl, 'profile.delete_email_subject'),
+              body: `${translateText(intl, 'profile.delete_email_text')} ${
+                user.email
+              }`,
+            });
 
-          const canOpen = await Linking.canOpenURL(url);
+            if (query.length) {
+              url += `?${query}`;
+            }
 
-          if (!canOpen) {
-            showToastError(translateText(intl, 'profile.delete_email_error'));
-          } else {
-            Linking.openURL(url);
-          }
+            const canOpen = await Linking.canOpenURL(url);
+
+            if (!canOpen) {
+              showToastError(translateText(intl, 'profile.delete_email_error'));
+            } else {
+              Linking.openURL(url);
+            }
+          },
         },
-      }],
-      {cancelable: true}
+      ],
+      {cancelable: true},
     );
   };
   const updatePassword = async (newPassword: string) => {
@@ -166,11 +182,10 @@ const Setting = ({navigation}: SettingProps) => {
     try {
       const userRepository = new UserRepository({authData: authData!});
       await userRepository.updatePassword({newPassword});
-      
+
       dispatch(userUpdateProfileAction({user}));
       setModalVisible(false);
       setNewPassword(null);
-
     } catch (error) {
       if (isFBAppError(error) || isFBGenericError(error)) {
         showToastError(translateText(intl, error.key));
@@ -185,27 +200,30 @@ const Setting = ({navigation}: SettingProps) => {
   };
 
   const handleChangePassword = () => {
-    console.log("Inside handle Psws", newPassword);
-    if(newPassword){
-      updatePassword(newPassword)
-    }else{
-      Alert.alert("Error", "Password can not be empty")
+    console.log('Inside handle Psws', newPassword);
+    if (newPassword) {
+      updatePassword(newPassword);
+    } else {
+      Alert.alert('Error', 'Password can not be empty');
     }
-    
-  }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity
         style={styles.backBtn}
         onPress={() => navigation.goBack()}>
         <LeftIcon width={18} height={18} />
-        <Text style={styles.backBtnTxt}>Настройки</Text>
+        <Text style={styles.backBtnTxt}>
+          {translateText(intl, 'setting.text')}
+        </Text>
       </TouchableOpacity>
       <View style={styles.settingMain}>
         <ScrollView
           contentContainerStyle={{paddingHorizontal: '5%', paddingBottom: 20}}
           showsVerticalScrollIndicator={false}>
-          <Text style={styles.heading}>лични данни</Text>
+          <Text style={styles.heading}>
+            {translateText(intl, 'personal.data')}
+          </Text>
           <View style={{marginTop: 20}}>
             {userData.map((val, i) => {
               return (
@@ -219,64 +237,87 @@ const Setting = ({navigation}: SettingProps) => {
             <TouchableOpacity
               style={styles.profileNameSec}
               onPress={() => setModalVisible(true)}>
-              <Text style={styles.profileName}>Промени парола</Text>
+              <Text style={styles.profileName}>
+                {translateText(intl, 'chang.password')}
+              </Text>
               <RightIcon width={10} height={10} />
             </TouchableOpacity>
             {/* Delete Account */}
-            <TouchableOpacity style={styles.profileNameSec} onPress={handleAccountDeletion} >
-              <Text style={styles.profileName}>Изтрий профила си</Text>
+            <TouchableOpacity
+              style={styles.profileNameSec}
+              onPress={handleAccountDeletion}>
+              <Text style={styles.profileName}>
+                {translateText(intl, 'delete.profile')}
+              </Text>
               <RightIcon width={10} height={10} />
             </TouchableOpacity>
           </View>
-            {/* Apllication Setting */}
+          {/* Apllication Setting */}
           <Text style={[styles.heading, {marginTop: 25}]}>
-            настройки на апликацията
+            {translateText(intl, 'setting.text')}{' '}
+            {translateText(intl, 'application.setting')}
           </Text>
           <View style={{marginTop: 10}}>
             {/* Notifications */}
             <TouchableOpacity style={styles.profileNameSec}>
-              <Text style={styles.profileName}>Нотификации</Text>
+              <Text style={styles.profileName}>
+                {translateText(intl, 'notification.setting')}
+              </Text>
               <RightIcon width={10} height={10} />
             </TouchableOpacity>
             {/* Recieves Email Notifications */}
             <TouchableOpacity style={styles.profileNameSec}>
               <Text style={styles.profileName}>
-                Получаване на имейл известия
+                {translateText(intl, 'notification.email')}
               </Text>
               <RightIcon width={10} height={10} />
             </TouchableOpacity>
           </View>
 
-        {/* Information */}
-          <Text style={[styles.heading, {marginTop: 25}]}>Информация</Text>
+          {/* Information */}
+          <Text style={[styles.heading, {marginTop: 25}]}>
+            {translateText(intl, 'toast.heading.info')}
+          </Text>
           <View style={{marginTop: 10}}>
             {/* FAQ */}
             <TouchableOpacity
               style={styles.profileNameSec}
               onPress={() => navigation.navigate('FAQ')}>
-              <Text style={styles.profileName}>Често задавани въпроси</Text>
+              <Text style={styles.profileName}>
+                {translateText(intl, 'drawer.faq')}
+              </Text>
               <RightIcon width={10} height={10} />
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.profileNameSec}
               onPress={() => navigation.navigate('GeneralTerms')}>
-              <Text style={styles.profileName}>Общи условия</Text>
+              <Text style={styles.profileName}>
+                {translateText(intl, 'drawer.privacy')}
+              </Text>
               <RightIcon width={10} height={10} />
             </TouchableOpacity>
             {/* Register your business */}
-            <TouchableOpacity style={styles.profileNameSec} onPress={()=>{
-                          const link = REGISTER_BUSINESS_FACTOR[userLocale];
-                          Linking.openURL(link);              
-            }} >
-              <Text style={styles.profileName}>Регистрирай бизнеса си</Text>
+            <TouchableOpacity
+              style={styles.profileNameSec}
+              onPress={() => {
+                const link = REGISTER_BUSINESS_FACTOR[userLocale];
+                Linking.openURL(link);
+              }}>
+              <Text style={styles.profileName}>
+                {translateText(intl, 'drawer.business')}
+              </Text>
               <ShareIcon />
             </TouchableOpacity>
             {/* Contact Us */}
-            <TouchableOpacity style={styles.profileNameSec} onPress={()=>{
-                                        const link = CONTACT_US_FACTORY[userLocale];
-                                        Linking.openURL(link);                            
-            }} >
-              <Text style={styles.profileName}>Свържи се с нас</Text>
+            <TouchableOpacity
+              style={styles.profileNameSec}
+              onPress={() => {
+                const link = CONTACT_US_FACTORY[userLocale];
+                Linking.openURL(link);
+              }}>
+              <Text style={styles.profileName}>
+                {translateText(intl, 'contact.us')}
+              </Text>
               <ShareIcon />
             </TouchableOpacity>
           </View>
@@ -297,7 +338,9 @@ const Setting = ({navigation}: SettingProps) => {
               onPress={() => setModalVisible(false)}>
               <CloseIcon />
             </TouchableOpacity>
-            <Text style={styles.modalHeading}>Смяна на парола</Text>
+            <Text style={styles.modalHeading}>
+              {translateText(intl, 'changePassword.modal.heading')}
+            </Text>
             {/* <View style={styles.modalInputView}>
               <Text style={styles.inputLabel}>текуща парола</Text>
               <TextInput
@@ -308,13 +351,15 @@ const Setting = ({navigation}: SettingProps) => {
               />
             </View> */}
             <View style={styles.modalInputView}>
-              <Text style={styles.inputLabel}>нова парола</Text>
+              <Text style={styles.inputLabel}>
+                {translateText(intl, 'login.new_password')}
+              </Text>
               <TextInput
                 placeholder=""
                 style={styles.modalInput}
                 placeholderTextColor="#182550"
                 secureTextEntry={true}
-                onChange={(input) => setNewPassword(input.nativeEvent.text)}
+                onChange={input => setNewPassword(input.nativeEvent.text)}
               />
             </View>
             <View style={styles.buttons}>
@@ -323,12 +368,16 @@ const Setting = ({navigation}: SettingProps) => {
                 onPress={() => {
                   setModalVisible(false);
                 }}>
-                <Text style={styles.cancelBtnTxt}>Отмени</Text>
+                <Text style={styles.cancelBtnTxt}>
+                  {translateText(intl, 'password.cancel')}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.button}
                 onPress={handleChangePassword}>
-                <Text style={styles.buttonTxt}>Запази</Text>
+                <Text style={styles.buttonTxt}>
+                  {translateText(intl, 'profile.apply')}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
