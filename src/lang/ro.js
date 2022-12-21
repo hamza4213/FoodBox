@@ -339,6 +339,11 @@ export default {
   'cash.payment': 'plată în numerar',
   'input.placeholder': 'Voucher sau cod promoțional',
 
+  // ProductDetailsScreen 4th modal
+  'create.personal':
+    'Pentru a plasa o comandă prin Foodobox, trebuie mai întâi să creați un profil personal.',
+  'create.profile': 'Creați un profil',
+
   //Start screen translations
   'sofia.city': 'Orașul Sofia',
   'r.radius': 'Rază',
@@ -391,4 +396,44 @@ export default {
 
   'tab.start': 'incepand',
   'tab.lovedOnes': 'cei dragi',
+
+  // Orders screen translation
+  'active.orders': 'Comenzi active',
+  'complete.orders': 'Comenzi finalizate',
+
+  'order.from': 'Comanda de azi',
+  'order.pickup': 'Comanda de azi',
+  'a.and': 'și',
+  'place.newOrder': 'Plasați o nouă comandă',
+
+  //orderdetails screen translations
+
+  'order.fromDetails': 'Comanda de la',
+  'order.in': 'în',
+  'heading.food.corner': 'Food Corner cutie de pizza și salată',
+  'address.street': 'str. Beli Dunav nr. 10, Sofia, Bulgaria',
+  'order.cancel': 'Comanda anulata',
+  'order.quantity': 'Cantitate',
+  'payment.amount': 'Suma de plată',
+  'money.saved': 'Ai salvat',
+  'box.saved': 'Cutia este salvată',
+  'rating.modal1.heading': 'Vă mulțumim că ați economisit alimente cu FoodOBox',
+  'rate.description':
+    'Părerea ta este importantă pentru noi. Cum apreciați această comandă?',
+  'tell.us': 'Mai spuneți-ne puțin',
+  'rate.food.quality': 'Calitatea alimentelor',
+  'rate.attitude.staff': 'Atitudine față de personal',
+  'rate.food.amount': 'Cantitatea de mâncare',
+  'rate.service.time': 'Viteza serviciului',
+  'rate.apply.it': 'Da-i o nota',
+  'thanks.for': 'Multumesc pentru',
+  'thanks.feedback': 'părere',
+  'thanks.takeoff.box': 'Scoate cutia',
+  'order.cancellation': 'Anularea comenzii',
+  'order.sure.cancel': 'Sigur doriți să anulați comanda?',
+  'order.cancellaton.radio1': 'Locația a fost închisă',
+  'order.cancellaton.radio2': 'Atitudine rea',
+  'order.cancellaton.radio3': `Nu mi-a plăcut cutia`,
+  'order.cancellaton.radio4': `Nu voi putea să o iau`,
+  'order.cancellaton.radio5': 'M-am răzgândit',
 };

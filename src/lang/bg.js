@@ -359,6 +359,11 @@ export default {
   'cash.payment': 'плащане в брой',
   'input.placeholder': 'Ваучер или промо код',
 
+  // ProductDetailsScreen 4th modal
+  'create.personal':
+    'За да направиш поръчка през Foodobox, трябва първо да създадеш персонален профил.',
+  'create.profile': 'Създай профил',
+
   //Start Screen translations
   'sofia.city': 'София-град',
   'r.radius': 'Радиус',
@@ -411,4 +416,42 @@ export default {
 
   'tab.start': 'начало',
   'tab.lovedOnes': 'любими',
+
+  // Orders screen translation
+  'active.orders': 'Активни поръчки',
+  'complete.orders': 'Завършени поръчки',
+  'order.from': 'Поръчайте от днес',
+  'order.pickup': 'Поръчайте днес',
+  'a.and': 'и',
+  'place.newOrder': 'Направи нова поръчка',
+
+  //orderdetails screen translations
+
+  'order.fromDetails': 'Поръчайте от',
+  'order.in': 'в',
+  'heading.food.corner': 'Кутия с пица и салата от Food Corner',
+  'address.street': 'ул. “Бели Дунав” 10, София, България',
+  'order.cancel': 'Отменена поръчка',
+  'order.quantity': 'Количество',
+  'payment.amount': 'Сума за плащане',
+  'money.saved': 'Ти спести',
+  'box.saved': 'Кутията е спасена',
+  'rating.modal1.heading': 'Благодарим ти, че спаси храна с FoodOBox',
+  'rate.description': 'Мнението ти е важно за нас. Как оценяваш тази поръчка',
+  'tell.us': 'Разкажи ни малко повече',
+  'rate.food.quality': 'Качество на храната',
+  'rate.attitude.staff': 'Отношение на персонала',
+  'rate.food.amount': 'Количество на храната',
+  'rate.service.time': 'Бързина на обслужване',
+  'rate.apply.it': 'Оцени',
+  'thanks.for': 'Благодарим за',
+  'thanks.feedback': 'обратната връзка',
+  'thanks.takeoff.box': 'Снимай кутията',
+  'order.cancellation': 'Отмяна на поръчка',
+  'order.sure.cancel': 'Сигурен ли си, че искаш да се откажеш от поръчката си?',
+  'order.cancellaton.radio1': 'Локацията беше затворена',
+  'order.cancellaton.radio2': 'Лошо отношение',
+  'order.cancellaton.radio3': `Не ми хареса кутията`,
+  'order.cancellaton.radio4': `Няма да успея да я взема`,
+  'order.cancellaton.radio5': 'Промених си мнението',
 };

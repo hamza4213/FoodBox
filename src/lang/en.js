@@ -348,6 +348,10 @@ export default {
   'cash.payment': 'Cash payment',
   'input.placeholder': 'Voucher or promo code',
 
+  // ProductDetailsScreen 4th modal
+  'create.personal':
+    'To place an order through Foodobox, you must first create a personal profile.',
+  'create.profile': 'Create a profile',
   //Start Screen translations
   'sofia.city': 'Sofia City',
   'r.radius': 'Radius',
@@ -402,4 +406,45 @@ export default {
   'tab.objects': 'Objects',
   'tab.start': 'Start',
   'tab.lovedOnes': 'LovedOnes',
+
+  // Orders screen translation
+  'active.orders': 'Active orders',
+  'complete.orders': 'Complete orders',
+  'order.from': 'Order from today',
+  'order.pickup': 'Pick up between',
+  'a.and': 'and',
+  'place.newOrder': 'Place a new order',
+
+  //orderdetails screen translations
+
+  'order.fromDetails': 'Order from',
+  'order.in': 'in',
+  'heading.food.corner': 'Food Corner pizza and salad box',
+  'address.street': '10 Beli Dunav St., Sofia, Bulgaria',
+  'order.cancel': 'Canceled order',
+  'order.quantity': 'Quantity',
+  'payment.amount': 'Payment amount',
+  'money.saved': 'You saved',
+  'box.saved': 'The box is saved',
+  'rating.modal1.heading': 'Thank you for saving food with FoodOBox',
+  'rate.description':
+    'Your opinion is important to us. How do you rate this order?',
+  'tell.us': 'Tell us a little more',
+  'rate.food.quality': 'Food quality',
+  'rate.attitude.staff': 'Attitude towards staff',
+  'rate.food.amount': 'Amount of food',
+  'rate.service.time': 'Time to service',
+  'rate.apply.it': 'Rate it',
+
+  'thanks.for': 'Thanks for',
+  'thanks.feedback': 'feedback',
+  'thanks.takeoff.box': 'Take off the box',
+
+  'order.cancellation': 'Order cancellation',
+  'order.sure.cancel': 'Are you sure you want to cancel your order?',
+  'order.cancellaton.radio1': 'The location was closed',
+  'order.cancellaton.radio2': 'Bad attitude',
+  'order.cancellaton.radio3': `I didn't like the box`,
+  'order.cancellaton.radio4': `I won't be able to get her`,
+  'order.cancellaton.radio5': 'I changed my mind',
 };
