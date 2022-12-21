@@ -36,7 +36,9 @@ interface ProductDetailProps {
 
 const ProductDetail = ({navigation}: ProductDetailProps) => {
   const intl = useIntl();
-  const [activeTab, setActiveTab] = useState('Съдържание');
+  const [activeTab, setActiveTab] = useState(
+    translateText(intl, 'active.content'),
+  );
   const [modalVisible, setModalVisible] = useState(false);
   const [secondModal, setSecondModal] = useState(false);
   const [thirdModal, setThirdModal] = useState(false);
@@ -132,23 +134,26 @@ const ProductDetail = ({navigation}: ProductDetailProps) => {
           <View style={[styles.clockSec, {marginTop: 30}]}>
             <ClockIcon />
             <Text style={styles.clockTxt1}>
-              Прозорец за вземане:{' '}
+              {translateText(intl, 'clock.time')}:{' '}
               <Text style={styles.clockTxt2}>16:30 - 17:30</Text>
             </Text>
           </View>
           <View style={styles.clockSec}>
             <CallIcon />
             <Text style={styles.clockTxt1}>
-              Телефон за връзка:{' '}
+              {translateText(intl, 'contect.num')}:{' '}
               <Text style={styles.clockTxt2}>+359 885 45 48 23</Text>
             </Text>
           </View>
           <View style={styles.clockSec}>
             <LocationIcon />
             <Text style={styles.clockTxt1}>
-              Адрес:{' '}
+              {translateText(intl, 'address.location')}:{' '}
               <Text style={styles.clockTxt2}>
-                ул. “Бели Дунав” 10, София,{'\n'} България
+                {translateText(intl, 'address.text1')}. “
+                {translateText(intl, 'address.text2')}” 10,{' '}
+                {translateText(intl, 'address.text3')},{'\n'}{' '}
+                {translateText(intl, 'address.text4')}
               </Text>
             </Text>
           </View>
@@ -156,75 +161,89 @@ const ProductDetail = ({navigation}: ProductDetailProps) => {
             <View style={styles.tabs}>
               <TouchableOpacity
                 style={styles.tab}
-                onPress={() => setActiveTab('Съдържание')}>
+                onPress={() =>
+                  setActiveTab(translateText(intl, 'active.content'))
+                }>
                 <Text
                   style={[
                     styles.tabTxt,
-                    activeTab === 'Съдържание'
+                    activeTab === translateText(intl, 'active.content')
                       ? {color: '#182550'}
                       : {color: '#A6A6A6'},
                   ]}>
-                  Съдържание
+                  {translateText(intl, 'active.content')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.tab}
-                onPress={() => setActiveTab('Алергени')}>
+                onPress={() =>
+                  setActiveTab(translateText(intl, 'active.allergens'))
+                }>
                 <Text
                   style={[
                     styles.tabTxt,
-                    activeTab === 'Алергени'
+                    activeTab === translateText(intl, 'active.allergens')
                       ? {color: '#182550'}
                       : {color: '#A6A6A6'},
                   ]}>
-                  Алергени
+                  {translateText(intl, 'active.allergens')}{' '}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.tab}
-                onPress={() => setActiveTab('Снимки')}>
+                onPress={() =>
+                  setActiveTab(translateText(intl, 'active.pictures'))
+                }>
                 <Text
                   style={[
                     styles.tabTxt,
-                    activeTab === 'Снимки'
+                    activeTab === translateText(intl, 'active.pictures')
                       ? {color: '#182550'}
                       : {color: '#A6A6A6'},
                   ]}>
-                  Снимки
+                  {translateText(intl, 'active.pictures')}
                 </Text>
               </TouchableOpacity>
             </View>
-            {activeTab === 'Съдържание' ? (
+            {activeTab === translateText(intl, 'active.content') ? (
               <View>
                 <Text style={styles.tabContentTxt}>
-                  В твоята FoodObox изненада най-често ще откриеш вкусни торти,
-                  еклери, турска баклава, кадаиф, тулумби или сладки.{'\n'}
-                  {'\n'} Ако не всичко е по вкуса ти, сподели със семейството и
-                  приятелите си. Споделената храна е по-сладка! :)
+                  {translateText(intl, 'content.lines1')}.{'\n'}
+                  {'\n'} {translateText(intl, 'content.lines2')} :)
                 </Text>
               </View>
             ) : null}
-            {activeTab === 'Алергени' ? (
+            {activeTab === translateText(intl, 'active.allergens') ? (
               <View>
                 <View style={styles.allergensContentSec}>
-                  <Text style={styles.allergensContentTxt}>Яйца</Text>
                   <Text style={styles.allergensContentTxt}>
-                    Млечни продукти
+                    {translateText(intl, 'allergens.food1')}
+                  </Text>
+                  <Text style={styles.allergensContentTxt}>
+                    {translateText(intl, 'allergens.food2')}
                   </Text>
                 </View>
                 <View style={styles.allergensContentSec}>
-                  <Text style={styles.allergensContentTxt}>Ядки</Text>
-                  <Text style={styles.allergensContentTxt}>Глутен</Text>
+                  <Text style={styles.allergensContentTxt}>
+                    {translateText(intl, 'allergens.food3')}
+                  </Text>
+                  <Text style={styles.allergensContentTxt}>
+                    {translateText(intl, 'allergens.food4')}
+                  </Text>
                 </View>
                 <View style={styles.allergensContentSec}>
-                  <Text style={styles.allergensContentTxt}>Фъстъци</Text>
+                  <Text style={styles.allergensContentTxt}>
+                    {translateText(intl, 'allergens.food5')}
+                  </Text>
                 </View>
                 <View style={styles.allergensContentSec}>
-                  <Text style={styles.allergensContentTxt}>Сусам</Text>
+                  <Text style={styles.allergensContentTxt}>
+                    {translateText(intl, 'allergens.food6')}
+                  </Text>
                 </View>
               </View>
             ) : null}
-            {activeTab === 'Снимки' ? (
+            {activeTab === translateText(intl, 'active.pictures') ? (
               <View>
                 <View style={styles.productPhotoSec}>
                   {foodPhotos.map((val, i) => {
@@ -241,14 +260,21 @@ const ProductDetail = ({navigation}: ProductDetailProps) => {
             ) : null}
           </View>
           <Text style={styles.initialPriceTxt}>
-            първоначална цена:{' '}
-            <Text style={styles.initialPriceValue}>12.50лв</Text>
+            {translateText(intl, 'price.initial')}:{' '}
+            <Text style={styles.initialPriceValue}>
+              12.50{translateText(intl, 'price.currency')}
+            </Text>
           </Text>
-          <Text style={styles.foodPriceTxt}>foodObox цена: 7.00лв</Text>
+          <Text style={styles.foodPriceTxt}>
+            foodObox {translateText(intl, 'sort.lowest_price_first')}: 7.00
+            {translateText(intl, 'price.currency')}
+          </Text>
           <TouchableOpacity
             style={styles.toTheResultBtn}
             onPress={() => setModalVisible(true)}>
-            <Text style={styles.toTheResultBtnTXt}>Поръчай</Text>
+            <Text style={styles.toTheResultBtnTXt}>
+              {translateText(intl, 'offer.order')}
+            </Text>
             <CartIcon />
           </TouchableOpacity>
         </ScrollView>
@@ -271,15 +297,20 @@ const ProductDetail = ({navigation}: ProductDetailProps) => {
               <CloseIcon />
             </TouchableOpacity>
             <Text style={styles.modalHeading}>
-              Кутия с пица и салата от Food Corner
+              {translateText(intl, 'modal.heading')} Food Corner
             </Text>
-            <Text style={styles.addressLabel}>Адрес на заведението</Text>
+            <Text style={styles.addressLabel}>
+              {translateText(intl, 'address.shop')}
+            </Text>
             <Text
               style={[
                 styles.addressTxt,
                 {borderBottomWidth: 1, borderBottomColor: '#182550'},
               ]}>
-              ул. “Бели Дунав” 10, София, България
+              {translateText(intl, 'address.text1')}. “
+              {translateText(intl, 'address.text2')}” 10,{' '}
+              {translateText(intl, 'address.text3')},{' '}
+              {translateText(intl, 'address.text4')}
             </Text>
             <View
               style={{
@@ -289,20 +320,29 @@ const ProductDetail = ({navigation}: ProductDetailProps) => {
                 borderRadius: 10,
               }}>
               <TouchableOpacity style={styles.seeloctionBtn}>
-                <Text style={styles.seeloctionTxt}>Виж локацията</Text>
+                <Text style={styles.seeloctionTxt}>
+                  {translateText(intl, 'see.location')}
+                </Text>
               </TouchableOpacity>
-              <ClusteredMapView zoomOnRestaurant={selectedRestaurant} />
+              {/* <ClusteredMapView zoomOnRestaurant={selectedRestaurant} /> */}
             </View>
 
-            <Text style={styles.addressLabel}>Час за вземане</Text>
-            <Text style={styles.addressTxt}>от 16:30 до 17:30 </Text>
+            <Text style={styles.addressLabel}>
+              {translateText(intl, 'time.pickup')}
+            </Text>
+            <Text style={styles.addressTxt}>
+              {translateText(intl, 'offer.from')} 16:30{' '}
+              {translateText(intl, 'offer.to')} 17:30{' '}
+            </Text>
             <TouchableOpacity
               style={styles.button}
               onPress={() => {
                 setModalVisible(false);
                 setSecondModal(true);
               }}>
-              <Text style={styles.buttonTxt}>Продължи с поръчката</Text>
+              <Text style={styles.buttonTxt}>
+                {translateText(intl, 'continue.order')}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -327,24 +367,36 @@ const ProductDetail = ({navigation}: ProductDetailProps) => {
               <TouchableOpacity style={styles.increaseBtn}>
                 <Text style={styles.minusTxt}>-</Text>
               </TouchableOpacity>
-              <Text style={styles.itemNumberTxt}>{itemNumber} кутии</Text>
+              <Text style={styles.itemNumberTxt}>
+                {itemNumber} {translateText(intl, 'order.boxes')}
+              </Text>
               <TouchableOpacity style={styles.decreaseBtn}>
                 <Text style={styles.minusTxt}>+</Text>
               </TouchableOpacity>
             </View>
             <View style={[styles.totalPaymentSec, {marginTop: 20}]}>
-              <Text style={styles.totalPaymentLabel}>Обща сума</Text>
-              <Text style={styles.totalPayment}>14.00лв</Text>
+              <Text style={styles.totalPaymentLabel}>
+                {translateText(intl, 'price.total')}
+              </Text>
+              <Text style={styles.totalPayment}>
+                14.00{translateText(intl, 'price.currency')}
+              </Text>
             </View>
             <View style={styles.totalPaymentSec}>
-              <Text style={styles.saveTxt}>Ти спестяваш</Text>
-              <Text style={styles.saveTxt}>10.00лв</Text>
+              <Text style={styles.saveTxt}>
+                {translateText(intl, 'price.save')}
+              </Text>
+              <Text style={styles.saveTxt}>
+                10.00{translateText(intl, 'price.currency')}
+              </Text>
             </View>
             <TouchableOpacity
               style={styles.cashPaymentSec}
               onPress={() => setCashPayment(!cashPayment)}>
               <CashPaymentIcon />
-              <Text style={styles.cashPaymentTxt}>плащане в брой</Text>
+              <Text style={styles.cashPaymentTxt}>
+                {translateText(intl, 'cash.payment')}
+              </Text>
               <View style={styles.cashPaymentCheck}>
                 {cashPayment ? (
                   <View style={styles.cashPaymentCheckFilled}></View>
@@ -353,11 +405,13 @@ const ProductDetail = ({navigation}: ProductDetailProps) => {
             </TouchableOpacity>
             <View style={styles.voucherSec}>
               <TextInput
-                placeholder="Ваучер или промо код"
+                placeholder={translateText(intl, 'input.placeholder')}
                 style={styles.voucherInput}
               />
               <TouchableOpacity style={styles.voucherBtn}>
-                <Text style={styles.voucherBtnTxt}>Приложи</Text>
+                <Text style={styles.voucherBtnTxt}>
+                  {translateText(intl, 'btn.apply')}
+                </Text>
               </TouchableOpacity>
             </View>
             <TouchableOpacity
@@ -366,7 +420,9 @@ const ProductDetail = ({navigation}: ProductDetailProps) => {
                 setSecondModal(false);
                 setFourthModal(true);
               }}>
-              <Text style={styles.buttonTxt}>Завърши поръчката</Text>
+              <Text style={styles.buttonTxt}>
+                {translateText(intl, 'payment.complete_order')}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -415,11 +471,10 @@ const ProductDetail = ({navigation}: ProductDetailProps) => {
             </TouchableOpacity>
             <MoscatIcon />
             <Text style={[styles.modalHeading, {marginTop: 10}]}>
-              Регистрирай се!
+              {translateText(intl, 'signup.title')}!
             </Text>
             <Text style={styles.desTxt}>
-              За да направиш поръчка през Foodobox, трябва първо да създадеш
-              персонален профил.
+              {translateText(intl, 'create.personal')}.
             </Text>
             <TouchableOpacity
               style={styles.button}
@@ -427,7 +482,9 @@ const ProductDetail = ({navigation}: ProductDetailProps) => {
                 setFourthModal(false);
                 navigation.navigate('SignUpScreen');
               }}>
-              <Text style={styles.buttonTxt}>Създай профил</Text>
+              <Text style={styles.buttonTxt}>
+                {translateText(intl, 'create.profile')}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
