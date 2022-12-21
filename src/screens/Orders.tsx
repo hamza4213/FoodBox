@@ -17,6 +17,8 @@ import SavedIcon from './../../assets/images/savedOrderIcon.svg';
 import CompletdOrderIcon from './../../assets/images/completedOrderIcon.svg';
 import CanceledOrderIcon from './../../assets/images/canceledOrderImage.svg';
 import ListOrders from './ListOrders';
+import {translateText} from '../lang/translate';
+import {useIntl} from 'react-intl';
 
 interface OrdersProps {
   route: any;
@@ -24,23 +26,44 @@ interface OrdersProps {
 }
 
 const Orders = ({navigation}: OrdersProps) => {
-  const [activeTab, setActiveTab] = useState('Активни поръчки');
+  const intl = useIntl();
+  const [activeTab, setActiveTab] = useState(
+    translateText(intl, 'active.orders'),
+  );
   const orders = [
     {
       name: 'Food Corner',
-      orderStartTime: 'Поръчка от днес 14:00ч.',
+      orderStartTime: `${translateText(
+        intl,
+        'order.from',
+      )} 14:00${translateText(intl, 'time.h')}.`,
       orderImage: require('./../../assets/images/productIMage.png'),
-      box: 'box 2 кутии',
-      price: '14.00лв',
-      pickUpTime: 'Вземи между 14:00ч. и 19:00ч.',
+      box: `box 2 ${translateText(intl, 'order.boxes')}`,
+      price: `14.00${translateText(intl, 'price.currency')}`,
+      pickUpTime: `${translateText(intl, 'order.pickup')} 14:00${translateText(
+        intl,
+        'time.h',
+      )}. ${translateText(intl, 'a.and')} 19:00${translateText(
+        intl,
+        'time.h',
+      )}. `,
     },
     {
       name: 'Food Corner',
-      orderStartTime: 'Поръчка от днес 14:00ч.',
+      orderStartTime: `${translateText(
+        intl,
+        'order.from',
+      )} 14:00${translateText(intl, 'time.h')}.`,
       orderImage: require('./../../assets/images/productIMage.png'),
-      box: 'box 2 кутии',
-      price: '14.00лв',
-      pickUpTime: 'Вземи между 14:00ч. и 19:00ч.',
+      box: `box 2 ${translateText(intl, 'order.boxes')}`,
+      price: `14.00${translateText(intl, 'price.currency')}`,
+      pickUpTime: `${translateText(intl, 'order.pickup')} 14:00${translateText(
+        intl,
+        'time.h',
+      )}. ${translateText(intl, 'a.and')} 19:00${translateText(
+        intl,
+        'time.h',
+      )}. `,
     },
   ];
 
@@ -76,7 +99,9 @@ const Orders = ({navigation}: OrdersProps) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTxt}>Поръчки</Text>
+        <Text style={styles.headerTxt}>
+          {translateText(intl, 'tab.orders')}
+        </Text>
         <TouchableOpacity>
           <FilterIcon width={21} height={21} />
         </TouchableOpacity>
@@ -85,35 +110,37 @@ const Orders = ({navigation}: OrdersProps) => {
         <View style={styles.tabs}>
           <TouchableOpacity
             style={styles.tab}
-            onPress={() => setActiveTab('Активни поръчки')}>
+            onPress={() => setActiveTab(translateText(intl, 'active.orders'))}>
             <Text
               style={[
                 styles.tabTxt,
-                activeTab === 'Активни поръчки'
+                activeTab === translateText(intl, 'active.orders')
                   ? {color: '#182550'}
                   : {color: '#A6A6A6'},
               ]}>
-              Активни поръчки
+              {translateText(intl, 'active.orders')}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.tab}
-            onPress={() => setActiveTab('Завършени поръчки')}>
+            onPress={() =>
+              setActiveTab(translateText(intl, 'complete.orders'))
+            }>
             <Text
               style={[
                 styles.tabTxt,
-                activeTab === 'Завършени поръчки'
+                activeTab === translateText(intl, 'complete.orders')
                   ? {color: '#182550'}
                   : {color: '#A6A6A6'},
               ]}>
-              Завършени поръчки
+              {translateText(intl, 'complete.orders')}
             </Text>
           </TouchableOpacity>
         </View>
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{paddingHorizontal: '5%', paddingBottom: 100}}>
-          {activeTab === 'Активни поръчки' ? (
+          {activeTab === translateText(intl, 'active.orders') ? (
             <View>
               {orders.map((val, i) => {
                 return (
@@ -144,7 +171,7 @@ const Orders = ({navigation}: OrdersProps) => {
             </View>
           ) : null}
 
-          {activeTab === 'Завършени поръчки' ? (
+          {activeTab === translateText(intl, 'complete.orders') ? (
             <View>
               {ProgressedOrders.map((val, i) => {
                 return (
@@ -191,7 +218,9 @@ const Orders = ({navigation}: OrdersProps) => {
             </View>
           ) : null}
           <TouchableOpacity style={styles.toTheResultBtn}>
-            <Text style={styles.toTheResultBtnTXt}>Направи нова поръчка</Text>
+            <Text style={styles.toTheResultBtnTXt}>
+              {translateText(intl, 'place.newOrder')}
+            </Text>
             <PlusIcon />
           </TouchableOpacity>
         </ScrollView>
