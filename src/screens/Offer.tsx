@@ -1,5 +1,13 @@
-import React, {useEffect} from 'react';
-import {Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useRef} from 'react';
+import {
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {COLORS, icons} from './../constants';
 import {Utils} from '../utils';
 import {API_ENDPOINT_PRODUCT_PHOTOS} from '../network/Server';
@@ -20,15 +28,19 @@ import {FBBox} from '../models/FBBox';
 
 // TODO: make proper ts type
 export interface OfferProps {
-  route: any,
-  navigation: any
+  route: any;
+  navigation: any;
 }
 
 const Offer = ({route, navigation}: OfferProps) => {
   // TODO: make it react if the pick-up time starts or ends
   const intl = useIntl();
-  const user = useSelector((state: FBRootState) => state.userState.user) as FBUser;
-  const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
+  const user = useSelector(
+    (state: FBRootState) => state.userState.user,
+  ) as FBUser;
+  const userLocation = useSelector(
+    (state: FBRootState) => state.userState.userLocation,
+  );
   const restaurant: RestaurantHomeListItem = route.params.restaurant;
   const box: FBBox = route.params.box;
   const dietTypeText = RestaurantService.getDietTypeText(box, intl);
@@ -41,18 +53,26 @@ const Offer = ({route, navigation}: OfferProps) => {
   const hasAvailableBoxes = RestaurantService.hasAvailability(box);
   const isFinished = RestaurantService.isFinished(box);
   const isStarted = RestaurantService.isStarted(box);
-  
-
+  const ref = useRef(null);
   useEffect(() => {
-    return navigation.addListener('focus', async () => {
+    const subscription = navigation.addListener('change', async () => {
       await analyticsPageOpen({
         userId: user.id,
         email: user.email,
         pageName: 'OfferDetails',
-        data: {boxId: box.id, isStarted: isStarted, isFinished: isFinished, isOpen: isOpen},
-        loc: userLocation
+        data: {
+          boxId: box.id,
+          isStarted: isStarted,
+          isFinished: isFinished,
+          isOpen: isOpen,
+        },
+        loc: userLocation,
       });
     });
+
+    return () => {
+      subscription.remove();
+    };
   }, [navigation]);
 
   const isOnFocus = useIsFocused();
@@ -61,29 +81,27 @@ const Offer = ({route, navigation}: OfferProps) => {
     <SafeAreaView style={styles.mainWrapper}>
       <View style={styles.mainContentWrapper}>
         <View style={{flexDirection: 'row'}}>
-          <BackButton/>
-          <View style={{
-            flex: 1,
-            height: 50,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-            <Text style={{fontSize: 18}}>
-              {restaurant.name}
-            </Text>
+          <BackButton />
+          <View
+            style={{
+              flex: 1,
+              height: 50,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Text style={{fontSize: 18}}>{restaurant.name}</Text>
           </View>
         </View>
 
         <ScrollView
           showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-        >
+          showsHorizontalScrollIndicator={false}>
           <View style={{}}>
             <Image
               style={{
                 aspectRatio: 2,
                 width: '100%',
-                marginBottom: 10
+                marginBottom: 10,
               }}
               resizeMode={'contain'}
               blurRadius={canCheckout ? 0 : 3}
@@ -92,55 +110,71 @@ const Offer = ({route, navigation}: OfferProps) => {
           </View>
 
           <View style={styles.wrapBoxMeta}>
-            <Text numberOfLines={2} adjustsFontSizeToFit style={{flex: 1, width: 1, color: '#29455f'}}>
+            <Text
+              numberOfLines={2}
+              adjustsFontSizeToFit
+              style={{flex: 1, width: 1, color: '#29455f'}}>
               <Text style={styles.boxTitleText}>{box.name}</Text>
               <Text>{` ${translateText(intl, 'order.from')} `}</Text>
               <Text style={styles.boxTitleText}>{restaurant.name}</Text>
             </Text>
 
-            {!isOpen &&
+            {!isOpen && (
               <View
                 style={{
                   ...styles.availableBoxesIndicatorWrapper,
                   backgroundColor: COLORS.red,
-                  borderColor: '#000', borderWidth: 2,
-                }}
-              >
-                <Text adjustsFontSizeToFit numberOfLines={1} style={styles.availableBoxesIndicatorText}>
+                  borderColor: '#000',
+                  borderWidth: 2,
+                }}>
+                <Text
+                  adjustsFontSizeToFit
+                  numberOfLines={1}
+                  style={styles.availableBoxesIndicatorText}>
                   {translateText(intl, 'restaurant.status.closed')}
                 </Text>
               </View>
-            }
+            )}
 
-            {isOpen && !isFinished &&
+            {isOpen && !isFinished && (
               <View
                 style={{
                   ...styles.availableBoxesIndicatorWrapper,
                   backgroundColor: COLORS.primary,
-                  borderColor: '#000', borderWidth: 2,
+                  borderColor: '#000',
+                  borderWidth: 2,
                 }}>
-                <Text adjustsFontSizeToFit numberOfLines={1} style={styles.availableBoxesIndicatorText}>
-                  {availableBoxes}{' '}{availableBoxes === 1 ? translateText(intl, 'box') : translateText(intl, 'boxes')}
+                <Text
+                  adjustsFontSizeToFit
+                  numberOfLines={1}
+                  style={styles.availableBoxesIndicatorText}>
+                  {availableBoxes}{' '}
+                  {availableBoxes === 1
+                    ? translateText(intl, 'box')
+                    : translateText(intl, 'boxes')}
                 </Text>
               </View>
-            }
+            )}
 
-            {isOpen && isFinished &&
+            {isOpen && isFinished && (
               <View
                 style={{
                   ...styles.availableBoxesIndicatorWrapper,
                   backgroundColor: COLORS.red,
-                  borderColor: '#000', borderWidth: 2,
+                  borderColor: '#000',
+                  borderWidth: 2,
                 }}>
-                <Text adjustsFontSizeToFit numberOfLines={1} style={styles.availableBoxesIndicatorText}>
+                <Text
+                  adjustsFontSizeToFit
+                  numberOfLines={1}
+                  style={styles.availableBoxesIndicatorText}>
                   {translateText(intl, 'offer.expired')}
                 </Text>
               </View>
-            }
-
+            )}
           </View>
 
-          {canCheckout &&
+          {canCheckout && (
             <View style={styles.pickUpTimeWrapper}>
               <Image
                 source={require('../../assets/icons/offer_clock_icon.png')}
@@ -148,49 +182,64 @@ const Offer = ({route, navigation}: OfferProps) => {
                 resizeMode="contain"
               />
               <Text style={styles.pickUpTimeText}>
-                {`${translateText(intl, 'offer.pick_up_window')} ${translateText(intl, 'offer.from')} ${RestaurantService.formatPickUpWindowDate(box.pickUpFrom)} ${translateText(intl, 'offer.to')} ${RestaurantService.formatPickUpWindowDate(box.pickUpTo)}!`}
+                {`${translateText(
+                  intl,
+                  'offer.pick_up_window',
+                )} ${translateText(
+                  intl,
+                  'offer.from',
+                )} ${RestaurantService.formatPickUpWindowDate(
+                  box.pickUpFrom,
+                )} ${translateText(
+                  intl,
+                  'offer.to',
+                )} ${RestaurantService.formatPickUpWindowDate(box.pickUpTo)}!`}
               </Text>
             </View>
-          }
+          )}
 
-          {!isOpen &&
-            <View style={{
-              ...styles.countdownWrapper,
-              backgroundColor: COLORS.red,
-            }}>
+          {!isOpen && (
+            <View
+              style={{
+                ...styles.countdownWrapper,
+                backgroundColor: COLORS.red,
+              }}>
               <Text style={styles.countdownText}>
                 {translateText(intl, 'offer.restaurant_not_open')}
               </Text>
             </View>
-          }
+          )}
 
-          {isOpen && !hasAvailableBoxes &&
-            <View style={{
-              ...styles.countdownWrapper,
-              backgroundColor: COLORS.primary,
-            }}>
+          {isOpen && !hasAvailableBoxes && (
+            <View
+              style={{
+                ...styles.countdownWrapper,
+                backgroundColor: COLORS.primary,
+              }}>
               <Text style={styles.countdownText}>
                 {translateText(intl, 'offer.no_availability')}
               </Text>
             </View>
-          }
+          )}
 
-          {isOpen && isFinished &&
-            <View style={{
-              ...styles.countdownWrapper,
-              backgroundColor: COLORS.red,
-            }}>
+          {isOpen && isFinished && (
+            <View
+              style={{
+                ...styles.countdownWrapper,
+                backgroundColor: COLORS.red,
+              }}>
               <Text style={styles.countdownText}>
                 {translateText(intl, 'offer.message_end')}
               </Text>
             </View>
-          }
+          )}
 
           {canCheckout && (
-            <View style={{
-              ...styles.countdownWrapper,
-              backgroundColor: isStarted ? COLORS.red : COLORS.primary,
-            }}>
+            <View
+              style={{
+                ...styles.countdownWrapper,
+                backgroundColor: isStarted ? COLORS.red : COLORS.primary,
+              }}>
               <Image
                 source={require('../../assets/icons/stopwatch_icon.png')}
                 style={styles.countdownIcon}
@@ -198,13 +247,19 @@ const Offer = ({route, navigation}: OfferProps) => {
               />
 
               <Text style={styles.countdownText}>
-                {isStarted ? translateText(intl, 'offer.sale_end') : translateText(intl, 'offer.sale_start')}
+                {isStarted
+                  ? translateText(intl, 'offer.sale_end')
+                  : translateText(intl, 'offer.sale_start')}
               </Text>
 
               <CountDown
-                until={(isStarted ? box.pickUpTo - now : box.pickUpFrom - now) / 1000}
+                until={
+                  (isStarted ? box.pickUpTo - now : box.pickUpFrom - now) / 1000
+                }
                 size={11}
-                digitStyle={{backgroundColor: isStarted ? COLORS.red : COLORS.primary}}
+                digitStyle={{
+                  backgroundColor: isStarted ? COLORS.red : COLORS.primary,
+                }}
                 style={{marginTop: 3, marginLeft: 2}}
                 digitTxtStyle={{color: '#FFF'}}
                 separatorStyle={{color: '#FFF', margin: 0}}
@@ -217,28 +272,39 @@ const Offer = ({route, navigation}: OfferProps) => {
 
           <TouchableOpacity
             style={styles.addressWrapper}
-            onPress={() => showOnMap({location: {latitude: restaurant.latitude, longitude: restaurant.longitude}})}
-          >
+            onPress={() =>
+              showOnMap({
+                location: {
+                  latitude: restaurant.latitude,
+                  longitude: restaurant.longitude,
+                },
+              })
+            }>
             <Image
               style={styles.addressIcon}
               source={icons.location}
               resizeMode="contain"
             />
 
-            <Text style={styles.addressText}>
-              {restaurant.address}
-            </Text>
+            <Text style={styles.addressText}>{restaurant.address}</Text>
           </TouchableOpacity>
 
           <Text style={styles.description}>
-            {`${translateText(intl, 'offer.description_start')} ${box.summary} ${translateText(intl, 'offer.description_end')}`}
+            {`${translateText(intl, 'offer.description_start')} ${
+              box.summary
+            } ${translateText(intl, 'offer.description_end')}`}
           </Text>
 
           <Text style={styles.allergens}>
             {`${translateText(intl, 'offer.allergens')}: `}
             {box.allergenes.map((item: string, key: number) => {
               let dot = box.allergenes.length - 1 === key ? '' : ', ';
-              return <Text key={key}>{translateText(intl, `allergens.${item}`)}{dot}</Text>;
+              return (
+                <Text key={key}>
+                  {translateText(intl, `allergens.${item}`)}
+                  {dot}
+                </Text>
+              );
             })}
           </Text>
 
@@ -255,38 +321,45 @@ const Offer = ({route, navigation}: OfferProps) => {
             </Text>
             <Text>{foodTypeText}</Text>
           </View>
-          
 
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.h3}>
               {translateText(intl, 'offer.price_in_store')}
             </Text>
-            <Text>{` ${box.price}${translateText(intl, `currency.${box.currency}`)}`}</Text>
+            <Text>{` ${box.price}${translateText(
+              intl,
+              `currency.${box.currency}`,
+            )}`}</Text>
           </View>
 
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.h3}>
               {translateText(intl, 'offer.price_in_foodobox')}
             </Text>
-            <Text>{` ${box.discountedPrice}${translateText(intl, `currency.${box.currency}`)} (-${box.discount}%)`}</Text>
+            <Text>{` ${box.discountedPrice}${translateText(
+              intl,
+              `currency.${box.currency}`,
+            )} (-${box.discount}%)`}</Text>
           </View>
 
-          {canCheckout &&
+          {canCheckout && (
             <Text>
-              <Text style={{color: COLORS.red, fontWeight: '700'}} >{translateText(intl, 'warning')}</Text>
+              <Text style={{color: COLORS.red, fontWeight: '700'}}>
+                {translateText(intl, 'warning')}
+              </Text>
               <Text>{translateText(intl, 'warning.check_address')}</Text>
             </Text>
-          }
+          )}
 
-          {canCheckout &&
+          {canCheckout && (
             <FoodBoxCheckoutControl
               restaurant={restaurant}
               foodbox={box}
               isOnFocus={isOnFocus}
             />
-          }
+          )}
 
-          {canCheckout &&
+          {canCheckout && (
             <View style={styles.howToPickUpDetailsWrapper}>
               <Text style={styles.howToPickUpTitle}>
                 {translateText(intl, 'offer.pick_up_info_header')}
@@ -309,13 +382,14 @@ const Offer = ({route, navigation}: OfferProps) => {
               <Text style={styles.descriptionAddressDialog}>
                 <TouchableOpacity
                   style={styles.addressWrapper}
-                  onPress={() => showOnMap({
-                    location: {
-                      latitude: restaurant.latitude,
-                      longitude: restaurant.longitude,
-                    },
-                  })}
-                >
+                  onPress={() =>
+                    showOnMap({
+                      location: {
+                        latitude: restaurant.latitude,
+                        longitude: restaurant.longitude,
+                      },
+                    })
+                  }>
                   <Image
                     style={styles.addressIcon}
                     source={icons.location}
@@ -334,9 +408,7 @@ const Offer = ({route, navigation}: OfferProps) => {
                 </TouchableOpacity>
               </Text>
             </View>
-          }
-
-
+          )}
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -347,7 +419,7 @@ const styles = StyleSheet.create({
   mainContentWrapper: {
     paddingLeft: 20,
     paddingRight: 20,
-    color: COLORS.black
+    color: COLORS.black,
   },
   mainWrapper: {},
   wrapBoxMeta: {
@@ -390,7 +462,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   addressIcon: {
-    width: 16, height: 16,
+    width: 16,
+    height: 16,
   },
   wrapCategoryName: {
     flexDirection: 'row',
