@@ -19,14 +19,18 @@ import CloseIcon from './../../assets/images/close.svg';
 import JumpingIcon from './../../assets/images/jumpingMascot.svg';
 import ExcitedIcon from './../../assets/images/excitedMascot.svg';
 import CameraIcon from './../../assets/images/camera.svg';
-
+import {translateText} from '../lang/translate';
+import {useIntl} from 'react-intl';
 interface OrderDetailProps {
   route: any;
   navigation: any;
 }
 
 const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
-  const [activeTab, setActiveTab] = useState('Съдържание');
+  const intl = useIntl();
+  const [activeTab, setActiveTab] = useState(
+    translateText(intl, 'active.content'),
+  );
   const [modalVisible, setModalVisible] = useState(false);
   const [secondModal, setSecondModal] = useState(false);
   const [thirdModal, setThirdModal] = useState(false);
@@ -53,7 +57,8 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
       <View style={styles.listsMain}>
         <View style={styles.header}>
           <Text style={styles.headerHeading}>
-            Поръчка от 12/06/2022 в 14:30
+            {translateText(intl, 'order.fromDetails')} 12/06/2022{' '}
+            {translateText(intl, 'order.in')} 14:30
           </Text>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <CloseIcon />
@@ -63,17 +68,17 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
           contentContainerStyle={{paddingBottom: 50}}
           showsVerticalScrollIndicator={false}>
           <Text style={styles.heading}>
-            Кутия с пица и салата от Food Corner
+            {translateText(intl, 'heading.food.corner')}
           </Text>
           <Text style={styles.addressTxt1}>
-            Адрес:{'   '}
+            {translateText(intl, 'address.location')}:{'   '}
             <Text
               style={[styles.addressTxt1, {textDecorationLine: 'underline'}]}>
-              ул. “Бели Дунав” 10, София, България
+              {translateText(intl, 'address.street')}
             </Text>
           </Text>
           <Text style={styles.addressTxt1}>
-            Телефон:{'   '}
+            {translateText(intl, 'order.phone')}:{'   '}
             <Text
               style={[styles.addressTxt1, {textDecorationLine: 'underline'}]}>
               +359 885 00 42 43
@@ -86,32 +91,46 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
             ]}>
             {cancelOrderSatus ? (
               <Text style={[styles.orderDetailsHeading, {color: '#CF4F4F'}]}>
-                Отменена поръчка
+                {translateText(intl, 'order.cancel')}
               </Text>
             ) : (
-              <Text style={styles.orderDetailsHeading}>ПИН: 559821</Text>
+              <Text style={styles.orderDetailsHeading}>
+                {translateText(intl, 'order.pin')}: 559821
+              </Text>
             )}
 
             <View style={[styles.clockSec, {marginTop: 10}]}>
               <ClockIcon fill={'#fff'} />
-              <Text style={styles.clockTxt2}> Вземи от 16:30 до 17:30</Text>
+              <Text style={styles.clockTxt2}>
+                {translateText(intl, 'time.from')} 16:30{' '}
+                {translateText(intl, 'time.to')} 17:30
+              </Text>
             </View>
             <View style={[styles.clockSec, {marginTop: 15}]}>
               <GiftIcon />
               <Text style={styles.clockTxt1}>
-                Количество: <Text style={styles.clockTxt2}>2 кутии</Text>
+                {translateText(intl, 'order.boxes')}
+                <Text style={styles.clockTxt2}>
+                  2 {translateText(intl, 'order.quantity')}
+                </Text>
               </Text>
             </View>
             <View style={[styles.clockSec, {marginTop: 15}]}>
               <DollarIcon />
               <Text style={styles.clockTxt1}>
-                Сума за плащане: <Text style={styles.clockTxt2}>14.00лв</Text>
+                {translateText(intl, 'payment.amount')}:
+                <Text style={styles.clockTxt2}>
+                  14.00{translateText(intl, 'price.currency')}
+                </Text>
               </Text>
             </View>
             <View style={[styles.clockSec, {marginTop: 15}]}>
               <PartyHorn />
               <Text style={styles.clockTxt1}>
-                Ти спести: <Text style={styles.clockTxt2}>12.00лв</Text>
+                {translateText(intl, 'money.saved')}:{' '}
+                <Text style={styles.clockTxt2}>
+                  12.00{translateText(intl, 'price.currency')}
+                </Text>
               </Text>
             </View>
           </View>
@@ -119,28 +138,32 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
             <View style={styles.tabs}>
               <TouchableOpacity
                 style={styles.tab}
-                onPress={() => setActiveTab('Съдържание')}>
+                onPress={() =>
+                  setActiveTab(translateText(intl, 'active.content'))
+                }>
                 <Text
                   style={[
                     styles.tabTxt,
-                    activeTab === 'Съдържание'
+                    activeTab === translateText(intl, 'active.content')
                       ? {color: '#182550'}
                       : {color: '#A6A6A6'},
                   ]}>
-                  Съдържание
+                  {translateText(intl, 'active.content')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.tab}
-                onPress={() => setActiveTab('Алергени')}>
+                onPress={() =>
+                  setActiveTab(translateText(intl, 'active.allergens'))
+                }>
                 <Text
                   style={[
                     styles.tabTxt,
-                    activeTab === 'Алергени'
+                    activeTab === translateText(intl, 'active.allergens')
                       ? {color: '#182550'}
                       : {color: '#A6A6A6'},
                   ]}>
-                  Алергени
+                  {translateText(intl, 'active.allergens')}
                 </Text>
               </TouchableOpacity>
               {/* <TouchableOpacity
@@ -157,33 +180,41 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
                 </Text>
               </TouchableOpacity> */}
             </View>
-            {activeTab === 'Съдържание' ? (
+            {activeTab === translateText(intl, 'active.content') ? (
               <View>
                 <Text style={styles.tabContentTxt}>
-                  В твоята FoodObox изненада най-често ще откриеш вкусни торти,
-                  еклери, турска баклава, кадаиф, тулумби или сладки.{'\n'}
-                  {'\n'} Ако не всичко е по вкуса ти, сподели със семейството и
-                  приятелите си. Споделената храна е по-сладка! :)
+                  {translateText(intl, 'content.lines1')}.{'\n'}
+                  {'\n'} {translateText(intl, 'content.lines2')} :)
                 </Text>
               </View>
             ) : null}
-            {activeTab === 'Алергени' ? (
+            {activeTab === translateText(intl, 'active.allergens') ? (
               <View>
                 <View style={styles.allergensContentSec}>
-                  <Text style={styles.allergensContentTxt}>Яйца</Text>
                   <Text style={styles.allergensContentTxt}>
-                    Млечни продукти
+                    {translateText(intl, 'allergens.3')}
+                  </Text>
+                  <Text style={styles.allergensContentTxt}>
+                    {translateText(intl, 'allergens.13')}
                   </Text>
                 </View>
                 <View style={styles.allergensContentSec}>
-                  <Text style={styles.allergensContentTxt}>Ядки</Text>
-                  <Text style={styles.allergensContentTxt}>Глутен</Text>
+                  <Text style={styles.allergensContentTxt}>
+                    {translateText(intl, 'allergens.5')}
+                  </Text>
+                  <Text style={styles.allergensContentTxt}>
+                    {translateText(intl, 'allergens.14')}
+                  </Text>
                 </View>
                 <View style={styles.allergensContentSec}>
-                  <Text style={styles.allergensContentTxt}>Фъстъци</Text>
+                  <Text style={styles.allergensContentTxt}>
+                    {translateText(intl, 'allergens.6')}
+                  </Text>
                 </View>
                 <View style={styles.allergensContentSec}>
-                  <Text style={styles.allergensContentTxt}>Сусам</Text>
+                  <Text style={styles.allergensContentTxt}>
+                    {translateText(intl, 'allergens.9')}
+                  </Text>
                 </View>
               </View>
             ) : null}
@@ -207,10 +238,14 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
           <TouchableOpacity
             style={styles.toTheResultBtn}
             onPress={() => setFourthModal(true)}>
-            <Text style={styles.toTheResultBtnTXt}>Кутията е спасена</Text>
+            <Text style={styles.toTheResultBtnTXt}>
+              {translateText(intl, 'box.saved')}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setModalVisible(true)}>
-            <Text style={styles.foodPriceTxt}>Отмени поръчка</Text>
+            <Text style={styles.foodPriceTxt}>
+              {translateText(intl, 'order.cancel')}
+            </Text>
           </TouchableOpacity>
           {/* <TouchableOpacity
             onPress={() => setSixthModal(true)}
@@ -238,10 +273,10 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
               <CloseIcon />
             </TouchableOpacity>
             <Text style={[styles.modalHeading, {color: '#CF4F4F'}]}>
-              Отмяна на поръчка
+              {translateText(intl, 'order.cancellation')}
             </Text>
             <Text style={styles.desTxt}>
-              Сигурен ли си, че искаш да се откажеш от поръчката си?
+              {translateText(intl, 'order.sure.cancel')}
             </Text>
             <View style={styles.firstModalBtns}>
               <TouchableOpacity
@@ -250,12 +285,16 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
                   setModalVisible(false);
                   setSecondModal(true);
                 }}>
-                <Text style={styles.backBtnTxt}>Назад</Text>
+                <Text style={styles.backBtnTxt}>
+                  {translateText(intl, 'back.btn')}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.cancelBtn}
                 onPress={() => setModalVisible(false)}>
-                <Text style={styles.cancelBtnTxt}>Отмени</Text>
+                <Text style={styles.cancelBtnTxt}>
+                  {translateText(intl, 'password.cancel')}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -277,7 +316,7 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
               <CloseIcon />
             </TouchableOpacity>
             <Text style={[styles.modalHeading, {color: '#CF4F4F'}]}>
-              Отмяна на поръчка
+              {translateText(intl, 'order.cancellation')}
             </Text>
             <TouchableOpacity
               style={styles.cashPaymentSec}
@@ -288,7 +327,7 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
                 ) : null}
               </View>
               <Text style={styles.cashPaymentTxt}>
-                Локацията беше затворена
+                {translateText(intl, 'order.cancellaton.radio1')}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -299,7 +338,9 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
                   <View style={styles.cashPaymentCheckFilled}></View>
                 ) : null}
               </View>
-              <Text style={styles.cashPaymentTxt}>Лошо отношение</Text>
+              <Text style={styles.cashPaymentTxt}>
+                {translateText(intl, 'order.cancellaton.radio2')}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.cashPaymentSec}
@@ -309,7 +350,9 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
                   <View style={styles.cashPaymentCheckFilled}></View>
                 ) : null}
               </View>
-              <Text style={styles.cashPaymentTxt}>Не ми хареса кутията</Text>
+              <Text style={styles.cashPaymentTxt}>
+                {translateText(intl, 'order.cancellaton.radio3')}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.cashPaymentSec}
@@ -320,7 +363,7 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
                 ) : null}
               </View>
               <Text style={styles.cashPaymentTxt}>
-                Няма да успея да я взема
+                {translateText(intl, 'order.cancellaton.radio4')}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -331,7 +374,9 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
                   <View style={styles.cashPaymentCheckFilled}></View>
                 ) : null}
               </View>
-              <Text style={styles.cashPaymentTxt}>Промених си мнението</Text>
+              <Text style={styles.cashPaymentTxt}>
+                {translateText(intl, 'order.cancellaton.radio5')}
+              </Text>
             </TouchableOpacity>
             <View style={styles.firstModalBtns}>
               <TouchableOpacity
@@ -340,12 +385,16 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
                   setSecondModal(false);
                   setCancelOrderSatus(true);
                 }}>
-                <Text style={styles.backBtnTxt}>Назад</Text>
+                <Text style={styles.backBtnTxt}>
+                  {translateText(intl, 'back.btn')}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.cancelBtn}
                 onPress={() => setModalVisible(false)}>
-                <Text style={styles.cancelBtnTxt}>Отмени</Text>
+                <Text style={styles.cancelBtnTxt}>
+                  {translateText(intl, 'password.cancel')}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -398,10 +447,10 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
             <JumpingIcon />
             <Text
               style={[styles.modalHeading, {marginTop: 10, color: '#79C54A'}]}>
-              Благодарим ти, че спаси храна с FoodOBox!
+              {translateText(intl, 'rating.modal1.heading')}!
             </Text>
             <Text style={styles.desTxt}>
-              Мнението ти е важно за нас. Как оценяваш тази поръчка?
+              {translateText(intl, 'rate.description')}?
             </Text>
             <Rating
               type="custom"
@@ -435,10 +484,10 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
             </TouchableOpacity>
             <Text
               style={[styles.modalHeading, {marginTop: 10, color: '#79C54A'}]}>
-              Разкажи ни малко повече
+              {translateText(intl, 'tell.us')}
             </Text>
             <Text style={[styles.modalHeading, {marginTop: 20, fontSize: 12}]}>
-              Качество на храната
+              {translateText(intl, 'rate.food.quality')}
             </Text>
             <Rating
               type="custom"
@@ -451,7 +500,7 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
               style={{paddingVertical: 0, width: '100%', marginTop: 5}}
             />
             <Text style={[styles.modalHeading, {marginTop: 20, fontSize: 12}]}>
-              Отношение на персонала
+              {translateText(intl, 'rate.attitude.staff')}
             </Text>
             <Rating
               type="custom"
@@ -463,7 +512,7 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
               style={{paddingVertical: 0, width: '100%', marginTop: 10}}
             />
             <Text style={[styles.modalHeading, {marginTop: 20, fontSize: 12}]}>
-              Количество на храната
+              {translateText(intl, 'rate.food.amount')}
             </Text>
             <Rating
               type="custom"
@@ -475,7 +524,7 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
               style={{paddingVertical: 0, width: '100%', marginTop: 10}}
             />
             <Text style={[styles.modalHeading, {marginTop: 20, fontSize: 12}]}>
-              Бързина на обслужване
+              {translateText(intl, 'rate.service.time')}
             </Text>
             <Rating
               type="custom"
@@ -492,7 +541,9 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
               <TouchableOpacity
                 style={styles.cancelBtn}
                 onPress={() => setFifthModal(false)}>
-                <Text style={styles.cancelBtnTxt}>Назад</Text>
+                <Text style={styles.cancelBtnTxt}>
+                  {translateText(intl, 'back.btn')}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.backBtn}
@@ -500,7 +551,9 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
                   setFifthModal(false);
                   setSeventhModal(true);
                 }}>
-                <Text style={styles.backBtnTxt}>Оцени</Text>
+                <Text style={styles.backBtnTxt}>
+                  {translateText(intl, 'rate.apply.it')}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -554,16 +607,19 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
             <ExcitedIcon />
             <Text
               style={[styles.modalHeading, {marginTop: 10, color: '#79C54A'}]}>
-              Благодарим за{'\n'} обратната връзка!
+              {translateText(intl, 'thanks.for')}
+              {'\n'} {translateText(intl, 'thanks.feedback')}!
             </Text>
             <Text style={styles.desTxt}>
-              Мнението ти е важно за нас. Как оценяваш тази поръчка?
+              {translateText(intl, 'rate.description')}?
             </Text>
             <TouchableOpacity
               style={styles.button}
               onPress={() => openCamera()}>
               <CameraIcon />
-              <Text style={styles.buttonTxt}> Снимай кутията</Text>
+              <Text style={styles.buttonTxt}>
+                {translateText(intl, 'thanks.takeoff.box')}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
