@@ -283,51 +283,48 @@ const Objects = ({navigation}: ObjectsProps) => {
                           <Text style={styles.productItemsBoxTxt}>кафе</Text>
                         </View> */}
                       </View>
-                      {val.boxes?.map((box: any, index: any) => {
-                        return (
-                          <View style={styles.priceSec}>
-                            <Text style={styles.oldPriceTxt}>
-                              12.50
-                              {translateText(intl, 'price.currency')}
-                            </Text>
-                            <Text style={styles.newPriceTxt}>
-                              {box.price}
-                              {translateText(intl, 'price.currency')}
-                            </Text>
-                          </View>
-                        );
-                      })}
+                      <View style={styles.priceSec}>
+                        <Text style={styles.oldPriceTxt}>
+                          12.50
+                          {translateText(intl, 'price.currency')}
+                        </Text>
+                        {/* {val.boxes?.map((box: any, index: any) => {
+                          return ( */}
+                        <Text style={styles.newPriceTxt}>
+                          {val.boxes[0].price}
+                          {translateText(intl, 'price.currency')}
+                        </Text>
+                        {/* );
+                        })} */}
+                      </View>
                     </ImageBackground>
-                    {val.boxes.map((item: any, index: any) => {
-                      return (
-                        <View key={index} style={styles.listProductBottomSec}>
-                          <Text style={styles.timeTxt}>
-                            {`${translateText(intl, 'get.from')} ${moment(
-                              item.pickUpFrom,
-                            ).format('HH:mm')}${translateText(
-                              intl,
-                              'time.h',
-                            )}. ${translateText(intl, 'time.to')} ${moment(
-                              item.pickUpTo,
-                            ).format('HH:mm')}${translateText(
-                              intl,
-                              'time.h',
-                            )}.`}
-                          </Text>
-                          <View style={styles.timeSec}>
-                            <BoxIcon />
-                            <Text style={styles.timeToOpenTxt}>
-                              {item.isOpen
-                                ? `${translateText(
-                                    intl,
-                                    'open.from',
-                                  )} 2 ${translateText(intl, 'open.till')}`
-                                : 'Closed'}
-                            </Text>
-                          </View>
-                        </View>
-                      );
-                    })}
+                    {/* {val.boxes.map((item: any, index: any) => {
+                      return ( */}
+                    <View style={styles.listProductBottomSec}>
+                      <Text style={styles.timeTxt}>
+                        {`${translateText(intl, 'get.from')} ${moment(
+                          val.boxes[0].pickUpFrom,
+                        ).format('HH:mm')}${translateText(
+                          intl,
+                          'time.h',
+                        )}. ${translateText(intl, 'time.to')} ${moment(
+                          val.boxes[0].pickUpTo,
+                        ).format('HH:mm')}${translateText(intl, 'time.h')}.`}
+                      </Text>
+                      <View style={styles.timeSec}>
+                        <BoxIcon />
+                        <Text style={styles.timeToOpenTxt}>
+                          {val.boxes[0].isOpen
+                            ? `${translateText(
+                                intl,
+                                'open.from',
+                              )} 2 ${translateText(intl, 'open.till')}`
+                            : 'Closed'}
+                        </Text>
+                      </View>
+                    </View>
+                    {/* );
+                    })} */}
                   </TouchableOpacity>
                 );
               })}
