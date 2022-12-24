@@ -356,7 +356,7 @@ const OrderDetailScreen = ({navigation}: OrderDetailProps) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.cashPaymentSec}
-              onPress={() => setFifthRadioBtn(!fourthRadioBtn)}>
+              onPress={() => setFourthRadioBtn(!fourthRadioBtn)}>
               <View style={styles.cashPaymentCheck}>
                 {fourthRadioBtn ? (
                   <View style={styles.cashPaymentCheckFilled}></View>
