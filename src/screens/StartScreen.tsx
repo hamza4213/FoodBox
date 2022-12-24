@@ -128,7 +128,9 @@ const StartScreen = ({navigation}: StartProps) => {
             </View>
 
             <View style={styles.header}>
-              <Text style={styles.headerTxt}>Изтичат скоро</Text>
+              <Text style={styles.headerTxt}>
+                {translateText(intl, 'expire.soon')}
+              </Text>
               <TouchableOpacity
                 style={styles.results}
                 onPress={() => navigation.navigate('LatestLOcation')}>
@@ -207,7 +209,9 @@ const StartScreen = ({navigation}: StartProps) => {
             </View>
 
             <View style={styles.header}>
-              <Text style={styles.headerTxt}>Препоръчани за теб</Text>
+              <Text style={styles.headerTxt}>
+                {translateText(intl, 'recommend.foryou')}
+              </Text>
               <TouchableOpacity
                 style={styles.results}
                 onPress={() => navigation.navigate('LatestLOcation')}>
