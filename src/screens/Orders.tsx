@@ -70,29 +70,38 @@ const Orders = ({navigation}: OrdersProps) => {
   const ProgressedOrders = [
     {
       name: 'Food Corner',
-      orderStartTime: 'Поръчка от днес 14:00ч.',
+      orderStartTime: `${translateText(
+        intl,
+        'order.from',
+      )} 14:00${translateText(intl, 'time.h')}.`,
       orderImage: require('./../../assets/images/productIMage.png'),
-      box: 'box 2 кутии',
-      price: '14.00лв',
-      pickUpTime: 'Спасена кутия',
+      box: `box 2 ${translateText(intl, 'order.boxes')}`,
+      price: `14.00${translateText(intl, 'price.currency')}`,
+      pickUpTime: `${translateText(intl, 'saved.box')}`,
       orderStatus: 'saved',
     },
     {
       name: 'Food Corner',
-      orderStartTime: 'Поръчка от днес 14:00ч.',
+      orderStartTime: `${translateText(
+        intl,
+        'order.from',
+      )} 14:00${translateText(intl, 'time.h')}.`,
       orderImage: require('./../../assets/images/productIMage.png'),
-      box: 'box 2 кутии',
-      price: '14.00лв',
-      pickUpTime: 'Завършена поръчка',
+      box: `box 2 ${translateText(intl, 'order.boxes')}`,
+      price: `14.00${translateText(intl, 'price.currency')}`,
+      pickUpTime: `${translateText(intl, 'order.complete')}`,
       orderStatus: 'completed',
     },
     {
       name: 'Food Corner',
-      orderStartTime: 'Поръчка от днес 14:00ч.',
+      orderStartTime: `${translateText(
+        intl,
+        'order.from',
+      )} 14:00${translateText(intl, 'time.h')}.`,
       orderImage: require('./../../assets/images/productIMage.png'),
-      box: 'box 2 кутии',
-      price: '14.00лв',
-      pickUpTime: 'Отменена поръчка',
+      box: `box 2 ${translateText(intl, 'order.boxes')}`,
+      price: `14.00${translateText(intl, 'price.currency')}`,
+      pickUpTime: `${translateText(intl, 'order.cancel')}`,
       orderStatus: 'canceled',
     },
   ];
@@ -102,7 +111,7 @@ const Orders = ({navigation}: OrdersProps) => {
         <Text style={styles.headerTxt}>
           {translateText(intl, 'tab.orders')}
         </Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('FilterScreen')}>
           <FilterIcon width={21} height={21} />
         </TouchableOpacity>
       </View>
@@ -209,7 +218,9 @@ const Orders = ({navigation}: OrdersProps) => {
                         {val.pickUpTime}
                       </Text>
                     </View>
-                    <TouchableOpacity style={styles.rightBtn}>
+                    <TouchableOpacity
+                      style={styles.rightBtn}
+                      onPress={() => navigation.navigate('OrderDetailScreen')}>
                       <RightIcon />
                     </TouchableOpacity>
                   </View>
@@ -217,7 +228,9 @@ const Orders = ({navigation}: OrdersProps) => {
               })}
             </View>
           ) : null}
-          <TouchableOpacity style={styles.toTheResultBtn}>
+          <TouchableOpacity
+            style={styles.toTheResultBtn}
+            onPress={() => navigation.navigate('Objects')}>
             <Text style={styles.toTheResultBtnTXt}>
               {translateText(intl, 'place.newOrder')}
             </Text>
