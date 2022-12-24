@@ -278,7 +278,7 @@ const ClusteredMapView = ({
           ...StyleSheet.absoluteFillObject,
           width: '100%',
         }}>
-        {resturantsdata.map((restaurant, i) => {
+        {resturantsdata?.map((restaurant, i) => {
           const box: FBBox = restaurant.boxes[0];
           const canCheckout = RestaurantService.canCheckout(box);
 
