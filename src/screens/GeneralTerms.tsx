@@ -32,7 +32,7 @@ const GeneralTerms = ({navigation}: GeneralTremsProps) => {
           </TouchableOpacity>
         </View>
         <Text style={styles.subHeading}>
-          {translateText(intl, 'terms.definition')}
+          {translateText(intl, 'terms.definitions')}
         </Text>
         <Text style={styles.termsTxt}>
           {translateText(intl, 'terms.paragraph1')}
