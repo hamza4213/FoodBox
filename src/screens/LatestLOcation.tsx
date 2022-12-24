@@ -14,13 +14,15 @@ import LeftIcon from './../../assets/images/chevron-left.svg';
 import RefreshIcon from './../../assets/images/refresh.svg';
 import HeartIcon from './../../assets/images/heart.svg';
 import BoxIcon from './../../assets/images/box.svg';
-
+import {translateText} from '../lang/translate';
+import {useIntl} from 'react-intl';
 interface LatestLOcationProps {
   route: any;
   navigation: any;
 }
 
 const LatestLOcation = ({navigation}: LatestLOcationProps) => {
+  const intl = useIntl();
   const filters = ['около мен', 'активни сега', 'любими', 'печива и сладкиши'];
   const productsList = [1, 2, 3, 4, 5, 6];
   return (
@@ -31,7 +33,9 @@ const LatestLOcation = ({navigation}: LatestLOcationProps) => {
             style={styles.header}
             onPress={() => navigation.goBack()}>
             <LeftIcon height={20} width={20} />
-            <Text style={styles.headerTxt}>Най-нови локации</Text>
+            <Text style={styles.headerTxt}>
+              {translateText(intl, 'latest.location')}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity>
             <FilterIcon height={21} width={21} />
@@ -43,7 +47,10 @@ const LatestLOcation = ({navigation}: LatestLOcationProps) => {
             contentContainerStyle={{paddingBottom: 50}}>
             <TouchableOpacity style={styles.results}>
               <RefreshIcon width={12} height={12} />
-              <Text style={styles.resulTxt}> поднови резултатите</Text>
+              <Text style={styles.resulTxt}>
+                {' '}
+                {translateText(intl, 'refresh.restaurant')}
+              </Text>
             </TouchableOpacity>
             {productsList.map((val, i) => {
               return (
