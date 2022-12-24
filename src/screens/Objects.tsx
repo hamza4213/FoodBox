@@ -183,10 +183,14 @@ const Objects = ({navigation}: ObjectsProps) => {
           <View style={styles.selectedCityMain}>
             <TouchableOpacity style={styles.selectedCityBtn}>
               <ArrowIcon />
-              <Text style={styles.selectedCityBtnTxt}>София-град</Text>
+              <Text style={styles.selectedCityBtnTxt}>
+                {translateText(intl, 'sofia.city')}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.selectedCityBtn}>
-              <Text style={styles.selectedCityBtnTxt}>София-град</Text>
+              <Text style={styles.selectedCityBtnTxt}>
+                {translateText(intl, 'sofia.city')}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -217,7 +221,6 @@ const Objects = ({navigation}: ObjectsProps) => {
               <TouchableOpacity onPress={getRestaurants} style={styles.results}>
                 <RefreshIcon width={12} height={12} />
                 <Text style={styles.resulTxt}>
-                  {' '}
                   {translateText(intl, 'refresh.restaurant')}
                 </Text>
               </TouchableOpacity>
