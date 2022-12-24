@@ -351,6 +351,9 @@ export default {
   'latest.location': 'Cele mai recente locații',
   'see.all': 'Vezi toate',
 
+  'expire.soon': 'Expiră în curând',
+  'recommend.foryou': 'recomandat pentru tine',
+
   //Setting Screen translations
   'setting.text': 'Settings',
   'personal.data': 'date personale',
@@ -405,6 +408,7 @@ export default {
   'order.pickup': 'Comanda de azi',
   'a.and': 'și',
   'place.newOrder': 'Plasați o nouă comandă',
+  'saved.box': 'Cutie salvată',
 
   //orderdetails screen translations
 
@@ -436,4 +440,9 @@ export default {
   'order.cancellaton.radio3': `Nu mi-a plăcut cutia`,
   'order.cancellaton.radio4': `Nu voi putea să o iau`,
   'order.cancellaton.radio5': 'M-am răzgândit',
+
+  //savedOrder screen translations
+
+  'share.withfriend': 'Impartasiti cu prietenii',
+  'your.ratings': 'Evaluările dvs',
 };

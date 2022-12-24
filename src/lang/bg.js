@@ -370,6 +370,8 @@ export default {
   'kilometer.k': 'км',
   'latest.location': 'Най-нови локации',
   'see.all': 'Виж всички',
+  'expire.soon': 'Изтичат скоро',
+  'recommend.foryou': 'Препоръчани за теб',
 
   //Setting Screen translations
   'setting.text': 'Settings',
@@ -424,6 +426,7 @@ export default {
   'order.pickup': 'Поръчайте днес',
   'a.and': 'и',
   'place.newOrder': 'Направи нова поръчка',
+  'saved.box': 'Спасена кутия',
 
   //orderdetails screen translations
 
@@ -454,4 +457,9 @@ export default {
   'order.cancellaton.radio3': `Не ми хареса кутията`,
   'order.cancellaton.radio4': `Няма да успея да я взема`,
   'order.cancellaton.radio5': 'Промених си мнението',
+
+  //savedOrder screen translations
+
+  'share.withfriend': 'Сподели с приятели',
+  'your.ratings': 'Вашите оценки',
 };

@@ -359,6 +359,9 @@ export default {
   'latest.location': 'Latest location',
   'see.all': 'See all',
 
+  'expire.soon': 'Expire soon',
+  'recommend.foryou': 'Recommended for you',
+
   //Setting Screen translations
   'setting.text': 'Settings',
   'personal.data': 'Personal data',
@@ -414,6 +417,8 @@ export default {
   'order.pickup': 'Pick up between',
   'a.and': 'and',
   'place.newOrder': 'Place a new order',
+  'saved.box': 'Saved box',
+  'order.complete': 'Completed order',
 
   //orderdetails screen translations
 
@@ -447,4 +452,9 @@ export default {
   'order.cancellaton.radio3': `I didn't like the box`,
   'order.cancellaton.radio4': `I won't be able to get her`,
   'order.cancellaton.radio5': 'I changed my mind',
+
+  //savedOrder screen translations
+
+  'share.withfriend': 'Share with friends',
+  'your.ratings': 'Your ratings',
 };
