@@ -324,7 +324,7 @@ const ProductDetail = ({navigation}: ProductDetailProps) => {
                   {translateText(intl, 'see.location')}
                 </Text>
               </TouchableOpacity>
-              {/* <ClusteredMapView zoomOnRestaurant={selectedRestaurant} /> */}
+              <ClusteredMapView zoomOnRestaurant={selectedRestaurant} />
             </View>
 
             <Text style={styles.addressLabel}>
