@@ -20,15 +20,19 @@ import CloseIcon from './../../assets/images/close.svg';
 import JumpingIcon from './../../assets/images/jumpingMascot.svg';
 import ExcitedIcon from './../../assets/images/excitedMascot.svg';
 import ShareIcon from './../../assets/images/shareIcon.svg';
-
+import {translateText} from '../lang/translate';
+import {useIntl} from 'react-intl';
 interface OrderDetailProps {
   route: any;
   navigation: any;
 }
 
 const SaveOrderScreen = ({navigation, route}: OrderDetailProps) => {
+  const intl = useIntl();
   let {uri} = route.params;
-  const [activeTab, setActiveTab] = useState('Съдържание');
+  const [activeTab, setActiveTab] = useState(
+    translateText(intl, 'active.content'),
+  );
   const [cancelOrderSatus, setCancelOrderSatus] = useState(false);
 
   const ShareFunc = async () => {
@@ -43,7 +47,8 @@ const SaveOrderScreen = ({navigation, route}: OrderDetailProps) => {
       <View style={styles.listsMain}>
         <View style={styles.header}>
           <Text style={styles.headerHeading}>
-            Поръчка от 12/06/2022 в 14:30
+            {translateText(intl, 'order.from')} 12/06/2022{' '}
+            {translateText(intl, 'order.in')} 14:30
           </Text>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <CloseIcon />
@@ -53,17 +58,17 @@ const SaveOrderScreen = ({navigation, route}: OrderDetailProps) => {
           contentContainerStyle={{paddingBottom: 50}}
           showsVerticalScrollIndicator={false}>
           <Text style={styles.heading}>
-            Кутия с пица и салата от Food Corner
+            {translateText(intl, 'heading.food.corner')}
           </Text>
           <Text style={styles.addressTxt1}>
-            Адрес:{'   '}
+            {translateText(intl, 'address.location')}:{'   '}
             <Text
               style={[styles.addressTxt1, {textDecorationLine: 'underline'}]}>
-              ул. “Бели Дунав” 10, София, България
+              {translateText(intl, 'address.street')}
             </Text>
           </Text>
           <Text style={styles.addressTxt1}>
-            Телефон:{'   '}
+            {translateText(intl, 'order.phone')}:{'   '}
             <Text
               style={[styles.addressTxt1, {textDecorationLine: 'underline'}]}>
               +359 885 00 42 43
@@ -76,9 +81,13 @@ const SaveOrderScreen = ({navigation, route}: OrderDetailProps) => {
               marginTop: 10,
             }}>
             <ExcitedIcon />
-            <Text style={styles.heading2}>Кутията е спасена!</Text>
+            <Text style={styles.heading2}>
+              {translateText(intl, 'box.saved')}
+            </Text>
             <View style={styles.ratingSec}>
-              <Text style={styles.reviewTxt}>Твоята оценка:</Text>
+              <Text style={styles.reviewTxt}>
+                {translateText(intl, 'your.ratings')}:
+              </Text>
               <Rating
                 type="custom"
                 readonly
@@ -98,26 +107,37 @@ const SaveOrderScreen = ({navigation, route}: OrderDetailProps) => {
               style={styles.toTheResultBtn}
               onPress={() => ShareFunc()}>
               <ShareIcon />
-              <Text style={styles.toTheResultBtnTXt}>Сподели с приятели</Text>
+              <Text style={styles.toTheResultBtnTXt}>
+                {translateText(intl, 'share.withfriend')}
+              </Text>
             </TouchableOpacity>
           </View>
           <View style={[styles.orderDetailsSec]}>
             <View style={[styles.clockSec, {marginTop: 15}]}>
               <GiftIcon />
               <Text style={styles.clockTxt1}>
-                Количество: <Text style={styles.clockTxt2}>2 кутии</Text>
+                {translateText(intl, 'order.quantity')}:{' '}
+                <Text style={styles.clockTxt2}>
+                  2 {translateText(intl, 'order.boxes')}
+                </Text>
               </Text>
             </View>
             <View style={[styles.clockSec, {marginTop: 7}]}>
               <DollarIcon />
               <Text style={styles.clockTxt1}>
-                Сума за плащане: <Text style={styles.clockTxt2}>14.00лв</Text>
+                {translateText(intl, 'payment.amount')}:{' '}
+                <Text style={styles.clockTxt2}>
+                  14.00{translateText(intl, 'price.currency')}
+                </Text>
               </Text>
             </View>
             <View style={[styles.clockSec, {marginTop: 7}]}>
               <PartyHorn />
               <Text style={styles.clockTxt1}>
-                Ти спести: <Text style={styles.clockTxt2}>12.00лв</Text>
+                {translateText(intl, 'money.saved')}:{' '}
+                <Text style={styles.clockTxt2}>
+                  12.00{translateText(intl, 'price.currency')}
+                </Text>
               </Text>
             </View>
           </View>
@@ -126,58 +146,69 @@ const SaveOrderScreen = ({navigation, route}: OrderDetailProps) => {
             <View style={styles.tabs}>
               <TouchableOpacity
                 style={styles.tab}
-                onPress={() => setActiveTab('Съдържание')}>
+                onPress={() =>
+                  setActiveTab(translateText(intl, 'active.content'))
+                }>
                 <Text
                   style={[
                     styles.tabTxt,
-                    activeTab === 'Съдържание'
+                    activeTab === translateText(intl, 'active.content')
                       ? {color: '#182550'}
                       : {color: '#A6A6A6'},
                   ]}>
-                  Съдържание
+                  {translateText(intl, 'active.content')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.tab}
-                onPress={() => setActiveTab('Алергени')}>
+                onPress={() =>
+                  setActiveTab(translateText(intl, 'active.allergens'))
+                }>
                 <Text
                   style={[
                     styles.tabTxt,
-                    activeTab === 'Алергени'
+                    activeTab === translateText(intl, 'active.allergens')
                       ? {color: '#182550'}
                       : {color: '#A6A6A6'},
                   ]}>
-                  Алергени
+                  {translateText(intl, 'active.allergens')}
                 </Text>
               </TouchableOpacity>
             </View>
-            {activeTab === 'Съдържание' ? (
+            {activeTab === translateText(intl, 'active.content') ? (
               <View>
                 <Text style={styles.tabContentTxt}>
-                  В твоята FoodObox изненада най-често ще откриеш вкусни торти,
-                  еклери, турска баклава, кадаиф, тулумби или сладки.{'\n'}
-                  {'\n'} Ако не всичко е по вкуса ти, сподели със семейството и
-                  приятелите си. Споделената храна е по-сладка! :)
+                  {translateText(intl, 'content.lines1')}! :)
                 </Text>
               </View>
             ) : null}
-            {activeTab === 'Алергени' ? (
+            {activeTab === translateText(intl, 'active.allergens') ? (
               <View>
                 <View style={styles.allergensContentSec}>
-                  <Text style={styles.allergensContentTxt}>Яйца</Text>
                   <Text style={styles.allergensContentTxt}>
-                    Млечни продукти
+                    {translateText(intl, 'allergens.3')}
+                  </Text>
+                  <Text style={styles.allergensContentTxt}>
+                    {translateText(intl, 'allergens.13')}
                   </Text>
                 </View>
                 <View style={styles.allergensContentSec}>
-                  <Text style={styles.allergensContentTxt}>Ядки</Text>
-                  <Text style={styles.allergensContentTxt}>Глутен</Text>
+                  <Text style={styles.allergensContentTxt}>
+                    {translateText(intl, 'allergens.6')}
+                  </Text>
+                  <Text style={styles.allergensContentTxt}>
+                    {translateText(intl, 'allergens.14')}
+                  </Text>
                 </View>
                 <View style={styles.allergensContentSec}>
-                  <Text style={styles.allergensContentTxt}>Фъстъци</Text>
+                  <Text style={styles.allergensContentTxt}>
+                    {translateText(intl, 'allergens.6')}
+                  </Text>
                 </View>
                 <View style={styles.allergensContentSec}>
-                  <Text style={styles.allergensContentTxt}>Сусам</Text>
+                  <Text style={styles.allergensContentTxt}>
+                    {translateText(intl, 'allergens.9')}
+                  </Text>
                 </View>
               </View>
             ) : null}
