@@ -53,27 +53,27 @@ const Offer = ({route, navigation}: OfferProps) => {
   const hasAvailableBoxes = RestaurantService.hasAvailability(box);
   const isFinished = RestaurantService.isFinished(box);
   const isStarted = RestaurantService.isStarted(box);
-  const ref = useRef(null);
-  useEffect(() => {
-    const subscription = navigation.addListener('change', async () => {
-      await analyticsPageOpen({
-        userId: user.id,
-        email: user.email,
-        pageName: 'OfferDetails',
-        data: {
-          boxId: box.id,
-          isStarted: isStarted,
-          isFinished: isFinished,
-          isOpen: isOpen,
-        },
-        loc: userLocation,
-      });
-    });
-
-    return () => {
-      subscription.remove();
-    };
-  }, [navigation]);
+  let Subref = useRef(null);
+  // useEffect(() => {
+  //   const subscription = navigation.addListener('change', async () => {
+  //     await analyticsPageOpen({
+  //       userId: user.id,
+  //       email: user.email,
+  //       pageName: 'OfferDetails',
+  //       data: {
+  //         boxId: box.id,
+  //         isStarted: isStarted,
+  //         isFinished: isFinished,
+  //         isOpen: isOpen,
+  //       },
+  //       loc: userLocation,
+  //     });
+  //   });
+  //   Subref = subscription;
+  //   return () => {
+  //     subscription.remove();
+  //   };
+  // }, [navigation]);
 
   const isOnFocus = useIsFocused();
 
@@ -81,7 +81,17 @@ const Offer = ({route, navigation}: OfferProps) => {
     <SafeAreaView style={styles.mainWrapper}>
       <View style={styles.mainContentWrapper}>
         <View style={{flexDirection: 'row'}}>
-          <BackButton />
+          <TouchableOpacity
+            style={styles.mainWrapper}
+            onPress={() => {
+              navigation.goBack();
+            }}>
+            <Image
+              source={icons.back}
+              resizeMode="contain"
+              style={styles.backButtonIcon}
+            />
+          </TouchableOpacity>
           <View
             style={{
               flex: 1,
@@ -421,7 +431,14 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     color: COLORS.black,
   },
-  mainWrapper: {},
+  mainWrapper: {
+    justifyContent: 'center',
+  },
+  backButtonIcon: {
+    marginLeft: 10,
+    width: 23,
+    height: 23,
+  },
   wrapBoxMeta: {
     flexDirection: 'row',
     flexGrow: 1,
