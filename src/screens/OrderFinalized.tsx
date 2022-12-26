@@ -1,5 +1,11 @@
 import React, {useEffect} from 'react';
-import {SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {FBBox} from '../models/FBBox';
 import {RestaurantService} from '../services/RestaurantService';
 import {FBUserVoucher} from '../models/FBUserVoucher';
@@ -9,8 +15,15 @@ import {useIntl} from 'react-intl';
 import {useDispatch, useSelector} from 'react-redux';
 import {FBRootState} from '../redux/store';
 import {RestaurantRepository} from '../repositories/RestaurantRepository';
-import {restaurantResetAction, restaurantsFetchedAction} from '../redux/restaurant/actions';
-import {isFBAppError, isFBBackendError, isFBGenericError} from '../network/axiosClient';
+import {
+  restaurantResetAction,
+  restaurantsFetchedAction,
+} from '../redux/restaurant/actions';
+import {
+  isFBAppError,
+  isFBBackendError,
+  isFBGenericError,
+} from '../network/axiosClient';
 import {showToastError} from '../common/FBToast';
 import {useFbLoading} from '../providers/FBLoaderProvider';
 
@@ -19,24 +32,29 @@ interface OrderFinalizedProps {
   navigation: any;
 }
 
-const OrderFinalized = ({route, navigation}: OrderFinalizedProps) => {
+const OrderFinalized = ({navigation, route}: OrderFinalizedProps) => {
   const orderPin = route.params.orderPin;
   const foodBox: FBBox = route.params.foodBox;
   const userVoucher: FBUserVoucher = route.params.userVoucher;
   const {authData} = useAuth();
-  const userLocation = useSelector((state: FBRootState) => state.userState.userLocation);
+  const userLocation = useSelector(
+    (state: FBRootState) => state.userState.userLocation,
+  );
   const intl = useIntl();
   const dispatch = useDispatch();
   const {showLoading, hideLoading} = useFbLoading();
-  
+
   useEffect(() => {
     const fetchRestaurantList = async () => {
       showLoading('fetchRestaurants');
 
       try {
-        const restaurantRepository = new RestaurantRepository({authData: authData!});
+        const restaurantRepository = new RestaurantRepository({
+          authData: authData!,
+        });
         const restaurantService = new RestaurantService({restaurantRepository});
-        const restaurantsListItems = await restaurantService.getRestaurantsForHome({userLocation});
+        const restaurantsListItems =
+          await restaurantService.getRestaurantsForHome({userLocation});
 
         dispatch(restaurantsFetchedAction({restaurants: restaurantsListItems}));
       } catch (error) {
@@ -66,7 +84,9 @@ const OrderFinalized = ({route, navigation}: OrderFinalizedProps) => {
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            <Text style={styles.text}>{translateText(intl, 'order.congratulation')}</Text>
+            <Text style={styles.text}>
+              {translateText(intl, 'order.congratulation')}
+            </Text>
           </View>
           <View
             style={{
@@ -75,7 +95,9 @@ const OrderFinalized = ({route, navigation}: OrderFinalizedProps) => {
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            <Text style={styles.text}>{translateText(intl, 'order.confirm_from_app')}</Text>
+            <Text style={styles.text}>
+              {translateText(intl, 'order.confirm_from_app')}
+            </Text>
           </View>
           <View
             style={{
@@ -90,7 +112,15 @@ const OrderFinalized = ({route, navigation}: OrderFinalizedProps) => {
           </View>
           <View style={{marginTop: 30, marginHorizontal: 20}}>
             <Text style={styles.text}>
-              {`${translateText(intl, 'order.time')} ${translateText(intl, 'offer.from')} ${RestaurantService.formatPickUpWindowDate(foodBox.pickUpFrom)} ${translateText(intl, 'offer.to')} ${RestaurantService.formatPickUpWindowDate(foodBox.pickUpTo)}`}
+              {`${translateText(intl, 'order.time')} ${translateText(
+                intl,
+                'offer.from',
+              )} ${RestaurantService.formatPickUpWindowDate(
+                foodBox.pickUpFrom,
+              )} ${translateText(
+                intl,
+                'offer.to',
+              )} ${RestaurantService.formatPickUpWindowDate(foodBox.pickUpTo)}`}
             </Text>
           </View>
 
