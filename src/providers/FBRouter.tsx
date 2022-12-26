@@ -126,7 +126,7 @@ const FBRouter = () => {
                 name="OrderFinalized"
                 component={OrderFinalized}
               />
-
+              <AuthStack.Screen name="HomeTabs" component={HomeTabs} />
               <AuthStack.Screen
                 name="OrderDetailScreen"
                 component={OrderDetailScreen}
